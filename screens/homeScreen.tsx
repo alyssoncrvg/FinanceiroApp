@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { PieChart } from 'react-native-chart-kit';
 
 import { styleHome } from '../styles/styleHome'
+import { styleNavigation } from '../styles/styleNavigation';
 
 export function HomeScreen({ navigation }: any) {
   const data = [
@@ -81,17 +82,17 @@ export function HomeScreen({ navigation }: any) {
       </ScrollView>
 
       {/* Barra de Navegação */}
-      <View style={styleHome.navigationBar}>
+      <View style={styleNavigation.navigationBar}>
         <TouchableOpacity>
           <Ionicons name="home" size={32} color="#007AFF" />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Investments')}>
           <Ionicons name="stats-chart" size={32} color="#000" />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Control')}>
           <Ionicons name="pie-chart" size={32} color="#000" />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Goals')}>
           <Ionicons name="cash" size={32} color="#000" />
         </TouchableOpacity>
       </View>

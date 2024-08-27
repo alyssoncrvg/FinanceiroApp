@@ -5,6 +5,7 @@ import { PieChart } from 'react-native-chart-kit';
 
 import { styleInvestment } from '../styles/styleInvestment'
 import { styleHome } from '../styles/styleHome';
+import { styleNavigation } from '../styles/styleNavigation';
 
 export function InvestmentsScreen({ navigation }: any) {
     const [investmentValue, setInvestmentValue] = useState('1000.00');
@@ -94,17 +95,17 @@ export function InvestmentsScreen({ navigation }: any) {
             </TouchableOpacity>
 
             {/* Barra de Navegação */}
-            <View style={styleHome.navigationBar}>
+            <View style={styleNavigation.navigationBar}>
                 <TouchableOpacity onPress={() => navigation.navigate('Home')}>
                     <Ionicons name="home" size={32} color="#000" />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity >
                     <Ionicons name="stats-chart" size={32} color="#007AFF" />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Control')}>
                     <Ionicons name="pie-chart" size={32} color="#000" />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Goals')}>
                     <Ionicons name="cash" size={32} color="#000" />
                 </TouchableOpacity>
             </View>

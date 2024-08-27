@@ -73,18 +73,5 @@ export const styleHome = StyleSheet.create({
       paddingHorizontal: 20,
       paddingVertical: 20,
     },
-    navigationBar: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      alignItems: 'center',
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      height: 60,
-      backgroundColor: '#fff',
-      borderTopWidth: 1,
-      borderTopColor: '#ddd',
-    },
   });
   
