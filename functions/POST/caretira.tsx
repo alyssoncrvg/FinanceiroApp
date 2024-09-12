@@ -1,28 +1,14 @@
-import { Alert } from "react-native";
+import { apiRequest } from "../../api/api";
 
-export const addWallet = async () => {
-    try{
-        const response = await fetch('http://localhost:3000/api/carteiras', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                
-                "banco": "TESTE",
-                "saldo": 5000
-                
-            }),
-        })
-
-        if (response.ok) {
-            Alert.alert('Sucesso', 'Carteira adicionada com sucesso!');
-        } else {
-            Alert.alert('Erro', 'Falha ao adicionar carteira.');
-        }
-
-
-    } catch (error){
-
+export const addWallet = async (banco: string, saldo: number) => {
+    try {
+        const response = await apiRequest('/carteiras', 'POST', {
+            banco,
+            saldo
+        });
+        console.log('Carteira adicionada:', response);
+        return response;
+    } catch (error) {
+        console.error('Erro ao adicionar carteira:', error);
     }
-}
+};
