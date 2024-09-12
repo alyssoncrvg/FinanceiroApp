@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { PieChart } from 'react-native-chart-kit';
 import { styleNavigation } from '../styles/styleNavigation';
 import { styleControl } from '../styles/styleControl';
+import { addWallet } from '../functions/POST/caretira';
 
 export function ExpensesScreen({ navigation }: any) {
     const data = [
@@ -18,9 +19,9 @@ export function ExpensesScreen({ navigation }: any) {
         <View style={styleControl.container}>
         <ScrollView style={styleControl.scrollView}>
             {/* Cabeçalho */}
-            <View style={styleControl.header}>
-                <Text style={styleControl.title}>Controle de Gastos</Text>
-            </View>
+            <TouchableOpacity style={styleControl.addButton} onPress={addWallet}>
+                <Text style={styleControl.addButtonText}>Adicionar +</Text>
+            </TouchableOpacity>
 
             {/* Carteiras */}
             <View style={styleControl.walletsContainer}>
