@@ -3,18 +3,16 @@ import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 
 type CardProps = {
-  title: string;
-  description: string;
-  imageUrl: string;
+  banco: string;
+  valor: number;
 };
 
-const Card: React.FC<CardProps> = ({ title, description, imageUrl }) => {
+const Card: React.FC<CardProps> = ({ banco, valor }) => {
   return (
     <View style={styles.card}>
-      <Image source={{ uri: imageUrl }} style={styles.cardImage} />
       <View style={styles.cardContent}>
-        <Text style={styles.cardTitle}>{title}</Text>
-        <Text style={styles.cardDescription}>{description}</Text>
+        <Text style={styles.cardTitle}>{banco}</Text>
+        <Text style={styles.cardDescription}>{`${valor} R$`}</Text>
       </View>
     </View>
   );
@@ -37,7 +35,7 @@ const styles = StyleSheet.create({
     height: 200,
   },
   cardContent: {
-    padding: 15,
+    padding: 20,
   },
   cardTitle: {
     fontSize: 18,

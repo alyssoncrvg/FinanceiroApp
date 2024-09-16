@@ -16,6 +16,7 @@ export default function App() {
         <Tab.Navigator
           initialRouteName="Home"
           screenOptions={{
+            swipeEnabled: false, // Desabilita a transição por swipe
             tabBarLabelStyle: { display: 'none' }, // Oculta o rótulo da aba
             tabBarStyle: { backgroundColor: 'transparent' }, // Define a cor de fundo da barra de abas como transparente
             tabBarIndicatorStyle: { backgroundColor: 'transparent' }, // Remove o indicador da aba

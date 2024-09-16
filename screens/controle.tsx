@@ -1,106 +1,51 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, StyleSheet, Dimensions } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { PieChart } from 'react-native-chart-kit';
-import { styleNavigation } from '../styles/styleNavigation';
-import { styleControl } from '../styles/styleControl';
+import { styleControl } from '../styles/styleControl'; // Atualize o caminho conforme necessário
 import { FlexModal } from '../modal/modalWallet';
-import { addWallet } from '../functions/POST/caretira';
-import { addExpenses } from '../functions/POST/despesas';
-import { apiRequest } from '../api/api';
+import { useFetchData, useModalHandlers } from '../logics/controleScreenLogics'; // Atualize o caminho conforme necessário
 import Card from '../modal/cards/card';
-import Carousel from 'react-native-snap-carousel';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
+import { styleNavigation } from '../styles/styleNavigation';
 
-type Item = {
-    title: string;
-    description: string;
-    imageUrl: string;
-};
+interface Item {
+    banco: string;
+    valor: number;
+}
 
 export function ExpensesScreen({ navigation }: any) {
-    const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    // Estado para controlar se uma nova despesa foi adicionada
-    const [expenseAdded, setExpenseAdded] = useState(false);
-
-    // Função para buscar os dados da API e formatá-los para o gráfico
-    const fetchData = async () => {
-        try {
-            const gastos = await apiRequest('/get/gastos');
-            const formattedData = gastos.map((gasto: any) => ({
-                name: gasto.categoria,
-                population: gasto.valor,
-                color: getRandomColor(),
-                legendFontColor: '#7F7F7F',
-                legendFontSize: 12,
-            }));
-
-            setData(formattedData);
-            setLoading(false);
-        } catch (error) {
-            console.error('Erro ao buscar os dados de gastos:', error);
-            setLoading(false);
-        }
-    };
-
-    // Função para gerar cor aleatória
-    const getRandomColor = () => {
-        const letters = '0123456789ABCDEF';
-        let color = '#';
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    };
-
-    // UseEffect para buscar os dados da API quando o componente monta ou quando uma nova despesa é adicionada
-    useEffect(() => {
-        fetchData();
-    }, [expenseAdded]);  // O gráfico será recarregado sempre que 'expenseAdded' mudar
-
     const [walletModalVisible, setWalletModalVisible] = useState(false);
     const [expenseModalVisible, setExpenseModalVisible] = useState(false);
+    const [expenseAdded, setExpenseAdded] = useState(false); // Estado para acionar o re-fetch
+    const [activeSlide, setActiveSlide] = useState(0); // Variável para rastrear o slide ativo
 
-    const addModalWallet = () => {
-        setWalletModalVisible(true);
-    };
+    const { dataWallet, dataExpenses, loading } = useFetchData(expenseAdded); // Passa `expenseAdded` para o hook
+    const { addModalWallet, closeModalWallet, addModalExpense, closeModalExpense, handleAddCarteira, handleAddDespesas } = useModalHandlers(
+        setWalletModalVisible,
+        setExpenseModalVisible,
+        setExpenseAdded // Passa o setter para o hook de manipulação de modais
+    );
 
-    const closeModalWallet = () => {
-        setWalletModalVisible(false);
-    };
+    const firstSlide = 1;
 
-    const addModalExpense = () => {
-        setExpenseModalVisible(true);
-    };
+    const isDataEmpty = dataExpenses.length === 0;
+    const isDataWalleteEmpty = dataWallet.length === 0;
 
-    const closeModalExpense = () => {
-        setExpenseModalVisible(false);
-    };
+    const walletDefault = [{
+        banco: 'Nenhum Banco Cadastrado',
+        valor: 0,
+    }];
 
-    const handleAddCarteira = (formData: { [key: string]: string | number }) => {
-        const banco = String(formData.banco);
-        const saldo = Number(formData.saldo);
+    var carouselRef = useRef<Carousel<any>>(null);
 
-        if (isNaN(saldo)) {
-            console.error('Erro: O saldo informado não é um número válido');
-            return;
-        }
-        addWallet(banco, saldo);
-    };
+    const renderItem = ({ item }: { item: Item }) => (
+        <View style={styleControl.containerCarousel}>
+            <Card banco={item.banco} valor={item.valor} />
+        </View>
+    );
 
-    // Função para adicionar despesa e atualizar o gráfico
-    const handleAddDespesas = async (formData: { [key: string]: string | number }) => {
-        const descricao = String(formData.descricao);
-        const valor = Number(formData.valor);
-        const categoria = String(formData.categoria);
-
-        await addExpenses(descricao, valor, categoria);
-
-        // Após adicionar uma despesa, altere o estado para recarregar o gráfico
-        setExpenseAdded(prev => !prev);
-        closeModalExpense(); // Fecha o modal após adicionar a despesa
-    };
+    const { width } = Dimensions.get('window');
 
     if (loading) {
         return (
@@ -110,72 +55,108 @@ export function ExpensesScreen({ navigation }: any) {
         );
     }
 
-    const data2: Item[] = [
-        {
-            title: 'Meu Primeiro Card',
-            description: 'Essa é uma descrição de exemplo para o card.',
-            imageUrl: 'https://via.placeholder.com/400',
-        },
-        {
-            title: 'Segundo Card',
-            description: 'Este é um segundo exemplo de card com imagem diferente.',
-            imageUrl: 'https://via.placeholder.com/400',
-        },
-        {
-            title: 'Terceiro Card',
-            description: 'Mais um card para o carrossel.',
-            imageUrl: 'https://via.placeholder.com/400',
-        },
-    ];
-
-    const renderItem = ({ item }: { item: Item }) => (
-        <Card title={item.title} description={item.description} imageUrl={item.imageUrl} />
-      );
-    
-    const { width } = Dimensions.get('window');
 
     return (
         <View style={styleControl.container}>
             <ScrollView style={styleControl.scrollView}>
+                <Text style={{ fontSize: 25, textAlign: 'center', fontWeight: 'bold', marginTop: 0 }}>
+                    Controle de Gastos
+                </Text>
                 <View style={styleControl.walletsContainer}>
-                    <Text style={styleControl.sectionTitle}>Controle de Gastos</Text>
-                    {/* <SafeAreaView style={styles.container}>
+                    <View style={styleControl.walletsContent}>
+                        <Text style={styleControl.sectionTitle}>Carteiras</Text>
+                        <TouchableOpacity style={styleControl.addButton} onPress={addModalWallet}>
+                            <Text style={styleControl.addButtonText}>Adicionar +</Text>
+                        </TouchableOpacity>
+                    </View>
+                    {isDataWalleteEmpty ? (
                         <Carousel
-                            data={data2}
+                            ref={carouselRef}
+                            layout={'default'}
+                            layoutCardOffset={18}
+                            data={walletDefault}
                             renderItem={renderItem}
                             sliderWidth={width}
-                            itemWidth={width * 0.75} // Ajuste o tamanho do card em relação ao slider
-                            loop={true} // Faz o carrossel dar loop
-                            autoplay={true} // Auto deslize
-                            autoplayDelay={500} // Delay para começar o autoplay
-                            autoplayInterval={3000} // Tempo entre cada slide
+                            itemWidth={width * 0.90}
+                            firstItem={firstSlide}
+                            containerCustomStyle={{ padding: 10 }}
+                            contentContainerCustomStyle={{ marginVertical: 0 }}
+                            slideStyle={{ backgroundColor: '#fff' }}
+                            onSnapToItem={(index) => setActiveSlide(index)} // Atualiza o slide ativo
+                            useScrollView={true}
                         />
-                    </SafeAreaView> */}
-                    <TouchableOpacity style={styleControl.addButton} onPress={addModalWallet}>
-                        <Text style={styleControl.addButtonText}>Adicionar +</Text>
-                    </TouchableOpacity>
+                    ) : (
+                        <Carousel
+                        ref={carouselRef}
+                        layout={'default'}
+                        layoutCardOffset={18}
+                        data={dataWallet}
+                        renderItem={renderItem}
+                        sliderWidth={width}
+                        itemWidth={width * 0.90}
+                        firstItem={firstSlide}
+                        containerCustomStyle={{ padding: 10 }}
+                        contentContainerCustomStyle={{ marginVertical: 0 }}
+                        slideStyle={{ backgroundColor: '#fff' }}
+                        onSnapToItem={(index) => setActiveSlide(index)} // Atualiza o slide ativo
+                        useScrollView={true}
+                    />
+                    )}
+                     <Pagination
+                        dotsLength={dataWallet.length} // Usa o comprimento do array data2
+                        activeDotIndex={activeSlide} // Usa o slide ativo do estado
+                        containerStyle={styleControl.paginationContainer}
+                        dotColor={'rgba(0, 0, 0, 0.92)'}
+                        dotStyle={styleControl.paginationDot}
+                        inactiveDotColor={'#C0C0C0'}
+                        inactiveDotOpacity={0.4}
+                        inactiveDotScale={0.6}
+                        carouselRef={carouselRef.current ? carouselRef.current : undefined} // Passa a referência ao Pagination
+                        tappableDots={!!carouselRef.current} // Permite tocar nos dots
+                    />
+
                 </View>
 
                 <View style={styleControl.expensesContainer}>
-                    <Text style={styleControl.sectionTitle}>Despesas</Text>
-                    <PieChart
-                        data={data}
-                        width={350}
-                        height={220}
-                        chartConfig={{
-                            backgroundColor: '#fff',
-                            backgroundGradientFrom: '#fff',
-                            backgroundGradientTo: '#fff',
-                            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                        }}
-                        accessor="population"
-                        backgroundColor="transparent"
-                        paddingLeft="15"
-                        absolute
-                    />
-                    <TouchableOpacity style={styleControl.addButton} onPress={addModalExpense}>
-                        <Text style={styleControl.addButtonText}>Adicionar +</Text>
-                    </TouchableOpacity>
+                    <View style={styleControl.walletsContent}>
+                        <Text style={styleControl.sectionTitle}>Despesas</Text>
+                        <TouchableOpacity style={styleControl.addButton} onPress={addModalExpense}>
+                            <Text style={styleControl.addButtonText}>Adicionar +</Text>
+                        </TouchableOpacity>
+                    </View>
+                    {isDataEmpty ? (
+                        <PieChart
+                            data={[{ name: 'Sem Dados', population: 1 }]} // Dado fictício para exibir o gráfico cinza
+                            width={350}
+                            height={220}
+                            chartConfig={{
+                                backgroundColor: '#fff',
+                                backgroundGradientFrom: '#fff',
+                                backgroundGradientTo: '#fff',
+                                color: () => 'rgba(169, 169, 169, 1)', // Cinza
+                            }}
+                            accessor="population"
+                            backgroundColor="transparent"
+                            paddingLeft="15"
+                            absolute
+                        />
+                    ) : (
+                        <PieChart
+                            data={dataExpenses}
+                            width={350}
+                            height={220}
+                            chartConfig={{
+                                backgroundColor: '#fff',
+                                backgroundGradientFrom: '#fff',
+                                backgroundGradientTo: '#fff',
+                                color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                            }}
+                            accessor="population"
+                            backgroundColor="transparent"
+                            paddingLeft="15"
+                            absolute
+                        />
+                    )}
                 </View>
             </ScrollView>
 
@@ -198,6 +179,7 @@ export function ExpensesScreen({ navigation }: any) {
                     { name: 'categoria', placeholder: 'Categoria' }
                 ]}
                 onSubmit={handleAddDespesas}
+
             />
 
             <View style={styleNavigation.navigationBar}>
@@ -215,13 +197,5 @@ export function ExpensesScreen({ navigation }: any) {
                 </TouchableOpacity>
             </View>
         </View>
-    );
+    )
 }
-
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-  });
