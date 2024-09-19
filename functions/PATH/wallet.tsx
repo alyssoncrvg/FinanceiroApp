@@ -1,10 +1,14 @@
 import { apiRequest } from "../../api/api";
+import { Item } from "../../interfaces/interfaces";
 
-export const editWallet = async (id:string) => {
-
+export const editWallet = async (item: Item) => {
+    console.log(item)
     try{
-        console.log(id)
-        const response = await apiRequest(`/carteiras/${id}`, 'PATCH')
+        console.log(item.id)
+        const response = await apiRequest(`/carteiras/${item.id}`, 'PATCH', {
+            "novoBanco" : item.banco,
+            "saldo": item.valor
+        })
 
         return response
 

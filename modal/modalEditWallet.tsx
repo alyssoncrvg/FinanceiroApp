@@ -1,13 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-native';
 import { deleteWallet } from '../functions/DELETE/wallet';
 import { editWallet } from '../functions/PATH/wallet';
-
-interface Item {
-    id: string;
-    banco: string;
-    valor: number;
-}
+import { Item } from '../interfaces/interfaces';
 
 interface EditWalletModalProps {
     modalVisible: boolean;
@@ -15,22 +10,33 @@ interface EditWalletModalProps {
     fields: { name: string; placeholder: string; type?: string }[];
     onSubmit: (formData: { [key: string]: string | number }) => void;
     item: Item;
+    setItemUpdated: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const EditWalletModal: React.FC<EditWalletModalProps> = ({ modalVisible, onClose, fields, onSubmit, item }) => {
-    const [formData, setFormData] = useState<{ [key: string]: string | number }>({
-        banco: item.banco,
-        valor: item.valor,
+export const EditWalletModal: React.FC<EditWalletModalProps> = ({ modalVisible, onClose, fields, onSubmit, item, setItemUpdated }) => {
+    const [formData, setFormData] = useState<Item>({
+        id: '',
+        banco: '',
+        valor: 0,
     });
+
+    // Sempre que o item mudar, atualiza o formData com os valores do item selecionado
+    useEffect(() => {
+        if (item) {
+            setFormData({
+                id: item.id,
+                banco: item.banco,
+                valor: item.valor,
+            });
+        }
+    }, [item]);
 
     const handleInputChange = (field: string, value: string) => {
         setFormData({
             ...formData,
-            [field]: value,
+            [field]: field === 'valor' ? Number(value) : value,
         });
     };
-
-    console.log(item.id)
 
     return (
         <Modal animationType="fade" transparent={true} visible={modalVisible} onRequestClose={onClose}>
@@ -58,10 +64,25 @@ export const EditWalletModal: React.FC<EditWalletModalProps> = ({ modalVisible, 
                         ))}
 
                         <View style={styles.buttonContainer}>
-                            <TouchableOpacity onPress={() => editWallet(item.id)} style={styles.saveButton}>
+                            <TouchableOpacity 
+                            style={styles.saveButton}
+                            onPress={
+                                () => {
+                                    editWallet(formData)
+                                    setItemUpdated((prev) => !prev);
+                                    onClose()
+                                }} 
+                            >
                                 <Text style={styles.buttonText}>Salvar</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => deleteWallet(item.id)} style={styles.deleteButton}>
+                            <TouchableOpacity 
+                            style={styles.deleteButton} 
+                            onPress={
+                                () => {
+                                    deleteWallet(formData)
+                                    setItemUpdated((prev) => !prev);
+                                    onClose()
+                                }}>
                                 <Text style={styles.buttonText}>Excluir</Text>
                             </TouchableOpacity>
                         </View>

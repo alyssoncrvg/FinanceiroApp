@@ -7,7 +7,7 @@ interface FormData {
     [key: string]: string | number;
 }
 
-export const useFetchData = (expenseAdded: boolean) => { // Removeu o setter de estado e agora monitora diretamente expenseAdded
+export const useFetchData = (expenseAdded: boolean, itemUpdated: boolean) => { // Removeu o setter de estado e agora monitora diretamente expenseAdded
     const [dataExpenses, setData] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [dataWallet, setDataWallet] = useState<any[]>([]);
@@ -33,6 +33,7 @@ export const useFetchData = (expenseAdded: boolean) => { // Removeu o setter de 
         try {
             const wallet = await apiRequest('/get/carteiras');
             const walletFormat = wallet.map((wallet:any) => ({
+                id: wallet._id,
                 banco: wallet.banco,
                 valor: wallet.saldo,
             }));
@@ -56,7 +57,7 @@ export const useFetchData = (expenseAdded: boolean) => { // Removeu o setter de 
 
     useEffect(() => {
         fetchData();
-    }, [expenseAdded]); // Reexecuta o fetch sempre que `expenseAdded` mudar
+    }, [expenseAdded, itemUpdated]); // Reexecuta o fetch sempre que `expenseAdded` mudar
 
     return { dataWallet, dataExpenses, loading };
 };

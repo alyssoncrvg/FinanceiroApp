@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { PieChart } from 'react-native-chart-kit';
@@ -9,23 +9,19 @@ import Card from '../modal/cards/card';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { styleNavigation } from '../styles/styleNavigation';
 import { EditWalletModal } from '../modal/modalEditWallet';
-
-interface Item {
-    id: string;
-    banco: string;
-    valor: number;
-}
+import { Item } from '../interfaces/interfaces';
 
 export function ExpensesScreen({ navigation }: any) {
     const [walletModalVisible, setWalletModalVisible] = useState(false);
     const [expenseModalVisible, setExpenseModalVisible] = useState(false);
     const [expenseAdded, setExpenseAdded] = useState(false); // Estado para acionar o re-fetch
+    const [itemUpdated, setItemUpdated] = useState(false);
     const [activeSlide, setActiveSlide] = useState(0); // Variável para rastrear o slide ativo
 
     const [editModalVisible, setEditModalVisible] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
-    const { dataWallet, dataExpenses, loading } = useFetchData(expenseAdded); // Passa `expenseAdded` para o hook
+    const { dataWallet, dataExpenses, loading } = useFetchData(expenseAdded, itemUpdated); // Passa `expenseAdded` para o hook
     const { addModalWallet, closeModalWallet, addModalExpense, closeModalExpense, handleAddCarteira, handleAddDespesas } = useModalHandlers(
         setWalletModalVisible,
         setExpenseModalVisible,
@@ -46,6 +42,7 @@ export function ExpensesScreen({ navigation }: any) {
     var carouselRef = useRef<Carousel<any>>(null);
 
     function handlePress(item: Item){
+        console.log(item)
         setSelectedItem(item); // Define o item selecionado
         setEditModalVisible(true); // Abre o modal
     }
@@ -57,16 +54,17 @@ export function ExpensesScreen({ navigation }: any) {
     };
 
     const renderItem = ({ item }: { item: Item }) => (
-
+        
         <View style={styleControl.containerCarousel}>
         {isDataWalleteEmpty ? (
             <Card banco={item.banco} valor={item.valor} />
         ) : (
+            
             <TouchableOpacity onPress={() => handlePress(item)}>
                 <Card banco={item.banco} valor={item.valor} />
             </TouchableOpacity>
         )}
-    </View>
+        </View>
     );
 
     const { width } = Dimensions.get('window');
@@ -209,13 +207,16 @@ export function ExpensesScreen({ navigation }: any) {
             {selectedItem && (
                 <EditWalletModal
                     modalVisible={editModalVisible}
-                    onClose={() => setEditModalVisible(false)}
+                    onClose={() => {
+                        setEditModalVisible(false)
+                    }}
                     fields={[
                         { name: 'banco', placeholder: 'Nome do banco' },
                         { name: 'valor', placeholder: 'Saldo', type: 'numeric' },
                     ]}
                     onSubmit={handleEditSubmit}
                     item={selectedItem}
+                    setItemUpdated={setItemUpdated}
                 />
             )}
             
