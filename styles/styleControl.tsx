@@ -65,7 +65,7 @@ export const styleControl = StyleSheet.create({
         marginTop: 5,
     },
     addButton: {
-        backgroundColor: '#6A5ACD',
+        backgroundColor: '#820AD1',
         paddingVertical: 5, // Aumenta o padding verticalmente
         paddingHorizontal: 16, // Aumenta o padding horizontalmente
         borderRadius: 10,

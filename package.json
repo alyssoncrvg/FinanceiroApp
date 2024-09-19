@@ -21,6 +21,7 @@
     "prop-types": "^15.8.1",
     "react": "18.2.0",
     "react-native": "*",
+    "react-native-calendars": "^1.1307.0",
     "react-native-chart-kit": "^6.12.0",
     "react-native-pager-view": "6.3.0",
     "react-native-progress": "^5.0.1",

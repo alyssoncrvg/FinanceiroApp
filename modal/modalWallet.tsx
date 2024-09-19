@@ -1,13 +1,7 @@
 // FlexModal.tsx
 import React, { useState } from 'react';
 import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-
-interface FlexModalProps {
-  modalVisible: boolean;
-  onClose: () => void;
-  fields: { name: string; placeholder: string; type?: string }[]; // Lista de campos dinâmicos
-  onSubmit: (formData: { [key: string]: string | number }) => void; // Função de submissão
-}
+import { FlexModalProps } from '../interfaces/interfaces';
 
 export const FlexModal: React.FC<FlexModalProps> = ({ modalVisible, onClose, fields, onSubmit }) => {
   const [formData, setFormData] = useState<{ [key: string]: string | number }>({});

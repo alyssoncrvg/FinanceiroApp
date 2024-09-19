@@ -1,20 +1,32 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Progress from 'react-native-progress';
 
 import { styleGoals } from '../styles/styleGoals';
 import { styleNavigation } from '../styles/styleNavigation';
+import { UsefecthDataGoals } from '../logics/goalsScreenLogics';
+import { useModalGoalsHandlres } from '../logics/goalsScreenLogics';
+import { FormDataGoal } from '../interfaces/interfaces';
+import { FlexModalGoal } from '../modal/modalGoal';
+
+interface FlexModalProps {
+    modalVisible: boolean;
+    onClose: () => void;
+    fields: { name: string; placeholder: string; type: string }[];
+    onSubmit: (formData: FormDataGoal) => void; // Ajuste aqui
+}
+
 
 export function GoalsScreen({ navigation }: any) {
-    const goals = [
-        { id: '1', name: 'Carro Novo', icon: 'car' as const, targetAmount: 98000, currentAmount: 88200 },
-        { id: '2', name: 'Casa Nova', icon: 'home' as const, targetAmount: 98000, currentAmount: 88200 },
-        { id: '3', name: 'Eletrônicos', icon: 'tv' as const, targetAmount: 98000, currentAmount: 88200 },
-        { id: '4', name: 'Viagem', icon: 'airplane' as const, targetAmount: 98000, currentAmount: 88200 },
-        { id: '5', name: 'Viagem', icon: 'airplane' as const, targetAmount: 98000, currentAmount: 88200 },
-        { id: '6', name: 'Viagem', icon: 'airplane' as const, targetAmount: 98000, currentAmount: 88200 },
-    ];
+
+    const [ExpenseGoals, setExpenseGoals] = useState(false);
+    const [ModalGoal, setModalGoal] = useState(false)
+
+    const { dataGoals } = UsefecthDataGoals(ExpenseGoals); // Espera os dados
+    const { addModelGoal, closeModalGoal, handleAddGoal } = useModalGoalsHandlres(setModalGoal, setExpenseGoals)
+
+
 
     return (
         <View style={styleGoals.container}>
@@ -22,20 +34,20 @@ export function GoalsScreen({ navigation }: any) {
                 {/* Cabeçalho */}
                 <View style={styleGoals.header}>
                     <Text style={styleGoals.title}>Metas Financeiras</Text>
-                    <TouchableOpacity style={styleGoals.newGoalButton}>
+                    <TouchableOpacity style={styleGoals.newGoalButton} onPress={addModelGoal}>
                         <Text style={styleGoals.newGoalButtonText}>Nova Meta</Text>
                     </TouchableOpacity>
                 </View>
 
                 {/* Lista de Metas */}
                 <View style={styleGoals.goalsContainer}>
-                    {goals.map((goal) => {
-                        const progress = goal.currentAmount / goal.targetAmount;
+                    {dataGoals.map((goal) => {
+                        const progress = goal.targetAmount > 0 ? goal.currentAmount / goal.targetAmount : 0;
 
                         return (
                             <View key={goal.id} style={styleGoals.goalItem}>
                                 <View style={styleGoals.goalHeader}>
-                                    <Ionicons name={goal.icon} size={32} color="black" />
+                                    <Ionicons name={'home'} size={32} color="black" />
                                     <Text style={styleGoals.goalName}>{goal.name}</Text>
                                     <Text style={styleGoals.goalTarget}>Meta: {goal.targetAmount.toFixed(2)}</Text>
                                 </View>
@@ -70,6 +82,13 @@ export function GoalsScreen({ navigation }: any) {
                     <Ionicons name="cash" size={32} color="#007AFF" />
                 </TouchableOpacity>
             </View>
+
+            {/* Modal para adicionar nova meta */}
+            <FlexModalGoal
+                modalVisible={ModalGoal}
+                onClose={() => closeModalGoal}
+                onSubmit={handleAddGoal}
+            />
         </View>
     );
 }
