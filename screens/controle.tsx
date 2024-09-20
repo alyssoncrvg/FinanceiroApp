@@ -14,9 +14,8 @@ import { useExpenses } from '../context/context';
 export function ExpensesScreen({ navigation }: any) {
     const [walletModalVisible, setWalletModalVisible] = useState(false);
     const [expenseModalVisible, setExpenseModalVisible] = useState(false);
-    const { expenseAdded, setExpenseAdded } = useExpenses();
+    const { expenseAdded, setExpenseAdded, itemUpdated, setItemUpdated } = useExpenses();
 
-    const [itemUpdated, setItemUpdated] = useState(false);
     const [activeSlide, setActiveSlide] = useState(0); // Variável para rastrear o slide ativo
 
     const [editModalVisible, setEditModalVisible] = useState(false);

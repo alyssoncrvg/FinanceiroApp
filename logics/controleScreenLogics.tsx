@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { addWallet } from '../functions/POST/caretira';
 import { addExpenses } from '../functions/POST/despesas';
 import { apiRequest } from '../api/api';
+import { useExpenses } from '../context/context';
 
 interface FormData {
     [key: string]: string | number;
@@ -12,6 +13,9 @@ export const useFetchData = (expenseAdded: boolean, itemUpdated: boolean) => { /
     const [dataExpensesOthers, setDataOthers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [dataWallet, setDataWallet] = useState<any[]>([]);
+    const [topWallets, setTopWallets] = useState<any[]>([]);
+    
+    const { setSumWallet } = useExpenses()
 
     const fetchData = async () => {
         try {
@@ -24,34 +28,34 @@ export const useFetchData = (expenseAdded: boolean, itemUpdated: boolean) => { /
                 legendFontSize: 15,
             }));
 
-             // Ordenar os gastos do maior para o menor valor
-             const sortedGastos = gastos.sort((a: any, b: any) => b.valor - a.valor);
+            // Ordenar os gastos do maior para o menor valor
+            const sortedGastos = gastos.sort((a: any, b: any) => b.valor - a.valor);
 
-             // Selecionar os 3 maiores gastos
-             const top3Gastos = sortedGastos.slice(0, 3).map((gasto: any) => ({
-                 name: gasto.categoria,
-                 population: gasto.valor,
-                 color: getRandomColor(),
-                 legendFontColor: '#000000',
-                 legendFontSize: 15,
-             }));
- 
-             // Calcular o valor total dos demais gastos
-             const outrosGastos = sortedGastos.slice(3);
-             const totalOutros = outrosGastos.reduce((sum: number, gasto: any) => sum + gasto.valor, 0);
- 
-             // Adicionar a categoria "Outros" para os demais gastos
-             const formattedDataOthers = [
-                 ...top3Gastos,
-                 {
-                     name: 'Outros',
-                     population: totalOutros,
-                     color: getRandomColor(),
-                     legendFontColor: '#000000',
-                     legendFontSize: 15,
-                 }
-             ];
- 
+            // Selecionar os 3 maiores gastos
+            const top3Gastos = sortedGastos.slice(0, 3).map((gasto: any) => ({
+                name: gasto.categoria,
+                population: gasto.valor,
+                color: getRandomColor(),
+                legendFontColor: '#000000',
+                legendFontSize: 15,
+            }));
+
+            // Calcular o valor total dos demais gastos
+            const outrosGastos = sortedGastos.slice(3);
+            const totalOutros = outrosGastos.reduce((sum: number, gasto: any) => sum + gasto.valor, 0);
+
+            // Adicionar a categoria "Outros" para os demais gastos
+            const formattedDataOthers = [
+                ...top3Gastos,
+                {
+                    name: 'Outros',
+                    population: totalOutros,
+                    color: getRandomColor(),
+                    legendFontColor: '#000000',
+                    legendFontSize: 15,
+                }
+            ];
+
             setDataOthers(formattedDataOthers);
 
             setData(formattedData);
@@ -63,12 +67,22 @@ export const useFetchData = (expenseAdded: boolean, itemUpdated: boolean) => { /
 
         try {
             const wallet = await apiRequest('/get/carteiras');
-            const walletFormat = wallet.map((wallet:any) => ({
+            const walletFormat = wallet.map((wallet: any) => ({
                 id: wallet._id,
                 banco: wallet.banco,
                 valor: wallet.saldo,
             }));
 
+            // Ordenar carteiras pelo saldo (valor) em ordem decrescente
+            const sortedWallets = walletFormat.sort((a: any, b: any) => b.valor - a.valor);
+
+            const totalSaldo = sortedWallets.reduce((acc: number, wallet: any) => acc + wallet.valor, 0);
+
+            // Selecionar as duas carteiras com maiores valores
+            const topTwoWallets = sortedWallets.slice(0, 2);
+
+            setTopWallets(topTwoWallets); // Atualiza as duas maiores carteiras
+            setSumWallet(totalSaldo);
             setDataWallet(walletFormat);
             setLoading(false);
         } catch (error) {
@@ -90,7 +104,7 @@ export const useFetchData = (expenseAdded: boolean, itemUpdated: boolean) => { /
         fetchData();
     }, [expenseAdded, itemUpdated]); // Reexecuta o fetch sempre que `expenseAdded` mudar
 
-    return { dataWallet, dataExpenses, dataExpensesOthers, loading };
+    return { dataWallet, dataExpenses, dataExpensesOthers, topWallets, loading };
 };
 
 export const useModalHandlers = (

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Text, View, TextInput, TouchableOpacity, Alert, ScrollView } from 'react-native';
-import { PieChart } from 'react-native-chart-kit';
+import { PieChart  } from 'react-native-chart-kit';
 
 import { styleInvestment } from '../styles/styleInvestment';
 import { useFechDataInvestments, useModalInvestmentsHandle } from '../logics/investmentsScreenLogics';
@@ -100,7 +100,7 @@ export function InvestmentsScreen({ navigation }: any) {
                     )}
                 </View>
 
-                {/* Carteira de Investimentos */}
+                  {/* Carteira de Investimentos */}
                 <View style={styleInvestment.portfolioContainer}>
                     <Text style={styleInvestment.sectionTitle}>Carteira de Investimento</Text>
                     <Text style={styleInvestment.totalText}>Total: {sumInvestments}</Text>

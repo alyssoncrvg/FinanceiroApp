@@ -76,6 +76,7 @@ export const styleHome = StyleSheet.create({
     expensesContainer: {
       paddingHorizontal: 20,
       paddingVertical: 20,
+      paddingBottom: 80,
     },
   });
   

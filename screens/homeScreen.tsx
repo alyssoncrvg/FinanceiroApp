@@ -10,21 +10,21 @@ import { useInvestments } from '../context/investmentContext';
 
 export function HomeScreen({ navigation }: any) {
 
-  const { expenseAdded, setExpenseAdded } = useExpenses();
+  const { expenseAdded, setExpenseAdded, itemUpdated, setItemUpdated } = useExpenses();
 
-  const [itemUpdated, setItemUpdated] = useState(false);
-
-  const { dataExpensesOthers } = useFetchData(expenseAdded, itemUpdated);
+  const { dataExpensesOthers, topWallets } = useFetchData(expenseAdded, itemUpdated);
 
   const { sumInvestments } = useInvestments();
+
+  const { sumWallet } = useExpenses();
 
   return (
     <ScrollView style={styleHome.scrollContent}>
       <View style={styleHome.container}>
         {/* Cabeçalho */}
         <View style={styleHome.header}>
-          <Text style={styleHome.welcomeText}>Bem Vindo (usuário)</Text>
-          <Text style={styleHome.balanceText}>R$ 7091.60</Text>
+          <Text style={styleHome.welcomeText}>Bem Vindo</Text>
+          <Text style={styleHome.balanceText}>R$ {(sumWallet + sumInvestments).toFixed(2)}</Text>
           <Text style={styleHome.subText}>Saldo atual em contas</Text>
         </View>
 
@@ -33,11 +33,11 @@ export function HomeScreen({ navigation }: any) {
           <Text style={styleHome.sectionTitle}>Resumo Mensal</Text>
           <View style={styleHome.summaryContent}>
             <TouchableOpacity style={styleHome.summaryItem}>
-              <Ionicons name="arrow-up-circle" size={32} color="green" />
+              <Ionicons name="arrow-down-circle" size={32} color="green" />
               <Text style={styleHome.summaryText}>R$ 0.00</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styleHome.summaryItem}>
-              <Ionicons name="arrow-down-circle" size={32} color="red" />
+              <Ionicons name="arrow-up-circle" size={32} color="red" />
               <Text style={styleHome.summaryText}>R$ 0.00</Text>
             </TouchableOpacity>
           </View>
@@ -49,40 +49,47 @@ export function HomeScreen({ navigation }: any) {
           <View style={styleHome.accountItem}>
             <Ionicons name="briefcase" size={32} color="black" />
             <Text style={styleHome.accountText}>Carteira de investimentos</Text>
-            <Text style={styleHome.accountBalance}>R$ {sumInvestments}</Text>
+            <Text style={styleHome.accountBalance}>R$ {sumInvestments.toFixed(2)}</Text>
           </View>
-          <View style={styleHome.accountItem}>
-            <Ionicons name="logo-usd" size={32} color="#5D3FD3" />
-            <Text style={styleHome.accountText}>Nubank</Text>
-            <Text style={styleHome.accountBalance}>R$ 3765.87</Text>
-          </View>
-          <View style={styleHome.accountItem}>
-            <Ionicons name="logo-usd" size={32} color="green" />
-            <Text style={styleHome.accountText}>Banco do Brasil</Text>
-            <Text style={styleHome.accountBalance}>R$ 1170.95</Text>
-          </View>
-        </View>
+          {/* Exibir a primeira carteira apenas se ela existir */}
+          {topWallets.length > 0 && (
+            <View style={styleHome.accountItem}>
+              <Ionicons name="logo-usd" size={32} color="#5D3FD3" />
+              <Text style={styleHome.accountText}>{topWallets[0].banco}</Text>
+              <Text style={styleHome.accountBalance}>R$ {topWallets[0].valor.toFixed(2)}</Text>
+            </View>
+          )}
 
-        {/* Despesas */}
-        <View style={styleHome.expensesContainer}>
-          <Text style={styleHome.sectionTitle}>Despesas</Text>
-          <PieChart
-            data={dataExpensesOthers}
-            width={350}
-            height={220}
-            chartConfig={{
-              backgroundColor: '#fff',
-              backgroundGradientFrom: '#fff',
-              backgroundGradientTo: '#fff',
-              color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-            }}
-            accessor="population"
-            backgroundColor="transparent"
-            paddingLeft="15"
-            absolute
-          />
+          {/* Exibir a segunda carteira apenas se ela existir */}
+          {topWallets.length > 1 && (
+            <View style={styleHome.accountItem}>
+              <Ionicons name="logo-usd" size={32} color="green" />
+              <Text style={styleHome.accountText}>{topWallets[1].banco}</Text>
+              <Text style={styleHome.accountBalance}>R$ {topWallets[1].valor.toFixed(2)}</Text>
+            </View>
+          )}
         </View>
       </View>
-    </ScrollView>
+
+      {/* Despesas */}
+      <View style={styleHome.expensesContainer}>
+        <Text style={styleHome.sectionTitle}>Despesas</Text>
+        <PieChart
+          data={dataExpensesOthers}
+          width={350}
+          height={220}
+          chartConfig={{
+            backgroundColor: '#fff',
+            backgroundGradientFrom: '#fff',
+            backgroundGradientTo: '#fff',
+            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+          }}
+          accessor="population"
+          backgroundColor="transparent"
+          paddingLeft="15"
+          absolute
+        />
+      </View>
+    </ScrollView >
   );
 }

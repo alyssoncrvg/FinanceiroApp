@@ -1,6 +1,6 @@
 // FlexModal.tsx
 import React, { useState } from 'react';
-import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { FormDataInvestments } from '../interfaces/interfaces';
 
 interface ModalProps {
@@ -23,6 +23,8 @@ export const FlexModalInvestments: React.FC<ModalProps> = ({ modalVisible, onClo
       [field]: value,
     });
   };
+
+  
 
   return (
     <Modal animationType="fade" transparent={true} visible={modalVisible} onRequestClose={onClose}>
