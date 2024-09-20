@@ -1,17 +1,12 @@
 import React, { useState } from 'react';
 import { Text, View, TextInput, TouchableOpacity, Alert, ScrollView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { PieChart } from 'react-native-chart-kit';
 
-import { styleInvestment } from '../styles/styleInvestment'
-import { FlexModal } from '../modal/modalWallet';
+import { styleInvestment } from '../styles/styleInvestment';
 import { useFechDataInvestments, useModalInvestmentsHandle } from '../logics/investmentsScreenLogics';
 import { FlexModalInvestments } from '../modal/modalInvestment';
 
 export function InvestmentsScreen({ navigation }: any) {
-    const [investmentValue, setInvestmentValue] = useState('1000.00');
-    const [returnPrediction, setReturnPrediction] = useState('991.5');
-
     const [modalVisible, setInvestmentsModalVisible] = useState(false);
     const [investimentAdded, setInvestmentAdded] = useState(false);
 
@@ -24,6 +19,33 @@ export function InvestmentsScreen({ navigation }: any) {
         Alert.alert('Simulação', 'Simulação de investimento realizada.');
     };
 
+    const [principal, setPrincipal] = useState('');
+    const [rate, setRate] = useState('');
+    const [time, setTime] = useState('');
+    const [simpleInterest, setSimpleInterest] = useState('');
+    const [compoundInterest, setCompoundInterest] = useState('');
+
+    const calculateInterests = () => {
+        const p = parseFloat(principal);
+        const r = parseFloat(rate) / 100;
+        const t = parseFloat(time);
+
+        if (isNaN(p) || isNaN(r) || isNaN(t)) {
+            // Checa se algum dos valores não é um número
+            return;
+        }
+
+        // Calcula juros simples
+        const simpleInterestValue = (p * r * t).toFixed(2);
+
+        // Calcula juros compostos
+        const compoundInterestValue = (p * Math.pow(1 + r, t) - p).toFixed(2);
+
+        // Atualiza o estado com os valores calculados
+        setSimpleInterest(simpleInterestValue);
+        setCompoundInterest(compoundInterestValue);
+    }
+
     return (
         <ScrollView style={styleInvestment.scrollContent}>
             <View style={styleInvestment.container}>
@@ -34,40 +56,45 @@ export function InvestmentsScreen({ navigation }: any) {
                     <Text style={styleInvestment.sectionTitle}>Simulador de Investimentos</Text>
 
                     <View style={styleInvestment.row}>
-                        <Text style={styleInvestment.label}>Ação</Text>
-                        <View style={styleInvestment.actionSelector}>
-                            <Text>VALE ON NM</Text>
-                            <Ionicons name="chevron-down" size={24} color="black" />
-                        </View>
-                    </View>
-
-                    <View style={styleInvestment.row}>
-                        <Text style={styleInvestment.label}>Valor</Text>
+                        <Text style={styleInvestment.label}>Valor (R$)</Text>
                         <TextInput
                             style={styleInvestment.input}
-                            value={investmentValue}
+                            value={principal}
                             keyboardType="numeric"
-                            onChangeText={setInvestmentValue}
+                            onChangeText={setPrincipal}
                         />
                     </View>
 
                     <View style={styleInvestment.row}>
-                        <Text style={styleInvestment.label}>Variação do dia</Text>
-                        <Text style={styleInvestment.positiveVariation}>+0.74 1.2%</Text>
+                        <Text style={styleInvestment.label}>Taxa de Juros (%)</Text>
+                        <TextInput
+                            style={styleInvestment.input}
+                            value={rate}
+                            keyboardType="numeric"
+                            onChangeText={setRate}
+                        />
                     </View>
 
                     <View style={styleInvestment.row}>
-                        <Text style={styleInvestment.label}>Variação do Mês</Text>
-                        <Text style={styleInvestment.negativeVariation}>-0.65 -0.85%</Text>
+                        <Text style={styleInvestment.label}>Tempo (anos)</Text>
+                        <TextInput
+                            style={styleInvestment.input}
+                            value={time}
+                            keyboardType="numeric"
+                            onChangeText={setTime}
+                        />
                     </View>
 
-                    <TouchableOpacity style={styleInvestment.simulateButton} onPress={simulateInvestment}>
-                        <Text style={styleInvestment.simulateButtonText}>SIMULAR</Text>
+                    <TouchableOpacity style={styleInvestment.newInvestmentButton} onPress={calculateInterests}>
+                        <Text style={styleInvestment.calculateButtonText}>Calcular</Text>
                     </TouchableOpacity>
 
-                    <Text style={styleInvestment.returnText}>
-                        Há uma previsão de um retorno aproximado de <Text style={styleInvestment.returnValue}>R$ {returnPrediction}</Text>
-                    </Text>
+                    {simpleInterest !== '' && compoundInterest !== '' && (
+                        <View style={styleInvestment.resultsContainer}>
+                            <Text style={styleInvestment.result}>Juros Simples: R$ {simpleInterest}</Text>
+                            <Text style={styleInvestment.result}>Juros Compostos: R$ {compoundInterest}</Text>
+                        </View>
+                    )}
                 </View>
 
                 {/* Carteira de Investimentos */}
@@ -98,10 +125,10 @@ export function InvestmentsScreen({ navigation }: any) {
             </View>
 
             <FlexModalInvestments
-                    modalVisible={modalVisible}
-                    onClose={closeModalInvestment}
-                    onSubmit={handleInvestments}
-                />
+                modalVisible={modalVisible}
+                onClose={closeModalInvestment}
+                onSubmit={handleInvestments}
+            />
         </ScrollView>
     );
 }

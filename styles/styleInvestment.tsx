@@ -100,5 +100,27 @@ export const styleInvestment = StyleSheet.create({
       fontWeight: 'bold',
       fontSize: 16,
     },
+    calculateButtonText: {
+      color: 'white',
+      fontWeight: 'bold',
+      fontSize: 16,
+    },
+    result: {
+      textAlign: 'center',
+      marginTop: 10,
+      fontSize: 16,
+      fontWeight: 'bold',
+    },
+    calculateButton: {
+      backgroundColor: '#007AFF',
+      padding: 15,
+      borderRadius: 8,
+      alignItems: 'center',
+      marginBottom: 10,
+    },
+    resultsContainer: {
+      marginTop: 20,
+      alignItems: 'center',
+    },
   });
   
