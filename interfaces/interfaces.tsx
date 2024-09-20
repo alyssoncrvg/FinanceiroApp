@@ -28,4 +28,9 @@ export type RootStackParamList = {
     Control: undefined;
     Goals: undefined;
   };
-  
+
+export interface FormDataInvestments {
+  id:string;
+  bolsa:string;
+  valor: number;
+}

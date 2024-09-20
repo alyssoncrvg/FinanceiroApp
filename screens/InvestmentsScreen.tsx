@@ -4,18 +4,21 @@ import { Ionicons } from '@expo/vector-icons';
 import { PieChart } from 'react-native-chart-kit';
 
 import { styleInvestment } from '../styles/styleInvestment'
+import { FlexModal } from '../modal/modalWallet';
+import { useFechDataInvestments, useModalInvestmentsHandle } from '../logics/investmentsScreenLogics';
+import { FlexModalInvestments } from '../modal/modalInvestment';
 
 export function InvestmentsScreen({ navigation }: any) {
     const [investmentValue, setInvestmentValue] = useState('1000.00');
     const [returnPrediction, setReturnPrediction] = useState('991.5');
 
-    const data = [
-        { name: 'FNA111', population: 15, color: '#FF6384', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-        { name: 'HAPV3', population: 25, color: '#36A2EB', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-        { name: 'BBDC4', population: 5, color: '#FFCE56', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-        { name: 'MGLU3', population: 10, color: '#FF9F40', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-        { name: 'VALE ON NM', population: 45, color: '#4BC0C0', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-    ];
+    const [modalVisible, setInvestmentsModalVisible] = useState(false);
+    const [investimentAdded, setInvestmentAdded] = useState(false);
+
+    const { investmentsData } = useFechDataInvestments(investimentAdded);
+    const { addModalInvestment, closeModalInvestment, handleInvestments } = useModalInvestmentsHandle(
+        setInvestmentsModalVisible, setInvestmentAdded
+    )
 
     const simulateInvestment = () => {
         Alert.alert('Simulação', 'Simulação de investimento realizada.');
@@ -72,7 +75,7 @@ export function InvestmentsScreen({ navigation }: any) {
                     <Text style={styleInvestment.sectionTitle}>Carteira de Investimento</Text>
                     <Text style={styleInvestment.totalText}>Total: 2154.78</Text>
                     <PieChart
-                        data={data}
+                        data={investmentsData}
                         width={350}
                         height={220}
                         chartConfig={{
@@ -89,10 +92,16 @@ export function InvestmentsScreen({ navigation }: any) {
                 </View>
 
                 {/* Botão Novo Investimento */}
-                <TouchableOpacity style={styleInvestment.newInvestmentButton}>
+                <TouchableOpacity style={styleInvestment.newInvestmentButton} onPress={addModalInvestment}>
                     <Text style={styleInvestment.newInvestmentButtonText}>Novo Investimento</Text>
                 </TouchableOpacity>
             </View>
+
+            <FlexModalInvestments
+                    modalVisible={modalVisible}
+                    onClose={closeModalInvestment}
+                    onSubmit={handleInvestments}
+                />
         </ScrollView>
     );
 }

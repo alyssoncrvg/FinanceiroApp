@@ -3,8 +3,8 @@ import { StyleSheet } from 'react-native';
 export const styleGoals = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     paddingBottom: 80,
+    marginTop: -20,
   },
   header: {
     padding: 20,
@@ -15,6 +15,7 @@ export const styleGoals = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingBottom: 150, // Adiciona espaço suficiente para a barra de navegação
+    backgroundColor: '#fff'
   },
   title: {
     fontSize: 24,

@@ -6,15 +6,17 @@ export const styleInvestment = StyleSheet.create({
       padding: 20,
       backgroundColor: '#fff',
       paddingBottom: 80,
+      marginTop: -23,
     },
     scrollContent: {
       flexGrow: 1,
     },
     title: {
-      fontSize: 24,
+      fontSize: 26,
       fontWeight: 'bold',
       marginBottom: 20,
       textAlign: 'center',
+      marginTop: 0
     },
     simulatorContainer: {
       marginBottom: 30,
@@ -23,6 +25,7 @@ export const styleInvestment = StyleSheet.create({
       fontSize: 18,
       fontWeight: 'bold',
       marginBottom: 10,
+      marginTop: 0,
     },
     row: {
       flexDirection: 'row',

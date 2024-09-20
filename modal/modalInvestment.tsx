@@ -1,13 +1,23 @@
 // FlexModal.tsx
 import React, { useState } from 'react';
 import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { FlexModalProps } from '../interfaces/interfaces';
+import { FormDataInvestments } from '../interfaces/interfaces';
 
-export const FlexModal: React.FC<FlexModalProps> = ({ modalVisible, onClose, fields, onSubmit }) => {
-  const [formData, setFormData] = useState<{ [key: string]: string | number  }>({});
+interface ModalProps {
+    modalVisible: boolean;
+    onClose: () => void;
+    onSubmit: (formData: FormDataInvestments) => void; // Função de submissão
+}
+
+export const FlexModalInvestments: React.FC<ModalProps> = ({ modalVisible, onClose, onSubmit }) => {
+  const [formData, setFormData] = useState<FormDataInvestments>({
+    id: '',
+    bolsa: '',
+    valor: 0,
+  });
 
   // Função para lidar com alterações nos inputs
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: keyof FormDataInvestments, value: string | number) => {
     setFormData({
       ...formData,
       [field]: value,
@@ -25,26 +35,29 @@ export const FlexModal: React.FC<FlexModalProps> = ({ modalVisible, onClose, fie
             </TouchableOpacity>
           </View>
 
-          {/* Gerar campos dinâmicos com base nos campos passados via props */}
+          {/* Campos específicos de bolsa e valor */}
           <View style={styles.modalBody}>
-            {fields.map((field, index) => (
-              <View key={index}>
-                <Text>{field.name}</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder={field.placeholder}
-                  keyboardType={field.type === 'numeric' ? 'numeric' : 'default'}
-                  onChangeText={(value) => handleInputChange(field.name, value)}
-                />
-              </View>
-            ))}
+            <Text>Bolsa</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Nome da bolsa"
+              onChangeText={(value) => handleInputChange('bolsa', value)}
+            />
+
+            <Text>Valor</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Valor"
+              keyboardType="numeric"
+              onChangeText={(value) => handleInputChange('valor', Number(value))}
+            />
 
             {/* Botão de Salvar */}
             <TouchableOpacity
               style={styles.saveButton}
               onPress={() => {
-                onSubmit(formData); // Chama a função de submissão com os dados do formulário
-                onClose(); // Fecha o modal
+                onSubmit(formData);
+                onClose(); 
               }}
             >
               <Text style={styles.saveButtonText}>Salvar</Text>

@@ -19,8 +19,8 @@ export const useFetchData = (expenseAdded: boolean, itemUpdated: boolean) => { /
                 name: gasto.categoria,
                 population: gasto.valor,
                 color: getRandomColor(),
-                legendFontColor: '#7F7F7F',
-                legendFontSize: 12,
+                legendFontColor: '#000000',
+                legendFontSize: 15,
             }));
 
             setData(formattedData);

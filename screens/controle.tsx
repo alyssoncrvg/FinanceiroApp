@@ -7,7 +7,6 @@ import { FlexModal } from '../modal/modalWallet';
 import { useFetchData, useModalHandlers } from '../logics/controleScreenLogics'; // Atualize o caminho conforme necessário
 import Card from '../modal/cards/card';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
-import { styleNavigation } from '../styles/styleNavigation';
 import { EditWalletModal } from '../modal/modalEditWallet';
 import { Item } from '../interfaces/interfaces';
 
