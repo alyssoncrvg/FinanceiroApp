@@ -9,11 +9,13 @@ import Card from '../modal/cards/card';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { EditWalletModal } from '../modal/modalEditWallet';
 import { Item } from '../interfaces/interfaces';
+import { useExpenses } from '../context/context';
 
 export function ExpensesScreen({ navigation }: any) {
     const [walletModalVisible, setWalletModalVisible] = useState(false);
     const [expenseModalVisible, setExpenseModalVisible] = useState(false);
-    const [expenseAdded, setExpenseAdded] = useState(false); // Estado para acionar o re-fetch
+    const { expenseAdded, setExpenseAdded } = useExpenses();
+
     const [itemUpdated, setItemUpdated] = useState(false);
     const [activeSlide, setActiveSlide] = useState(0); // Variável para rastrear o slide ativo
 

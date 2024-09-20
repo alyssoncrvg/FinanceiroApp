@@ -9,6 +9,7 @@ interface FormData {
 
 export const useFetchData = (expenseAdded: boolean, itemUpdated: boolean) => { // Removeu o setter de estado e agora monitora diretamente expenseAdded
     const [dataExpenses, setData] = useState<any[]>([]);
+    const [dataExpensesOthers, setDataOthers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [dataWallet, setDataWallet] = useState<any[]>([]);
 
@@ -22,6 +23,36 @@ export const useFetchData = (expenseAdded: boolean, itemUpdated: boolean) => { /
                 legendFontColor: '#000000',
                 legendFontSize: 15,
             }));
+
+             // Ordenar os gastos do maior para o menor valor
+             const sortedGastos = gastos.sort((a: any, b: any) => b.valor - a.valor);
+
+             // Selecionar os 3 maiores gastos
+             const top3Gastos = sortedGastos.slice(0, 3).map((gasto: any) => ({
+                 name: gasto.categoria,
+                 population: gasto.valor,
+                 color: getRandomColor(),
+                 legendFontColor: '#000000',
+                 legendFontSize: 15,
+             }));
+ 
+             // Calcular o valor total dos demais gastos
+             const outrosGastos = sortedGastos.slice(3);
+             const totalOutros = outrosGastos.reduce((sum: number, gasto: any) => sum + gasto.valor, 0);
+ 
+             // Adicionar a categoria "Outros" para os demais gastos
+             const formattedDataOthers = [
+                 ...top3Gastos,
+                 {
+                     name: 'Outros',
+                     population: totalOutros,
+                     color: getRandomColor(),
+                     legendFontColor: '#000000',
+                     legendFontSize: 15,
+                 }
+             ];
+ 
+            setDataOthers(formattedDataOthers);
 
             setData(formattedData);
             setLoading(false);
@@ -59,7 +90,7 @@ export const useFetchData = (expenseAdded: boolean, itemUpdated: boolean) => { /
         fetchData();
     }, [expenseAdded, itemUpdated]); // Reexecuta o fetch sempre que `expenseAdded` mudar
 
-    return { dataWallet, dataExpenses, loading };
+    return { dataWallet, dataExpenses, dataExpensesOthers, loading };
 };
 
 export const useModalHandlers = (

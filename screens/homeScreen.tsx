@@ -1,19 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { PieChart } from 'react-native-chart-kit';
 
 import { styleHome } from '../styles/styleHome'
-import { styleNavigation } from '../styles/styleNavigation';
+import { useFetchData } from '../logics/controleScreenLogics';
+import { useExpenses } from '../context/context';
 
 export function HomeScreen({ navigation }: any) {
-  const data = [
-    { name: 'Escola', population: 30, color: '#4CAF50', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-    { name: 'Fatura', population: 20, color: '#F44336', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-    { name: 'Lazer', population: 10, color: '#FFC107', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-    { name: 'Streams', population: 25, color: '#3F51B5', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-    { name: 'Mercado', population: 15, color: '#FF9800', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-  ];
+
+  const { expenseAdded, setExpenseAdded } = useExpenses();
+
+  const [itemUpdated, setItemUpdated] = useState(false);
+
+  const { dataExpensesOthers } = useFetchData(expenseAdded, itemUpdated);
 
   return (
     <ScrollView style={styleHome.scrollContent}>
@@ -64,7 +64,7 @@ export function HomeScreen({ navigation }: any) {
         <View style={styleHome.expensesContainer}>
           <Text style={styleHome.sectionTitle}>Despesas</Text>
           <PieChart
-            data={data}
+            data={dataExpensesOthers}
             width={350}
             height={220}
             chartConfig={{
