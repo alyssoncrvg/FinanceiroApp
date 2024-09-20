@@ -91,7 +91,7 @@ export function ExpensesScreen({ navigation }: any) {
                             <Text style={styleControl.addButtonText}>Adicionar +</Text>
                         </TouchableOpacity>
                     </View>
-                    {isDataWalleteEmpty ? (
+                    {/* {isDataWalleteEmpty ? (
                         <Carousel
                             ref={carouselRef}
                             layout={'default'}
@@ -135,7 +135,7 @@ export function ExpensesScreen({ navigation }: any) {
                         inactiveDotScale={0.6}
                         carouselRef={carouselRef.current ? carouselRef.current : undefined} // Passa a referência ao Pagination
                         tappableDots={!!carouselRef.current} // Permite tocar nos dots
-                    />
+                    /> */}
 
                 </View>
 

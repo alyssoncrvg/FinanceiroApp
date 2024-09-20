@@ -13,6 +13,7 @@ export interface FlexModalProps {
   }
 
 export interface FormDataGoal {
+    id: string;
     categoria: string;
     titulo: string;
     targetAmount: number;

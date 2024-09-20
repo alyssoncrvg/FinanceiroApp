@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { FormDataGoal } from '../interfaces/interfaces';
@@ -11,6 +11,7 @@ interface FlexModalProps {
 
 export const FlexModalGoal: React.FC<FlexModalProps> = ({ modalVisible, onClose, onSubmit }) => {
   const [formData, setFormData] = useState<FormDataGoal>({
+    id: '',
     categoria: '',
     titulo: '',
     targetAmount: 0,
@@ -18,6 +19,18 @@ export const FlexModalGoal: React.FC<FlexModalProps> = ({ modalVisible, onClose,
     forecast: new Date(),
   });
   const [showCalendar, setShowCalendar] = useState(false);
+
+  useEffect(() => {
+    if (modalVisible) {
+      setFormData((prevData) => ({
+        ...prevData,
+        categoria: '',
+        titulo: '',
+        targetAmount: 0,
+        currentAmount: 0,
+      }));
+    }
+  }, [modalVisible]);
 
   const handleInputChange = (field: keyof FormDataGoal, value: string) => {
     setFormData({
