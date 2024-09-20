@@ -28,6 +28,7 @@ export const FlexModalGoal: React.FC<FlexModalProps> = ({ modalVisible, onClose,
         titulo: '',
         targetAmount: 0,
         currentAmount: 0,
+        forecast: new Date(),
       }));
     }
   }, [modalVisible]);

@@ -4,12 +4,17 @@ export const styleGoals = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    paddingBottom: 80,
   },
   header: {
     padding: 20,
     backgroundColor: '#f8f8f8',
     borderBottomWidth: 1,
     borderColor: '#ddd',
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: 150, // Adiciona espaço suficiente para a barra de navegação
   },
   title: {
     fontSize: 24,

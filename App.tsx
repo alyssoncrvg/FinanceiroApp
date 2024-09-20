@@ -1,11 +1,13 @@
+// App.tsx
 import React from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { HomeScreen } from './screens/homeScreen';
 import { InvestmentsScreen } from './screens/InvestmentsScreen';
 import { ExpensesScreen } from './screens/controle';
 import { GoalsScreen } from './screens/goals';
+import { BottomNavigationBar } from './screens/bottomNavigationBar';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -13,20 +15,26 @@ export default function App() {
   return (
     <NavigationContainer>
       <SafeAreaView style={styles.safeArea}>
-        <Tab.Navigator
-          initialRouteName="Home"
-          screenOptions={{
-            swipeEnabled: false, // Desabilita a transição por swipe
-            tabBarLabelStyle: { display: 'none' }, // Oculta o rótulo da aba
-            tabBarStyle: { backgroundColor: 'transparent' }, // Define a cor de fundo da barra de abas como transparente
-            tabBarIndicatorStyle: { backgroundColor: 'transparent' }, // Remove o indicador da aba
-          }}
-        >
-          <Tab.Screen name="Home" component={HomeScreen} />
-          <Tab.Screen name="Investments" component={InvestmentsScreen} />
-          <Tab.Screen name="Control" component={ExpensesScreen} />
-          <Tab.Screen name="Goals" component={GoalsScreen} />
-        </Tab.Navigator>
+        <View style={styles.container}>
+          {/* Conteúdo das telas */}
+          <Tab.Navigator
+            initialRouteName="Home"
+            screenOptions={{
+              swipeEnabled: false,
+              tabBarLabelStyle: { display: 'none' },
+              tabBarStyle: { backgroundColor: 'transparent' },
+              tabBarIndicatorStyle: { backgroundColor: 'transparent' },
+            }}
+          >
+            <Tab.Screen name="Home" component={HomeScreen} />
+            <Tab.Screen name="Investments" component={InvestmentsScreen} />
+            <Tab.Screen name="Control" component={ExpensesScreen} />
+            <Tab.Screen name="Goals" component={GoalsScreen} />
+          </Tab.Navigator>
+
+          {/* Barra de navegação fixa */}
+          <BottomNavigationBar />
+        </View>
       </SafeAreaView>
     </NavigationContainer>
   );
@@ -35,6 +43,9 @@ export default function App() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    // backgroundColor: 'white', // Defina a cor de fundo conforme necessário
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'space-between', // Garante que a barra fique no final da tela
   },
 });

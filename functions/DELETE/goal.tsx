@@ -5,7 +5,7 @@ import { FormDataGoal } from "../../interfaces/interfaces";
 export const deleteGoal = async (item: FormDataGoal) => {
     try{
 
-        const response = await apiRequest(`/gastos/${item.id}`,'DELETE')
+        const response = await apiRequest(`/metas/${item.id}`,'DELETE')
 
         console.log('Deletado meta', response)
 

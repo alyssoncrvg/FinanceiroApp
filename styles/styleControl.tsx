@@ -6,6 +6,7 @@ export const styleControl = StyleSheet.create({
         backgroundColor: '#fff',
         fontFamily: 'sans-serif', 
         fontWeight: 'normal',
+        paddingBottom: 80,
     },
     containerCarousel: {
         flex: 1,
@@ -15,7 +16,7 @@ export const styleControl = StyleSheet.create({
         // alignItems: 'center', // Alinha o carrossel horizontalmente ao centro
       },
     scrollView: {
-        flex: 1,
+        flexGrow: 1,
     },
     header: {
         alignItems: 'center',

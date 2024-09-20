@@ -136,7 +136,9 @@ export const EditGoalModel: React.FC<EditGoalProps> = ({ modalVisible, onClose, 
                                 style={styles.input}
                                 placeholder="Previsão (YYYY-MM-DD)"
                                 editable={false}
-                                value={formData.forecast instanceof Date ? formData.forecast.toISOString().split("T")[0] : ""}
+                                value={formData.forecast
+                                    ? new Date(formData.forecast).toISOString().split("T")[0]
+                                    : ""}
                             />
                         </TouchableOpacity>
 
@@ -145,7 +147,12 @@ export const EditGoalModel: React.FC<EditGoalProps> = ({ modalVisible, onClose, 
                                 <Calendar
                                     onDayPress={handleDayPress}
                                     minDate={minDate}
-                                    markedDates={{ [formData.forecast.toISOString().split("T")[0]]: { selected: true, marked: true } }}
+                                    markedDates={{
+                                        [new Date(formData.forecast).toISOString().split("T")[0]]: {
+                                            selected: true,
+                                            marked: true
+                                        }
+                                    }}
                                     theme={{
                                         todayTextColor: "blue",
                                         selectedDayBackgroundColor: "blue",
@@ -184,8 +191,8 @@ export const EditGoalModel: React.FC<EditGoalProps> = ({ modalVisible, onClose, 
                 </View>
             </View>
         </Modal >
-      );
-    };
+    );
+};
 
 
 const styles = StyleSheet.create({

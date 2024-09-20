@@ -20,3 +20,12 @@ export interface FormDataGoal {
     currentAmount: number;
     forecast: Date; // formato de data em string ou Date
 }
+
+// types.ts
+export type RootStackParamList = {
+    Home: undefined;
+    Investments: undefined;
+    Control: undefined;
+    Goals: undefined;
+  };
+  

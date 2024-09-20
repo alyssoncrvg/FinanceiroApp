@@ -41,7 +41,7 @@ export function ExpensesScreen({ navigation }: any) {
 
     var carouselRef = useRef<Carousel<any>>(null);
 
-    function handlePress(item: Item){
+    function handlePress(item: Item) {
         console.log(item)
         setSelectedItem(item); // Define o item selecionado
         setEditModalVisible(true); // Abre o modal
@@ -54,16 +54,16 @@ export function ExpensesScreen({ navigation }: any) {
     };
 
     const renderItem = ({ item }: { item: Item }) => (
-        
+
         <View style={styleControl.containerCarousel}>
-        {isDataWalleteEmpty ? (
-            <Card banco={item.banco} valor={item.valor} />
-        ) : (
-            
-            <TouchableOpacity onPress={() => handlePress(item)}>
+            {isDataWalleteEmpty ? (
                 <Card banco={item.banco} valor={item.valor} />
-            </TouchableOpacity>
-        )}
+            ) : (
+
+                <TouchableOpacity onPress={() => handlePress(item)}>
+                    <Card banco={item.banco} valor={item.valor} />
+                </TouchableOpacity>
+            )}
         </View>
     );
 
@@ -79,8 +79,8 @@ export function ExpensesScreen({ navigation }: any) {
 
 
     return (
-        <View style={styleControl.container}>
-            <ScrollView style={styleControl.scrollView}>
+        <ScrollView style={styleControl.scrollView}>
+            <View style={styleControl.container}>
                 <Text style={{ fontSize: 25, textAlign: 'center', fontWeight: 'bold', marginTop: 0 }}>
                     Controle de Gastos
                 </Text>
@@ -91,7 +91,7 @@ export function ExpensesScreen({ navigation }: any) {
                             <Text style={styleControl.addButtonText}>Adicionar +</Text>
                         </TouchableOpacity>
                     </View>
-                    {/* {isDataWalleteEmpty ? (
+                    {isDataWalleteEmpty ? (
                         <Carousel
                             ref={carouselRef}
                             layout={'default'}
@@ -109,22 +109,22 @@ export function ExpensesScreen({ navigation }: any) {
                         />
                     ) : (
                         <Carousel
-                        ref={carouselRef}
-                        layout={'default'}
-                        layoutCardOffset={18}
-                        data={dataWallet}
-                        renderItem={renderItem}
-                        sliderWidth={width}
-                        itemWidth={width * 0.90}
-                        firstItem={firstSlide}
-                        containerCustomStyle={{ padding: 10 }}
-                        contentContainerCustomStyle={{ marginVertical: 0 }}
-                        slideStyle={{ backgroundColor: '#fff' }}
-                        onSnapToItem={(index) => setActiveSlide(index)} // Atualiza o slide ativo
-                        useScrollView={true}
-                    />
+                            ref={carouselRef}
+                            layout={'default'}
+                            layoutCardOffset={18}
+                            data={dataWallet}
+                            renderItem={renderItem}
+                            sliderWidth={width}
+                            itemWidth={width * 0.90}
+                            firstItem={firstSlide}
+                            containerCustomStyle={{ padding: 10 }}
+                            contentContainerCustomStyle={{ marginVertical: 0 }}
+                            slideStyle={{ backgroundColor: '#fff' }}
+                            onSnapToItem={(index) => setActiveSlide(index)} // Atualiza o slide ativo
+                            useScrollView={true}
+                        />
                     )}
-                     <Pagination
+                    <Pagination
                         dotsLength={dataWallet.length} // Usa o comprimento do array data2
                         activeDotIndex={activeSlide} // Usa o slide ativo do estado
                         containerStyle={styleControl.paginationContainer}
@@ -135,7 +135,7 @@ export function ExpensesScreen({ navigation }: any) {
                         inactiveDotScale={0.6}
                         carouselRef={carouselRef.current ? carouselRef.current : undefined} // Passa a referência ao Pagination
                         tappableDots={!!carouselRef.current} // Permite tocar nos dots
-                    /> */}
+                    />
 
                 </View>
 
@@ -180,61 +180,46 @@ export function ExpensesScreen({ navigation }: any) {
                         />
                     )}
                 </View>
-            </ScrollView>
 
-            <FlexModal
-                modalVisible={walletModalVisible}
-                onClose={closeModalWallet}
-                fields={[
-                    { name: 'banco', placeholder: 'Nome do banco' },
-                    { name: 'saldo', placeholder: 'Saldo inicial', type: 'numeric' }
-                ]}
-                onSubmit={handleAddCarteira}
-            />
 
-            <FlexModal
-                modalVisible={expenseModalVisible}
-                onClose={closeModalExpense}
-                fields={[
-                    { name: 'descricao', placeholder: 'Descrição' },
-                    { name: 'valor', placeholder: '0.00', type: 'numeric' },
-                    { name: 'categoria', placeholder: 'Categoria' }
-                ]}
-                onSubmit={handleAddDespesas}
-
-            />
-
-            {selectedItem && (
-                <EditWalletModal
-                    modalVisible={editModalVisible}
-                    onClose={() => {
-                        setEditModalVisible(false)
-                    }}
+                <FlexModal
+                    modalVisible={walletModalVisible}
+                    onClose={closeModalWallet}
                     fields={[
                         { name: 'banco', placeholder: 'Nome do banco' },
-                        { name: 'valor', placeholder: 'Saldo', type: 'numeric' },
+                        { name: 'saldo', placeholder: 'Saldo inicial', type: 'numeric' }
                     ]}
-                    onSubmit={handleEditSubmit}
-                    item={selectedItem}
-                    setItemUpdated={setItemUpdated}
+                    onSubmit={handleAddCarteira}
                 />
-            )}
-            
 
-            <View style={styleNavigation.navigationBar}>
-                <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-                    <Ionicons name="home" size={32} color="#000" />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('Investments')}>
-                    <Ionicons name="stats-chart" size={32} color="#000" />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('Control')}>
-                    <Ionicons name="pie-chart" size={32} color="#007AFF" />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('Goals')}>
-                    <Ionicons name="cash" size={32} color="#000" />
-                </TouchableOpacity>
+                <FlexModal
+                    modalVisible={expenseModalVisible}
+                    onClose={closeModalExpense}
+                    fields={[
+                        { name: 'descricao', placeholder: 'Descrição' },
+                        { name: 'valor', placeholder: '0.00', type: 'numeric' },
+                        { name: 'categoria', placeholder: 'Categoria' }
+                    ]}
+                    onSubmit={handleAddDespesas}
+
+                />
+
+                {selectedItem && (
+                    <EditWalletModal
+                        modalVisible={editModalVisible}
+                        onClose={() => {
+                            setEditModalVisible(false)
+                        }}
+                        fields={[
+                            { name: 'banco', placeholder: 'Nome do banco' },
+                            { name: 'valor', placeholder: 'Saldo', type: 'numeric' },
+                        ]}
+                        onSubmit={handleEditSubmit}
+                        item={selectedItem}
+                        setItemUpdated={setItemUpdated}
+                    />
+                )}
             </View>
-        </View>
+        </ScrollView>
     )
 }

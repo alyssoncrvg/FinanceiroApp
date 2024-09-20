@@ -16,8 +16,8 @@ export function HomeScreen({ navigation }: any) {
   ];
 
   return (
-    <View style={styleHome.container}>
-      <ScrollView>
+    <ScrollView style={styleHome.scrollContent}>
+      <View style={styleHome.container}>
         {/* Cabeçalho */}
         <View style={styleHome.header}>
           <Text style={styleHome.welcomeText}>Bem Vindo (usuário)</Text>
@@ -79,23 +79,7 @@ export function HomeScreen({ navigation }: any) {
             absolute
           />
         </View>
-      </ScrollView>
-
-      {/* Barra de Navegação */}
-      <View style={styleNavigation.navigationBar}>
-        <TouchableOpacity>
-          <Ionicons name="home" size={32} color="#007AFF" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Investments')}>
-          <Ionicons name="stats-chart" size={32} color="#000" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Control')}>
-          <Ionicons name="pie-chart" size={32} color="#000" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Goals')}>
-          <Ionicons name="cash" size={32} color="#000" />
-        </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 }

@@ -4,12 +4,16 @@ export const styleHome = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: '#fff',
+      paddingBottom:80,
     },
     header: {
       alignItems: 'center',
       paddingVertical: 20,
       borderBottomWidth: 1,
       borderBottomColor: '#ddd',
+    },
+    scrollContent: {
+      flexGrow: 1,
     },
     welcomeText: {
       fontSize: 18,

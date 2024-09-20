@@ -5,6 +5,10 @@ export const styleInvestment = StyleSheet.create({
       flex: 1,
       padding: 20,
       backgroundColor: '#fff',
+      paddingBottom: 80,
+    },
+    scrollContent: {
+      flexGrow: 1,
     },
     title: {
       fontSize: 24,

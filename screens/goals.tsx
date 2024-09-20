@@ -39,13 +39,14 @@ export function GoalsScreen({ navigation }: any) {
     }, [itemUpdated]);
 
     const handleEditGoal = (goal: FormDataGoal) => {
+        console.log(goal)
         setSelectedGoal(goal); // Define a meta a ser editada
         setEditModalGoal(true); // Abre o modal de edição
     };
 
     return (
-        <View style={styleGoals.container}>
-            <ScrollView>
+        <ScrollView style={styleGoals.scrollContent}>
+            <View style={styleGoals.container}>
                 {/* Cabeçalho */}
                 <View style={styleGoals.header}>
                     <Text style={styleGoals.title}>Metas Financeiras</Text>
@@ -60,11 +61,11 @@ export function GoalsScreen({ navigation }: any) {
                         const progress = goal.targetAmount > 0 ? goal.currentAmount / goal.targetAmount : 0;
 
                         return (
-                            <TouchableOpacity key={goal.id} onPress={()=> handleEditGoal(goal)}>
+                            <TouchableOpacity key={goal.id} onPress={() => handleEditGoal(goal)}>
                                 <View key={goal.id} style={styleGoals.goalItem}>
                                     <View style={styleGoals.goalHeader}>
                                         <Ionicons name={'home'} size={32} color="black" />
-                                        <Text style={styleGoals.goalName}>{goal.name}</Text>
+                                        <Text style={styleGoals.goalName}>{goal.categoria}</Text>
                                         <Text style={styleGoals.goalTarget}>Meta: {goal.targetAmount.toFixed(2)}</Text>
                                     </View>
                                     <Progress.Bar
@@ -82,42 +83,27 @@ export function GoalsScreen({ navigation }: any) {
                         );
                     })}
                 </View>
-            </ScrollView>
 
-            {/* Barra de Navegação */}
-            <View style={styleNavigation.navigationBar}>
-                <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-                    <Ionicons name="home" size={32} color="#000" />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('Investments')}>
-                    <Ionicons name="stats-chart" size={32} color="#000" />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('Control')}>
-                    <Ionicons name="pie-chart" size={32} color="#000" />
-                </TouchableOpacity>
-                <TouchableOpacity >
-                    <Ionicons name="cash" size={32} color="#007AFF" />
-                </TouchableOpacity>
-            </View>
 
-            {/* Modal para adicionar nova meta */}
-            <FlexModalGoal
-                modalVisible={ModalGoal}
-                onClose={closeModalGoal}
-                onSubmit={handleAddGoal}
-            />
-
-             {/* Modal para editar meta existente */}
-             {selectedGoal && (
-                <EditGoalModel
-                    modalVisible={editModalGoal}
-                    onClose={() => setEditModalGoal(false)}
-                    onSubmit={() => setItemUpdated(true)} // Atualiza flag para forçar refresh
-                    item={selectedGoal} // Meta selecionada para edição
-                    setItemUpdated={setItemUpdated} // Passa o setter para marcar atualização
+                {/* Modal para adicionar nova meta */}
+                <FlexModalGoal
+                    modalVisible={ModalGoal}
+                    onClose={closeModalGoal}
+                    onSubmit={handleAddGoal}
                 />
-            )}
 
-        </View>
+                {/* Modal para editar meta existente */}
+                {selectedGoal && (
+                    <EditGoalModel
+                        modalVisible={editModalGoal}
+                        onClose={() => setEditModalGoal(false)}
+                        onSubmit={() => setItemUpdated(true)} // Atualiza flag para forçar refresh
+                        item={selectedGoal} // Meta selecionada para edição
+                        setItemUpdated={setItemUpdated} // Passa o setter para marcar atualização
+                    />
+                )}
+
+            </View>
+        </ScrollView>
     );
 }
