@@ -3,7 +3,6 @@ import { StyleSheet } from 'react-native';
 export const styleHome = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#fff',
       paddingBottom:80,
     },
     header: {
@@ -14,6 +13,7 @@ export const styleHome = StyleSheet.create({
     },
     scrollContent: {
       flexGrow: 1,
+      backgroundColor: '#fff',
     },
     welcomeText: {
       fontSize: 18,

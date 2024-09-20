@@ -10,6 +10,7 @@ export const styleInvestment = StyleSheet.create({
     },
     scrollContent: {
       flexGrow: 1,
+      backgroundColor: '#fff',
     },
     title: {
       fontSize: 26,

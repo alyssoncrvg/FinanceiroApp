@@ -3,7 +3,6 @@ import { StyleSheet } from "react-native"
 export const styleControl = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
         fontFamily: 'sans-serif', 
         fontWeight: 'normal',
         paddingBottom: 80,
@@ -17,6 +16,7 @@ export const styleControl = StyleSheet.create({
       },
     scrollView: {
         flexGrow: 1,
+        backgroundColor: '#fff'
     },
     header: {
         alignItems: 'center',

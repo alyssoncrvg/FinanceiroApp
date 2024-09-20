@@ -2,16 +2,17 @@ import { useEffect, useState } from "react"
 import { apiRequest } from "../api/api";
 import { FormDataInvestments } from "../interfaces/interfaces";
 import { addInvestments } from "../functions/POST/investimentos";
+import { useInvestments } from "../context/investmentContext";
 
 
 export const useFechDataInvestments = (InvestmentsAdded: boolean) => {
+    const { setSumInvestments } = useInvestments(); // Use o contexto para atualizar a soma total
     const [investmentsData, setInvestmentData] = useState<any[]>([]);
 
     const fechData = async () => {
-        try{
-
-            const investments = await apiRequest('/get/investimentos')
-            const formDataInvestments = investments.map((investment:any) =>({
+        try {
+            const investments = await apiRequest('/get/investimentos');
+            const formDataInvestments = investments.map((investment: any) => ({
                 name: investment.bolsa,
                 population: investment.valor,
                 color: getRandomColor(),
@@ -19,15 +20,19 @@ export const useFechDataInvestments = (InvestmentsAdded: boolean) => {
                 legendFontSize: 15,
             }));
 
-            setInvestmentData(formDataInvestments)
-        } catch (error){
-            console.log(error)
+            setInvestmentData(formDataInvestments);
+
+            // Calcular a soma total dos investimentos
+            const total = formDataInvestments.reduce((acc: any, investment: { population: any; }) => acc + investment.population, 0);
+            setSumInvestments(total); // Atualiza o valor no contexto
+        } catch (error) {
+            console.log(error);
         }
-    }
+    };
 
     useEffect(() => {
-        fechData()
-    }, [InvestmentsAdded])
+        fechData();
+    }, [InvestmentsAdded]);
 
     const getRandomColor = () => {
         const letters = '0123456789ABCDEF';
@@ -38,8 +43,8 @@ export const useFechDataInvestments = (InvestmentsAdded: boolean) => {
         return color;
     };
 
-    return { investmentsData }
-}
+    return { investmentsData };
+};
 
 export const useModalInvestmentsHandle = (
     setInvestmentsModalVisible: React.Dispatch<React.SetStateAction<boolean>>,

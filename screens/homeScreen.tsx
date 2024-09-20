@@ -6,6 +6,7 @@ import { PieChart } from 'react-native-chart-kit';
 import { styleHome } from '../styles/styleHome'
 import { useFetchData } from '../logics/controleScreenLogics';
 import { useExpenses } from '../context/context';
+import { useInvestments } from '../context/investmentContext';
 
 export function HomeScreen({ navigation }: any) {
 
@@ -14,6 +15,8 @@ export function HomeScreen({ navigation }: any) {
   const [itemUpdated, setItemUpdated] = useState(false);
 
   const { dataExpensesOthers } = useFetchData(expenseAdded, itemUpdated);
+
+  const { sumInvestments } = useInvestments();
 
   return (
     <ScrollView style={styleHome.scrollContent}>
@@ -46,7 +49,7 @@ export function HomeScreen({ navigation }: any) {
           <View style={styleHome.accountItem}>
             <Ionicons name="briefcase" size={32} color="black" />
             <Text style={styleHome.accountText}>Carteira de investimentos</Text>
-            <Text style={styleHome.accountBalance}>R$ 2154.78</Text>
+            <Text style={styleHome.accountBalance}>R$ {sumInvestments}</Text>
           </View>
           <View style={styleHome.accountItem}>
             <Ionicons name="logo-usd" size={32} color="#5D3FD3" />

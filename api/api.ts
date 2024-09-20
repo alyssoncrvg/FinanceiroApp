@@ -1,6 +1,5 @@
-// api.ts
 const BASE_URL = 'http://10.0.2.2:3000/api'; // URL base para todas as requisições
-
+// 172.18.57.151
 // Função para fazer requisições
 export const apiRequest = async (endpoint: string, method: string = 'GET', body?: any) => {
     const url = `${BASE_URL}${endpoint}`;

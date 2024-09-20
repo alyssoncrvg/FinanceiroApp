@@ -5,10 +5,13 @@ import { PieChart } from 'react-native-chart-kit';
 import { styleInvestment } from '../styles/styleInvestment';
 import { useFechDataInvestments, useModalInvestmentsHandle } from '../logics/investmentsScreenLogics';
 import { FlexModalInvestments } from '../modal/modalInvestment';
+import { useInvestments } from '../context/investmentContext';
 
 export function InvestmentsScreen({ navigation }: any) {
     const [modalVisible, setInvestmentsModalVisible] = useState(false);
     const [investimentAdded, setInvestmentAdded] = useState(false);
+
+    const { sumInvestments } = useInvestments();
 
     const { investmentsData } = useFechDataInvestments(investimentAdded);
     const { addModalInvestment, closeModalInvestment, handleInvestments } = useModalInvestmentsHandle(
@@ -100,7 +103,7 @@ export function InvestmentsScreen({ navigation }: any) {
                 {/* Carteira de Investimentos */}
                 <View style={styleInvestment.portfolioContainer}>
                     <Text style={styleInvestment.sectionTitle}>Carteira de Investimento</Text>
-                    <Text style={styleInvestment.totalText}>Total: 2154.78</Text>
+                    <Text style={styleInvestment.totalText}>Total: {sumInvestments}</Text>
                     <PieChart
                         data={investmentsData}
                         width={350}
