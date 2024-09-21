@@ -34,3 +34,17 @@ export interface FormDataInvestments {
   bolsa:string;
   valor: number;
 }
+
+export interface expenses {
+  id: string,
+  descricao: string,
+  categoria: string,
+  valor: number,
+  date: Date,
+}
+
+export interface GroupedExpense {
+  categoria: string;
+  somaValue: number;
+  gastos: expenses[];
+}

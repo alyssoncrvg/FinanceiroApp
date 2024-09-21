@@ -3,13 +3,30 @@ import { addWallet } from '../functions/POST/caretira';
 import { addExpenses } from '../functions/POST/despesas';
 import { apiRequest } from '../api/api';
 import { useExpenses } from '../context/context';
+import { expenses, GroupedExpense } from '../interfaces/interfaces';
 
 interface FormData {
     [key: string]: string | number;
 }
 
+const groupByCategory = (gastos: any[]) => {
+    return gastos.reduce((acc, gasto) => {
+        if (!acc[gasto.categoria]) {
+            acc[gasto.categoria] = {
+                categoria: gasto.categoria,
+                somaValue: 0,
+                gastos: [],
+            };
+        }
+        acc[gasto.categoria].somaValue += gasto.valor;
+        acc[gasto.categoria].gastos.push(gasto);
+        return acc;
+    }, {} as Record<string, { categoria: string; somaValue: number; gastos: expenses[] }>);
+};
+
 export const useFetchData = (expenseAdded: boolean, itemUpdated: boolean) => { // Removeu o setter de estado e agora monitora diretamente expenseAdded
     const [dataExpenses, setData] = useState<any[]>([]);
+    const [dataExpensesPiechart, setDataPiechart] = useState<any[]>([]);
     const [dataExpensesOthers, setDataOthers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [dataWallet, setDataWallet] = useState<any[]>([]);
@@ -20,17 +37,25 @@ export const useFetchData = (expenseAdded: boolean, itemUpdated: boolean) => { /
     const fetchData = async () => {
         try {
             const gastos = await apiRequest('/get/gastos');
-            const formattedData = gastos.map((gasto: any) => ({
-                name: gasto.categoria,
-                population: gasto.valor,
+    
+            // Agrupar gastos por categoria e calcular a soma
+            const groupedGastos = groupByCategory(gastos);
+            
+            // Transformar os dados agrupados em um array
+            const formattedDataG: GroupedExpense[] = Object.values(groupedGastos);
+            
+            // Formatar os dados para o gráfico de pizza
+            const formattedData = formattedDataG.map((group:any) => ({
+                name: group.categoria,
+                population: group.somaValue,
                 color: getRandomColor(),
                 legendFontColor: '#000000',
                 legendFontSize: 15,
             }));
-
+            
             // Ordenar os gastos do maior para o menor valor
             const sortedGastos = gastos.sort((a: any, b: any) => b.valor - a.valor);
-
+            
             // Selecionar os 3 maiores gastos
             const top3Gastos = sortedGastos.slice(0, 3).map((gasto: any) => ({
                 name: gasto.categoria,
@@ -39,11 +64,11 @@ export const useFetchData = (expenseAdded: boolean, itemUpdated: boolean) => { /
                 legendFontColor: '#000000',
                 legendFontSize: 15,
             }));
-
+            
             // Calcular o valor total dos demais gastos
             const outrosGastos = sortedGastos.slice(3);
             const totalOutros = outrosGastos.reduce((sum: number, gasto: any) => sum + gasto.valor, 0);
-
+            
             // Adicionar a categoria "Outros" para os demais gastos
             const formattedDataOthers = [
                 ...top3Gastos,
@@ -57,8 +82,8 @@ export const useFetchData = (expenseAdded: boolean, itemUpdated: boolean) => { /
             ];
 
             setDataOthers(formattedDataOthers);
-
-            setData(formattedData);
+            setData(formattedDataG);
+            setDataPiechart(formattedData);
             setLoading(false);
         } catch (error) {
             console.error('Erro ao buscar os dados de gastos:', error);
@@ -104,7 +129,7 @@ export const useFetchData = (expenseAdded: boolean, itemUpdated: boolean) => { /
         fetchData();
     }, [expenseAdded, itemUpdated]); // Reexecuta o fetch sempre que `expenseAdded` mudar
 
-    return { dataWallet, dataExpenses, dataExpensesOthers, topWallets, loading };
+    return { dataWallet, dataExpenses, dataExpensesPiechart, dataExpensesOthers, topWallets, loading };
 };
 
 export const useModalHandlers = (

@@ -2,16 +2,32 @@ import React, { useRef, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { PieChart } from 'react-native-chart-kit';
-import { styleControl } from '../styles/styleControl'; // Atualize o caminho conforme necessário
+import { styleControl } from '../styles/styleControl'; 
 import { FlexModal } from '../modal/modalWallet';
-import { useFetchData, useModalHandlers } from '../logics/controleScreenLogics'; // Atualize o caminho conforme necessário
+import { useFetchData, useModalHandlers } from '../logics/controleScreenLogics';
 import Card from '../modal/cards/card';
-import Carousel, { Pagination } from 'react-native-snap-carousel';
+// import Carousel from 'react-native-reanimated-carousel';
 import { EditWalletModal } from '../modal/modalEditWallet';
 import { Item } from '../interfaces/interfaces';
 import { useExpenses } from '../context/context';
+import { useNavigation } from '@react-navigation/native';
+import { expenses } from '../interfaces/interfaces';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-export function ExpensesScreen({ navigation }: any) {
+
+export type RootStackParamList = {
+    ExpensesScreen: undefined;
+    ExpenseDetails: { data: expenses[] };
+  };
+
+type ExpensesScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'ExpensesScreen'>;
+
+
+export function ExpensesScreen() {
+
+    const navigation = useNavigation<ExpensesScreenNavigationProp>();
+
+
     const [walletModalVisible, setWalletModalVisible] = useState(false);
     const [expenseModalVisible, setExpenseModalVisible] = useState(false);
     const { expenseAdded, setExpenseAdded, itemUpdated, setItemUpdated } = useExpenses();
@@ -21,7 +37,7 @@ export function ExpensesScreen({ navigation }: any) {
     const [editModalVisible, setEditModalVisible] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
-    const { dataWallet, dataExpenses, loading } = useFetchData(expenseAdded, itemUpdated); // Passa `expenseAdded` para o hook
+    const { dataWallet, dataExpenses, dataExpensesPiechart, loading } = useFetchData(expenseAdded, itemUpdated); // Passa `expenseAdded` para o hook
     const { addModalWallet, closeModalWallet, addModalExpense, closeModalExpense, handleAddCarteira, handleAddDespesas } = useModalHandlers(
         setWalletModalVisible,
         setExpenseModalVisible,
@@ -30,7 +46,7 @@ export function ExpensesScreen({ navigation }: any) {
 
     const firstSlide = 1;
 
-    const isDataEmpty = dataExpenses.length === 0;
+    const isDataEmpty = dataExpensesPiechart.length === 0;
     const isDataWalleteEmpty = dataWallet.length === 0;
 
     const walletDefault = [{
@@ -39,7 +55,7 @@ export function ExpensesScreen({ navigation }: any) {
         valor: 0,
     }];
 
-    var carouselRef = useRef<Carousel<any>>(null);
+    const carouselRef = useRef(null);
 
     function handlePress(item: Item) {
         console.log(item)
@@ -52,6 +68,10 @@ export function ExpensesScreen({ navigation }: any) {
         console.log('Dados do formulário:', formData);
         setEditModalVisible(false);
     };
+
+    const handlePieChartPress = () => {
+        navigation.navigate('ExpenseDetails', { data: dataExpenses }); // Navegar para a tela ExpenseDetails
+      };
 
     const renderItem = ({ item }: { item: Item }) => (
 
@@ -91,51 +111,39 @@ export function ExpensesScreen({ navigation }: any) {
                             <Text style={styleControl.addButtonText}>Adicionar +</Text>
                         </TouchableOpacity>
                     </View>
-                    {isDataWalleteEmpty ? (
-                        <Carousel
-                            ref={carouselRef}
-                            layout={'default'}
-                            layoutCardOffset={18}
-                            data={walletDefault}
-                            renderItem={renderItem}
-                            sliderWidth={width}
-                            itemWidth={width * 0.90}
-                            firstItem={firstSlide}
-                            containerCustomStyle={{ padding: 10 }}
-                            contentContainerCustomStyle={{ marginVertical: 0 }}
-                            slideStyle={{ backgroundColor: '#fff' }}
-                            onSnapToItem={(index) => setActiveSlide(index)} // Atualiza o slide ativo
-                            useScrollView={true}
-                        />
-                    ) : (
-                        <Carousel
-                            ref={carouselRef}
-                            layout={'default'}
-                            layoutCardOffset={18}
-                            data={dataWallet}
-                            renderItem={renderItem}
-                            sliderWidth={width}
-                            itemWidth={width * 0.90}
-                            firstItem={firstSlide}
-                            containerCustomStyle={{ padding: 10 }}
-                            contentContainerCustomStyle={{ marginVertical: 0 }}
-                            slideStyle={{ backgroundColor: '#fff' }}
-                            onSnapToItem={(index) => setActiveSlide(index)} // Atualiza o slide ativo
-                            useScrollView={true}
-                        />
-                    )}
-                    <Pagination
-                        dotsLength={dataWallet.length} // Usa o comprimento do array data2
-                        activeDotIndex={activeSlide} // Usa o slide ativo do estado
-                        containerStyle={styleControl.paginationContainer}
-                        dotColor={'rgba(0, 0, 0, 0.92)'}
-                        dotStyle={styleControl.paginationDot}
-                        inactiveDotColor={'#C0C0C0'}
+                    {/* <Carousel
+                        ref={carouselRef}
+                        width={width * 0.9} // Largura dos itens do Carousel
+                        data={isDataWalleteEmpty ? walletDefault : dataWallet}
+                        renderItem={({ item }) => renderItem({ item })} // Renderiza os itens
+                        onSnapToItem={(index) => setActiveSlide(index)} // Atualiza o slide ativo
+                        mode="parallax"
+                        modeConfig={{
+                            parallaxScrollingScale: 0.9,
+                            parallaxScrollingOffset: 50,
+                        }}
+                        panGestureHandlerProps={{
+                            activeOffsetX: [-10, 10], // Controle sensibilidade do swipe
+                        }}
+                        loop={false}
+                    /> */}
+
+                    {/* <Pagination
+                        dotsLength={isDataWalleteEmpty ? walletDefault.length : dataWallet.length}
+                        activeDotIndex={activeSlide}
+                        dotStyle={{
+                            width: 10,
+                            height: 10,
+                            borderRadius: 5,
+                            backgroundColor: 'rgba(0, 0, 0, 0.92)',
+                        }}
+                        inactiveDotStyle={{
+                            backgroundColor: '#C0C0C0',
+                        }}
                         inactiveDotOpacity={0.4}
                         inactiveDotScale={0.6}
-                        carouselRef={carouselRef.current ? carouselRef.current : undefined} // Passa a referência ao Pagination
-                        tappableDots={!!carouselRef.current} // Permite tocar nos dots
-                    />
+                        tappableDots={!!carouselRef.current}
+                    /> */}
 
                 </View>
 
@@ -146,39 +154,41 @@ export function ExpensesScreen({ navigation }: any) {
                             <Text style={styleControl.addButtonText}>Adicionar +</Text>
                         </TouchableOpacity>
                     </View>
-                    {isDataEmpty ? (
-                        <PieChart
-                            data={[{ name: 'Sem Dados', population: 1 }]} // Dado fictício para exibir o gráfico cinza
-                            width={350}
-                            height={220}
-                            chartConfig={{
-                                backgroundColor: '#fff',
-                                backgroundGradientFrom: '#fff',
-                                backgroundGradientTo: '#fff',
-                                color: () => 'rgba(169, 169, 169, 1)', // Cinza
-                            }}
-                            accessor="population"
-                            backgroundColor="transparent"
-                            paddingLeft="15"
-                            absolute
-                        />
-                    ) : (
-                        <PieChart
-                            data={dataExpenses}
-                            width={350}
-                            height={220}
-                            chartConfig={{
-                                backgroundColor: '#fff',
-                                backgroundGradientFrom: '#fff',
-                                backgroundGradientTo: '#fff',
-                                color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                            }}
-                            accessor="population"
-                            backgroundColor="transparent"
-                            paddingLeft="15"
-                            absolute
-                        />
-                    )}
+                    <TouchableOpacity onPress={handlePieChartPress}>
+                        {isDataEmpty ? (
+                            <PieChart
+                                data={[{ name: 'Sem Dados', population: 1 }]} // Dado fictício para exibir o gráfico cinza
+                                width={350}
+                                height={220}
+                                chartConfig={{
+                                    backgroundColor: '#fff',
+                                    backgroundGradientFrom: '#fff',
+                                    backgroundGradientTo: '#fff',
+                                    color: () => 'rgba(169, 169, 169, 1)', // Cinza
+                                }}
+                                accessor="population"
+                                backgroundColor="transparent"
+                                paddingLeft="15"
+                                absolute
+                            />
+                        ) : (
+                            <PieChart
+                                data={dataExpensesPiechart}
+                                width={350}
+                                height={220}
+                                chartConfig={{
+                                    backgroundColor: '#fff',
+                                    backgroundGradientFrom: '#fff',
+                                    backgroundGradientTo: '#fff',
+                                    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                                }}
+                                accessor="population"
+                                backgroundColor="transparent"
+                                paddingLeft="15"
+                                absolute
+                            />
+                        )}
+                    </TouchableOpacity>
                 </View>
 
 
