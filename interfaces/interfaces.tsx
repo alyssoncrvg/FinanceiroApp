@@ -12,6 +12,7 @@ export interface FlexModalProps {
     onClose: () => void;
     fields: { name: string; placeholder: string; type?: string }[]; // Lista de campos dinâmicos
     onSubmit: (formData: { [key: string]: string | number }) => void; // Função de submissão
+    setAddItem: React.Dispatch<React.SetStateAction<boolean>>
   }
 
 export interface FormDataGoal {
@@ -54,5 +55,5 @@ export interface GroupedExpense {
 export interface walletFormat{
   id: string,
   banco: string,
-  valor: string,
+  valor: number,
 }

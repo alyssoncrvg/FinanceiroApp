@@ -6,9 +6,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Menu, MenuOptions, MenuOption, MenuTrigger, MenuProvider } from 'react-native-popup-menu';
 import CustomHeader from '../stack/customHeader';
 import { deleteExpense } from '../../functions/DELETE/expenses';
-import { useExpenses } from '../../context/expenseContext';
 import { EditExpensesModal } from '../../modal/editExpenses';
-import { useFetchData } from '../../logics/controleScreenLogics';
 import { PayModal } from '../../modal/payModal';
 
 

@@ -6,10 +6,8 @@ import { HomeScreen } from './screens/homeScreen';
 import { InvestmentsScreen } from './screens/InvestmentsScreen';
 import { GoalsScreen } from './screens/goals';
 import { BottomNavigationBar } from './screens/bottomNavigationBar';
-import { ExpenseProvider } from './context/expenseContext';
 import { InvestmentProvider } from './context/investmentContext';
 import ExpensesStackNavigator from './screens/stack/ExpensesStackScreen';
-import { MenuProvider } from 'react-native-popup-menu'; // Importa o MenuProvider
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -17,7 +15,6 @@ export default function App() {
   return (
     // <MenuProvider> {/* Adiciona o MenuProvider */}
       <InvestmentProvider>
-        <ExpenseProvider>
           <NavigationContainer>
             <SafeAreaView style={styles.safeArea}>
               <View style={styles.container}>
@@ -42,7 +39,6 @@ export default function App() {
               </View>
             </SafeAreaView>
           </NavigationContainer>
-        </ExpenseProvider>
       </InvestmentProvider>
     // </MenuProvider>
   );

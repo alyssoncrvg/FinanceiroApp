@@ -2,18 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-native';
 import { deleteWallet } from '../functions/DELETE/wallet';
 import { editWallet } from '../functions/PATH/wallet';
-import { Item } from '../interfaces/interfaces';
+import { Item, walletFormat } from '../interfaces/interfaces';
 
 interface EditWalletModalProps {
     modalVisible: boolean;
     onClose: () => void;
     fields: { name: string; placeholder: string; type?: string }[];
     onSubmit: (formData: { [key: string]: string | number }) => void;
-    item: Item;
-    setItemUpdated: React.Dispatch<React.SetStateAction<boolean>>;
+    item: walletFormat;
 }
 
-export const EditWalletModal: React.FC<EditWalletModalProps> = ({ modalVisible, onClose, fields, onSubmit, item, setItemUpdated }) => {
+export const EditWalletModal: React.FC<EditWalletModalProps> = ({ modalVisible, onClose, fields, onSubmit, item }) => {
     const [formData, setFormData] = useState<Item>({
         id: '',
         banco: '',
@@ -69,7 +68,6 @@ export const EditWalletModal: React.FC<EditWalletModalProps> = ({ modalVisible, 
                             onPress={
                                 () => {
                                     editWallet(formData)
-                                    setItemUpdated((prev) => !prev);
                                     onClose()
                                 }} 
                             >
@@ -80,7 +78,6 @@ export const EditWalletModal: React.FC<EditWalletModalProps> = ({ modalVisible, 
                             onPress={
                                 () => {
                                     deleteWallet(formData)
-                                    setItemUpdated((prev) => !prev);
                                     onClose()
                                 }}>
                                 <Text style={styles.buttonText}>Excluir</Text>

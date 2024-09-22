@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-nati
 import { expenses, GroupedExpense } from '../../interfaces/interfaces';
 import { RouteProp, useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useExpenses } from '../../context/expenseContext';
 import { useFetchData } from '../../logics/controleScreenLogics';
 
 type RootStackParamList = {
@@ -25,11 +24,8 @@ const ExpenseDetails = ({ route }: Props) => {
 
     const navigation = useNavigation<ExpenseDetailsNavigationProp>();
 
-    const { expenseAdded,setExpenseAdded,itemUpdated, setItemUpdated } = useExpenses();
-
-    
     const [refreshData, setRefreshData] = useState(false); 
-    const { dataExpenses, loading } = useFetchData(expenseAdded || refreshData, itemUpdated || refreshData);
+    const { dataExpenses, loading } = useFetchData(refreshData,refreshData);
 
     useFocusEffect(
         useCallback(() => {

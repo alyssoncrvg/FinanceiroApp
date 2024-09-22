@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { FlexModalProps } from '../interfaces/interfaces';
 
-export const FlexModal: React.FC<FlexModalProps> = ({ modalVisible, onClose, fields, onSubmit }) => {
+export const FlexModal: React.FC<FlexModalProps> = ({ modalVisible, onClose, fields, onSubmit, setAddItem }) => {
   const [formData, setFormData] = useState<{ [key: string]: string | number  }>({});
 
   // Função para lidar com alterações nos inputs
@@ -44,6 +44,7 @@ export const FlexModal: React.FC<FlexModalProps> = ({ modalVisible, onClose, fie
               style={styles.saveButton}
               onPress={() => {
                 onSubmit(formData); // Chama a função de submissão com os dados do formulário
+                setAddItem(true);
                 onClose(); // Fecha o modal
               }}
             >

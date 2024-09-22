@@ -1,5 +1,5 @@
 import { apiRequest } from "../../api/api";
-import { Item, walletFormat } from "../../interfaces/interfaces";
+import { walletFormat } from "../../interfaces/interfaces";
 
 export const editWallet = async (item: walletFormat) => {
     console.log(item)

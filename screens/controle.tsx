@@ -9,7 +9,6 @@ import Card from '../modal/cards/card';
 // import Carousel from 'react-native-reanimated-carousel';
 import { EditWalletModal } from '../modal/modalEditWallet';
 import { Item } from '../interfaces/interfaces';
-import { useExpenses } from '../context/expenseContext';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { expenses } from '../interfaces/interfaces';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -30,7 +29,6 @@ export function ExpensesScreen() {
 
     const [walletModalVisible, setWalletModalVisible] = useState(false);
     const [expenseModalVisible, setExpenseModalVisible] = useState(false);
-    const { expenseAdded, setExpenseAdded, itemUpdated, setItemUpdated } = useExpenses();
 
     const [activeSlide, setActiveSlide] = useState(0); // Variável para rastrear o slide ativo
 
@@ -39,11 +37,12 @@ export function ExpensesScreen() {
 
     const [refreshData, setRefreshData] = useState(false); 
 
-    const { dataWallet, dataExpenses, dataExpensesPiechart, loading } = useFetchData(expenseAdded || refreshData, itemUpdated || refreshData); // Passa `expenseAdded` para o hook
+    const [addItem, setAddItem] = useState(false);
+
+    const { dataWallet, dataExpenses, dataExpensesPiechart, loading } = useFetchData( refreshData || addItem, refreshData); // Passa `expenseAdded` para o hook
     const { addModalWallet, closeModalWallet, addModalExpense, closeModalExpense, handleAddCarteira, handleAddDespesas } = useModalHandlers(
         setWalletModalVisible,
         setExpenseModalVisible,
-        setExpenseAdded // Passa o setter para o hook de manipulação de modais
     );
 
     useFocusEffect(
@@ -58,7 +57,12 @@ export function ExpensesScreen() {
           setRefreshData(false); // Impede a recarga contínua quando os dados já foram atualizados
         }
       }, [ refreshData]);
-    
+
+      useEffect( () => {
+        if(addItem){
+            setAddItem(false)
+        }
+      }, [addItem])
 
     const firstSlide = 1;
 
@@ -216,6 +220,7 @@ export function ExpensesScreen() {
                         { name: 'saldo', placeholder: 'Saldo inicial', type: 'numeric' }
                     ]}
                     onSubmit={handleAddCarteira}
+                    setAddItem={setAddItem}
                 />
 
                 <FlexModal
@@ -227,7 +232,7 @@ export function ExpensesScreen() {
                         { name: 'categoria', placeholder: 'Categoria' }
                     ]}
                     onSubmit={handleAddDespesas}
-
+                    setAddItem={setAddItem}
                 />
 
                 {selectedItem && (
@@ -242,7 +247,6 @@ export function ExpensesScreen() {
                         ]}
                         onSubmit={handleEditSubmit}
                         item={selectedItem}
-                        setItemUpdated={setItemUpdated}
                     />
                 )}
             </View>

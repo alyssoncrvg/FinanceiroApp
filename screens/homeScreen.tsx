@@ -5,21 +5,16 @@ import { PieChart } from 'react-native-chart-kit';
 
 import { styleHome } from '../styles/styleHome'
 import { useFetchData } from '../logics/controleScreenLogics';
-import { useExpenses } from '../context/expenseContext';
 import { useInvestments } from '../context/investmentContext';
 import { useFocusEffect } from '@react-navigation/native';
 
 export function HomeScreen({ navigation }: any) {
 
-  const { expenseAdded, setExpenseAdded, itemUpdated, setItemUpdated } = useExpenses();
-
   const [refreshData, setRefreshData] = useState(false); 
 
-  const { dataExpensesOthers, topWallets } = useFetchData(expenseAdded || refreshData, itemUpdated || refreshData);
+  const { sumWallet, dataExpensesOthers, topWallets } = useFetchData(refreshData, refreshData);
 
   const { sumInvestments } = useInvestments();
-
-  const { sumWallet } = useExpenses();
 
   const isDataEmpty = dataExpensesOthers.length === 0;
 
