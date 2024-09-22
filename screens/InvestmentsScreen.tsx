@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Text, View, TextInput, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import { PieChart  } from 'react-native-chart-kit';
 
@@ -6,17 +6,55 @@ import { styleInvestment } from '../styles/styleInvestment';
 import { useFechDataInvestments, useModalInvestmentsHandle } from '../logics/investmentsScreenLogics';
 import { FlexModalInvestments } from '../modal/modalInvestment';
 import { useInvestments } from '../context/investmentContext';
+import { FormDataInvestments } from '../interfaces/interfaces';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
-export function InvestmentsScreen({ navigation }: any) {
+type RootStackParamList = {
+    InvestmentScreen: undefined;
+    InvestmentDetails: { data: FormDataInvestments[] };
+  };
+
+type ExpensesScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'InvestmentScreen'>;
+
+export function InvestmentsScreen() {
+
+    const navigation = useNavigation<ExpensesScreenNavigationProp>();
+
+
     const [modalVisible, setInvestmentsModalVisible] = useState(false);
     const [investimentAdded, setInvestmentAdded] = useState(false);
 
     const { sumInvestments } = useInvestments();
 
-    const { investmentsData } = useFechDataInvestments(investimentAdded);
+    const [refreshData, setRefreshData] = useState(false); 
+    const { investmentsDataFormated, investmentData } = useFechDataInvestments(investimentAdded || refreshData);
     const { addModalInvestment, closeModalInvestment, handleInvestments } = useModalInvestmentsHandle(
         setInvestmentsModalVisible, setInvestmentAdded
     )
+
+
+    useFocusEffect(
+        useCallback(() => {
+            setRefreshData(true); // Disparar recarregamento ao focar
+        }, [])
+    );
+    
+    // Depois que os dados forem carregados, podemos resetar o refreshData
+    useEffect(() => {
+        if (refreshData) {
+            setRefreshData(false); // Impede a recarga contínua quando os dados já foram atualizados
+        }
+    }, [refreshData]);
+    
+    useEffect(() => {
+        if (investimentAdded) {
+            setInvestmentAdded(false); // Reiniciar estado após adição
+            setRefreshData(true); // Força o refresh após adicionar ou remover um investimento
+        }
+    }, [investimentAdded]);
+
+    const isDataEmpty = investmentsDataFormated.length === 0;
 
     const simulateInvestment = () => {
         Alert.alert('Simulação', 'Simulação de investimento realizada.');
@@ -49,6 +87,10 @@ export function InvestmentsScreen({ navigation }: any) {
         setCompoundInterest(compoundInterestValue);
     }
 
+    const handlePieChartPress = () => {
+        navigation.navigate('InvestmentDetails', {data: investmentData })
+    }
+
     return (
         <ScrollView style={styleInvestment.scrollContent}>
             <View style={styleInvestment.container}>
@@ -56,7 +98,7 @@ export function InvestmentsScreen({ navigation }: any) {
 
                 {/* Simulador de Investimentos */}
                 <View style={styleInvestment.simulatorContainer}>
-                    <Text style={styleInvestment.sectionTitle}>Simulador de Investimentos</Text>
+                    <Text style={styleInvestment.sectionTitle}>Calculadora de Juros</Text>
 
                     <View style={styleInvestment.row}>
                         <Text style={styleInvestment.label}>Valor (R$)</Text>
@@ -104,21 +146,41 @@ export function InvestmentsScreen({ navigation }: any) {
                 <View style={styleInvestment.portfolioContainer}>
                     <Text style={styleInvestment.sectionTitle}>Carteira de Investimento</Text>
                     <Text style={styleInvestment.totalText}>Total: {sumInvestments}</Text>
-                    <PieChart
-                        data={investmentsData}
-                        width={350}
-                        height={220}
-                        chartConfig={{
-                            backgroundColor: '#fff',
-                            backgroundGradientFrom: '#fff',
-                            backgroundGradientTo: '#fff',
-                            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                        }}
-                        accessor="population"
-                        backgroundColor="transparent"
-                        paddingLeft="15"
-                        absolute
-                    />
+                    <TouchableOpacity onPress={handlePieChartPress}>
+                        {isDataEmpty ? (
+                            <PieChart
+                                data={[{ name: 'Sem Dados', population: 1 }]} // Dado fictício para exibir o gráfico cinza
+                                width={350}
+                                height={220}
+                                chartConfig={{
+                                    backgroundColor: '#fff',
+                                    backgroundGradientFrom: '#fff',
+                                    backgroundGradientTo: '#fff',
+                                    color: () => 'rgba(169, 169, 169, 1)', // Cinza
+                                }}
+                                accessor="population"
+                                backgroundColor="transparent"
+                                paddingLeft="15"
+                                absolute
+                            />
+                        ) : (
+                            <PieChart
+                                data={investmentsDataFormated}
+                                width={350}
+                                height={220}
+                                chartConfig={{
+                                    backgroundColor: '#fff',
+                                    backgroundGradientFrom: '#fff',
+                                    backgroundGradientTo: '#fff',
+                                    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                                }}
+                                accessor="population"
+                                backgroundColor="transparent"
+                                paddingLeft="15"
+                                absolute
+                            />
+                        )}
+                    </TouchableOpacity>
                 </View>
 
                 {/* Botão Novo Investimento */}

@@ -7,7 +7,8 @@ import { useInvestments } from "../context/investmentContext";
 
 export const useFechDataInvestments = (InvestmentsAdded: boolean) => {
     const { setSumInvestments } = useInvestments(); // Use o contexto para atualizar a soma total
-    const [investmentsData, setInvestmentData] = useState<any[]>([]);
+    const [investmentsDataFormated, setInvestmentDataFormated] = useState<any[]>([]);
+    const [ investmentData, setInvesntmentData ] = useState<FormDataInvestments[]>([]);
 
     const fechData = async () => {
         try {
@@ -20,7 +21,9 @@ export const useFechDataInvestments = (InvestmentsAdded: boolean) => {
                 legendFontSize: 15,
             }));
 
-            setInvestmentData(formDataInvestments);
+            setInvesntmentData(investments)
+
+            setInvestmentDataFormated(formDataInvestments);
 
             // Calcular a soma total dos investimentos
             const total = formDataInvestments.reduce((acc: any, investment: { population: any; }) => acc + investment.population, 0);
@@ -43,7 +46,7 @@ export const useFechDataInvestments = (InvestmentsAdded: boolean) => {
         return color;
     };
 
-    return { investmentsData };
+    return { investmentData, investmentsDataFormated };
 };
 
 export const useModalInvestmentsHandle = (

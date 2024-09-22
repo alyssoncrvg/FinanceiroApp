@@ -8,6 +8,7 @@ import { GoalsScreen } from './screens/goals';
 import { BottomNavigationBar } from './screens/bottomNavigationBar';
 import { InvestmentProvider } from './context/investmentContext';
 import ExpensesStackNavigator from './screens/stack/ExpensesStackScreen';
+import { InvestmentsStack } from './screens/stack/investmentsStackScreen';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -29,7 +30,7 @@ export default function App() {
                   }}
                 >
                   <Tab.Screen name="Home" component={HomeScreen} />
-                  <Tab.Screen name="Investments" component={InvestmentsScreen} />
+                  <Tab.Screen name="Investments" component={InvestmentsStack} />
                   <Tab.Screen name="Control" component={ExpensesStackNavigator} />
                   <Tab.Screen name="Goals" component={GoalsScreen} />
                 </Tab.Navigator>

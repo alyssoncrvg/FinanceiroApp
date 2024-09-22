@@ -33,9 +33,10 @@ export type RootStackParamList = {
   };
 
 export interface FormDataInvestments {
-  id:string;
+  _id:string;
   bolsa:string;
   valor: number;
+  date: Date;
 }
 
 export interface expenses {
