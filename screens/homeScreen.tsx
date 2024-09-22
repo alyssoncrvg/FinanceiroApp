@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { PieChart } from 'react-native-chart-kit';
@@ -7,16 +7,34 @@ import { styleHome } from '../styles/styleHome'
 import { useFetchData } from '../logics/controleScreenLogics';
 import { useExpenses } from '../context/expenseContext';
 import { useInvestments } from '../context/investmentContext';
+import { useFocusEffect } from '@react-navigation/native';
 
 export function HomeScreen({ navigation }: any) {
 
   const { expenseAdded, setExpenseAdded, itemUpdated, setItemUpdated } = useExpenses();
 
-  const { dataExpensesOthers, topWallets } = useFetchData(expenseAdded, itemUpdated);
+  const [refreshData, setRefreshData] = useState(false); 
+
+  const { dataExpensesOthers, topWallets } = useFetchData(expenseAdded || refreshData, itemUpdated || refreshData);
 
   const { sumInvestments } = useInvestments();
 
   const { sumWallet } = useExpenses();
+
+  const isDataEmpty = dataExpensesOthers.length === 0;
+
+  useFocusEffect(
+    useCallback(() => {
+      setRefreshData(true); // Disparar recarregamento ao focar
+    }, [])
+  );
+
+  // Depois que os dados forem carregados, podemos resetar o refreshData
+  useEffect(() => {
+    if ( refreshData) {
+      setRefreshData(false); // Impede a recarga contínua quando os dados já foram atualizados
+    }
+  }, [ refreshData]);
 
   return (
     <ScrollView style={styleHome.scrollContent}>
@@ -74,21 +92,40 @@ export function HomeScreen({ navigation }: any) {
       {/* Despesas */}
       <View style={styleHome.expensesContainer}>
         <Text style={styleHome.sectionTitle}>Despesas</Text>
-        <PieChart
-          data={dataExpensesOthers}
-          width={350}
-          height={220}
-          chartConfig={{
-            backgroundColor: '#fff',
-            backgroundGradientFrom: '#fff',
-            backgroundGradientTo: '#fff',
-            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-          }}
-          accessor="population"
-          backgroundColor="transparent"
-          paddingLeft="15"
-          absolute
-        />
+        {isDataEmpty ? (
+          <PieChart
+            data={[{ name: 'Sem Dados', population: 1 }]} // Dado fictício para exibir o gráfico cinza
+            width={350}
+            height={220}
+            chartConfig={{
+              backgroundColor: '#fff',
+              backgroundGradientFrom: '#fff',
+              backgroundGradientTo: '#fff',
+              color: () => 'rgba(169, 169, 169, 1)', // Cinza
+            }}
+            accessor="population"
+            backgroundColor="transparent"
+            paddingLeft="15"
+            absolute
+          />
+        ) : (
+          <PieChart
+            data={dataExpensesOthers}
+            width={350}
+            height={220}
+            chartConfig={{
+              backgroundColor: '#fff',
+              backgroundGradientFrom: '#fff',
+              backgroundGradientTo: '#fff',
+              color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+            }}
+            accessor="population"
+            backgroundColor="transparent"
+            paddingLeft="15"
+            absolute
+          />
+        )}
+
       </View>
     </ScrollView >
   );

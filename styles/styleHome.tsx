@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 export const styleHome = StyleSheet.create({
     container: {
       flex: 1,
-      paddingBottom:80,
+      // paddingBottom:80,
     },
     header: {
       alignItems: 'center',
