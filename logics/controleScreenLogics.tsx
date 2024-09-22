@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { addWallet } from '../functions/POST/caretira';
 import { addExpenses } from '../functions/POST/despesas';
 import { apiRequest } from '../api/api';
-import { useExpenses } from '../context/context';
+import { useExpenses } from '../context/expenseContext';
 import { expenses, GroupedExpense } from '../interfaces/interfaces';
 
 interface FormData {
@@ -37,6 +37,15 @@ export const useFetchData = (expenseAdded: boolean, itemUpdated: boolean) => { /
     const fetchData = async () => {
         try {
             const gastos = await apiRequest('/get/gastos');
+
+            if (gastos.length === 0) {
+                setData([]); // Limpar o estado se não houver despesas
+                setDataPiechart([]);
+                setDataOthers([]);
+                setLoading(false);
+                return;
+            }
+    
     
             // Agrupar gastos por categoria e calcular a soma
             const groupedGastos = groupByCategory(gastos);

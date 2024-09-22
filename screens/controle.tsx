@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { PieChart } from 'react-native-chart-kit';
@@ -9,8 +9,8 @@ import Card from '../modal/cards/card';
 // import Carousel from 'react-native-reanimated-carousel';
 import { EditWalletModal } from '../modal/modalEditWallet';
 import { Item } from '../interfaces/interfaces';
-import { useExpenses } from '../context/context';
-import { useNavigation } from '@react-navigation/native';
+import { useExpenses } from '../context/expenseContext';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { expenses } from '../interfaces/interfaces';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -37,12 +37,28 @@ export function ExpensesScreen() {
     const [editModalVisible, setEditModalVisible] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
-    const { dataWallet, dataExpenses, dataExpensesPiechart, loading } = useFetchData(expenseAdded, itemUpdated); // Passa `expenseAdded` para o hook
+    const [refreshData, setRefreshData] = useState(false); 
+
+    const { dataWallet, dataExpenses, dataExpensesPiechart, loading } = useFetchData(expenseAdded || refreshData, itemUpdated || refreshData); // Passa `expenseAdded` para o hook
     const { addModalWallet, closeModalWallet, addModalExpense, closeModalExpense, handleAddCarteira, handleAddDespesas } = useModalHandlers(
         setWalletModalVisible,
         setExpenseModalVisible,
         setExpenseAdded // Passa o setter para o hook de manipulação de modais
     );
+
+    useFocusEffect(
+        useCallback(() => {
+          setRefreshData(true); // Disparar recarregamento ao focar
+        }, [])
+      );
+    
+      // Depois que os dados forem carregados, podemos resetar o refreshData
+      useEffect(() => {
+        if ( refreshData) {
+          setRefreshData(false); // Impede a recarga contínua quando os dados já foram atualizados
+        }
+      }, [ refreshData]);
+    
 
     const firstSlide = 1;
 

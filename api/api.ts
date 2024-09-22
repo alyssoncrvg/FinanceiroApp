@@ -1,6 +1,6 @@
-const BASE_URL = 'http://10.0.2.2:3000/api'; // URL base para todas as requisições
+const BASE_URL = 'http://10.0.2.2:3000/api';
 // 172.18.57.151  10.0.2.2  192.168.0.120
-// Função para fazer requisições
+
 export const apiRequest = async (endpoint: string, method: string = 'GET', body?: any) => {
     const url = `${BASE_URL}${endpoint}`;
 
@@ -12,7 +12,7 @@ export const apiRequest = async (endpoint: string, method: string = 'GET', body?
     };
 
     if (body) {
-        options.body = JSON.stringify(body); // Adiciona o corpo da requisição se houver
+        options.body = JSON.stringify(body);
     }
 
     try {
@@ -22,7 +22,7 @@ export const apiRequest = async (endpoint: string, method: string = 'GET', body?
             throw new Error(`Erro na requisição: ${response.status}`);
         }
 
-        return await response.json(); // Retorna o resultado em formato JSON
+        return await response.json();
     } catch (error) {
         console.error('Erro na API:', error);
         throw error;

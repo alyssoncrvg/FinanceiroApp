@@ -6,7 +6,7 @@ import { HomeScreen } from './screens/homeScreen';
 import { InvestmentsScreen } from './screens/InvestmentsScreen';
 import { GoalsScreen } from './screens/goals';
 import { BottomNavigationBar } from './screens/bottomNavigationBar';
-import { ExpenseProvider } from './context/context';
+import { ExpenseProvider } from './context/expenseContext';
 import { InvestmentProvider } from './context/investmentContext';
 import ExpensesStackNavigator from './screens/stack/ExpensesStackScreen';
 import { MenuProvider } from 'react-native-popup-menu'; // Importa o MenuProvider

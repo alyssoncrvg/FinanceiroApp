@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { expenses, GroupedExpense } from '../../interfaces/interfaces';
-import { RouteProp, useNavigation } from '@react-navigation/native';
+import { RouteProp, useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useExpenses } from '../../context/expenseContext';
+import { useFetchData } from '../../logics/controleScreenLogics';
 
 type RootStackParamList = {
     ExpenseDetails: { data: GroupedExpense[] };
@@ -20,10 +22,28 @@ type Props = {
 };
 
 const ExpenseDetails = ({ route }: Props) => {
-    const { data } = route.params;
 
-    // Usar o tipo correto para navegação
     const navigation = useNavigation<ExpenseDetailsNavigationProp>();
+
+    const { expenseAdded,setExpenseAdded,itemUpdated, setItemUpdated } = useExpenses();
+
+    
+    const [refreshData, setRefreshData] = useState(false); 
+    const { dataExpenses, loading } = useFetchData(expenseAdded || refreshData, itemUpdated || refreshData);
+
+    useFocusEffect(
+        useCallback(() => {
+          setRefreshData(true); // Disparar recarregamento ao focar
+        }, [])
+      );
+    
+      // Depois que os dados forem carregados, podemos resetar o refreshData
+      useEffect(() => {
+        if (refreshData) {
+          setRefreshData(false); // Impede a recarga contínua quando os dados já foram atualizados
+        }
+      }, [ refreshData]);
+    
 
     const handlePieChartPress = (data: expenses[]) => {
         // Navegar para a tela ExpenseItensDetails
@@ -33,7 +53,7 @@ const ExpenseDetails = ({ route }: Props) => {
     return (
         <ScrollView style={styles.scrollView}>
             <View style={styles.container}>
-                {data.map((expense: GroupedExpense) => (
+                {dataExpenses.map((expense: GroupedExpense) => (
                     <TouchableOpacity key={expense.categoria} onPress={() => handlePieChartPress(expense.gastos)}>
                         <View style={styles.expenseItem}>
                             <Text style={styles.expenseName}>{expense.categoria}</Text>

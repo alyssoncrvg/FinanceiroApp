@@ -1,6 +1,5 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 
-// Defina o tipo para o contexto de despesas
 interface ExpenseContextType {
   expenseAdded: boolean;
   setExpenseAdded: React.Dispatch<React.SetStateAction<boolean>>;

@@ -5,7 +5,7 @@ import { PieChart } from 'react-native-chart-kit';
 
 import { styleHome } from '../styles/styleHome'
 import { useFetchData } from '../logics/controleScreenLogics';
-import { useExpenses } from '../context/context';
+import { useExpenses } from '../context/expenseContext';
 import { useInvestments } from '../context/investmentContext';
 
 export function HomeScreen({ navigation }: any) {

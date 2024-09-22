@@ -1,10 +1,16 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity, Text } from 'react-native';
 import { expenses } from '../../interfaces/interfaces';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Menu, MenuOptions, MenuOption, MenuTrigger, MenuProvider } from 'react-native-popup-menu';
 import CustomHeader from '../stack/customHeader';
+import { deleteExpense } from '../../functions/DELETE/expenses';
+import { useExpenses } from '../../context/expenseContext';
+import { EditExpensesModal } from '../../modal/editExpenses';
+import { useFetchData } from '../../logics/controleScreenLogics';
+import { PayModal } from '../../modal/payModal';
+
 
 type RootStackParamList = {
     ExpenseDetails: { data: any[] };
@@ -22,6 +28,13 @@ export const ExpenseItensDetails = ({ route }: Props) => {
 
     const { group, data } = route.params;
 
+    const [modalVisible, setModalVisible] = useState(false)
+    const [modalPayVisible, setModalPayVisible] = useState(false)
+    const [selectedItem, setSelectedItem] = useState<expenses | null>(null);
+    const [selectedItemPay, setSelectedItemPay] = useState<expenses | null>(null);
+
+    const [dataLocal, setData] = useState<expenses[]>([]);
+
     const navigation = useNavigation<ExpenseItensDetailsNavigationProp>();
 
     useLayoutEffect(() => {
@@ -30,25 +43,59 @@ export const ExpenseItensDetails = ({ route }: Props) => {
         });
     }, [navigation, group]);
 
-    const handleEdit = (expense: expenses) => {
-        // Implementar lógica de edição
+    useEffect(() => {
+        setData(data);
+    }, [data]);
+
+    const handleEditSubmit = (formData: { [key: string]: string | number }) => {
+        // Lógica para editar o item
+        console.log('Dados do formulário:', formData);
+        setModalVisible(false);
+    };
+
+    function handlePress(item: expenses) {
+        setSelectedItem(item); // Define o item selecionado
+        setModalVisible(true); // Abre o modal
+    }
+
+    const handleUpdate = (updatedItem: expenses) => {
+        console.log(updatedItem)
+        const oldItem = dataLocal.find(item => item._id === updatedItem._id);
+        if (oldItem && oldItem.categoria !== updatedItem.categoria) {
+            // Remove o item da lista se a categoria mudou
+            const updatedData = dataLocal.filter(item => item._id !== updatedItem._id);
+            setData(updatedData);
+        } else {
+            // Atualiza o item na lista local
+            const updatedData = dataLocal.map((item) =>
+                item._id === updatedItem._id ? updatedItem : item
+            );
+            setData(updatedData);
+        }
     };
 
     const handleDelete = (expense: expenses) => {
-        // Implementar lógica de exclusão
+        deleteExpense(expense).then(() => {
+            // Remover o item do array localmente após exclusão
+            const updatedData = data.filter(item => item._id !== expense._id);
+            setData(updatedData); // Atualiza o array localmente
+        }).catch(error => {
+            console.error("Erro ao excluir despesa:", error);
+        });
     };
 
     const handlePay = (expense: expenses) => {
-        // Implementar lógica de pagamento
+        setSelectedItemPay(expense)
+        setModalPayVisible(true)
     };
 
     return (
         <MenuProvider>
             <ScrollView style={styles.scrollView}>
                 <View style={styles.container}>
-                    {data.map((expense: expenses) => (
+                    {dataLocal.map((expense: expenses) => (
 
-                        <View style={styles.expenseItem}>
+                        <View style={styles.expenseItem} key={expense._id}>
                             <View style={styles.content}>
                                 <View>
                                     <Text style={styles.expenseName}>{expense.descricao}</Text>
@@ -60,7 +107,7 @@ export const ExpenseItensDetails = ({ route }: Props) => {
                                             <Text style={styles.menuTrigger}>...</Text>
                                         </MenuTrigger>
                                         <MenuOptions>
-                                            <MenuOption onSelect={() => handleEdit(expense)}>
+                                            <MenuOption onSelect={() => handlePress(expense)}>
                                                 <Text style={styles.menuOption}>Editar</Text>
                                             </MenuOption>
                                             <MenuOption onSelect={() => handleDelete(expense)}>
@@ -78,8 +125,34 @@ export const ExpenseItensDetails = ({ route }: Props) => {
                     ))}
                 </View>
             </ScrollView>
+
+            {selectedItem && (
+                <EditExpensesModal
+                    modalVisible={modalVisible}
+                    onClose={() => setModalVisible(false)}
+                    fields={[
+                        { name: 'descricao', placeholder: 'Descrição' },
+                        { name: 'valor', placeholder: '0.00', type: 'numeric' },
+                        { name: 'categoria', placeholder: 'Categoria' }
+                    ]}
+                    onSubmit={handleEditSubmit}
+                    onUpdate={handleUpdate}
+                    item={selectedItem}
+                />
+            )}
+
+            {selectedItemPay && (
+                <PayModal
+                    modalVisible={modalPayVisible}
+                    onClose={() => setModalPayVisible(false)}
+                    expense={selectedItemPay}
+                    onDelete={handleDelete}
+                />
+            )}
+
         </MenuProvider>
-    );
+    )
+
 }
 
 const styles = StyleSheet.create({

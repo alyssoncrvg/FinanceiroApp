@@ -1,3 +1,5 @@
+import { WithSafeAreaInsetsProps } from "react-native-safe-area-context";
+
 export interface Item {
     id: string;
     banco: string;
@@ -36,7 +38,7 @@ export interface FormDataInvestments {
 }
 
 export interface expenses {
-  id: string,
+  _id: string,
   descricao: string,
   categoria: string,
   valor: number,
@@ -47,4 +49,10 @@ export interface GroupedExpense {
   categoria: string;
   somaValue: number;
   gastos: expenses[];
+}
+
+export interface walletFormat{
+  id: string,
+  banco: string,
+  valor: string,
 }
