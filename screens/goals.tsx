@@ -4,7 +4,6 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Progress from 'react-native-progress';
 
 import { styleGoals } from '../styles/styleGoals';
-import { styleNavigation } from '../styles/styleNavigation';
 import { UsefecthDataGoals } from '../logics/goalsScreenLogics';
 import { useModalGoalsHandlres } from '../logics/goalsScreenLogics';
 import { FormDataGoal } from '../interfaces/interfaces';
@@ -43,6 +42,8 @@ export function GoalsScreen({ navigation }: any) {
         setEditModalGoal(true);
     };
 
+    console.log(dataGoals)
+
     return (
         <ScrollView style={styleGoals.scrollContent}>
             <View style={styleGoals.container}>
@@ -63,8 +64,8 @@ export function GoalsScreen({ navigation }: any) {
                             <TouchableOpacity key={goal.id} onPress={() => handleEditGoal(goal)}>
                                 <View key={goal.id} style={styleGoals.goalItem}>
                                     <View style={styleGoals.goalHeader}>
-                                        <Ionicons name={'home'} size={32} color="black" />
-                                        <Text style={styleGoals.goalName}>{goal.categoria}</Text>
+                                        <Ionicons name={goal.icon} size={32} color="black" />
+                                        <Text style={styleGoals.goalName}>{goal.titulo}</Text>
                                         <Text style={styleGoals.goalTarget}>Meta: {goal.targetAmount.toFixed(2)}</Text>
                                     </View>
                                     <Progress.Bar

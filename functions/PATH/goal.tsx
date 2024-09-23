@@ -6,7 +6,7 @@ export const editGoal = async (item: FormDataGoal) => {
     try{
 
         const response = await apiRequest(`/metas/${item.id}`,'PATCH',{
-            categoria: item.categoria, 
+            icon: item.icon, 
             meta: item.targetAmount, 
             titulo: item.titulo, 
             previsao: item.forecast, 

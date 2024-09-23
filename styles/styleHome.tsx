@@ -40,6 +40,11 @@ export const styleHome = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'space-between',
     },
+    picker: {
+      height: 50,
+      width: 100,
+      marginHorizontal: 5,
+    },
     summaryItem: {
       width: '48%',
       backgroundColor: '#f8f8f8',

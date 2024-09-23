@@ -88,41 +88,40 @@ export const ExpenseItensDetails = ({ route }: Props) => {
     };
 
     return (
-        <MenuProvider>
-            <ScrollView style={styles.scrollView}>
-                <View style={styles.container}>
-                    {dataLocal.map((expense: expenses) => (
 
-                        <View style={styles.expenseItem} key={expense._id}>
-                            <View style={styles.content}>
-                                <View>
-                                    <Text style={styles.expenseName}>{expense.descricao}</Text>
-                                    <Text style={styles.expenseAmount}>R$ {expense.valor.toFixed(2)}</Text>
-                                </View>
-                                <View style={styles.menuContainer}>
-                                    <Menu>
-                                        <MenuTrigger>
-                                            <Text style={styles.menuTrigger}>...</Text>
-                                        </MenuTrigger>
-                                        <MenuOptions>
-                                            <MenuOption onSelect={() => handlePress(expense)}>
-                                                <Text style={styles.menuOption}>Editar</Text>
-                                            </MenuOption>
-                                            <MenuOption onSelect={() => handleDelete(expense)}>
-                                                <Text style={styles.menuOption}>Excluir</Text>
-                                            </MenuOption>
-                                            <MenuOption onSelect={() => handlePay(expense)}>
-                                                <Text style={styles.menuOption}>Pagar</Text>
-                                            </MenuOption>
-                                        </MenuOptions>
-                                    </Menu>
-                                </View>
+        <ScrollView style={styles.scrollView}>
+            <View style={styles.container}>
+                {dataLocal.map((expense: expenses) => (
+
+                    <View style={styles.expenseItem} key={expense._id}>
+                        <View style={styles.content}>
+                            <View>
+                                <Text style={styles.expenseName}>{expense.descricao}</Text>
+                                <Text style={styles.expenseAmount}>R$ {expense.valor.toFixed(2)}</Text>
+                            </View>
+                            <View style={styles.menuContainer}>
+                                <Menu>
+                                    <MenuTrigger>
+                                        <Text style={styles.menuTrigger}>...</Text>
+                                    </MenuTrigger>
+                                    <MenuOptions>
+                                        <MenuOption onSelect={() => handlePress(expense)}>
+                                            <Text style={styles.menuOption}>Editar</Text>
+                                        </MenuOption>
+                                        <MenuOption onSelect={() => handleDelete(expense)}>
+                                            <Text style={styles.menuOption}>Excluir</Text>
+                                        </MenuOption>
+                                        <MenuOption onSelect={() => handlePay(expense)}>
+                                            <Text style={styles.menuOption}>Pagar</Text>
+                                        </MenuOption>
+                                    </MenuOptions>
+                                </Menu>
                             </View>
                         </View>
+                    </View>
 
-                    ))}
-                </View>
-            </ScrollView>
+                ))}
+            </View>
 
             {selectedItem && (
                 <EditExpensesModal
@@ -148,7 +147,8 @@ export const ExpenseItensDetails = ({ route }: Props) => {
                 />
             )}
 
-        </MenuProvider>
+        </ScrollView>
+
     )
 
 }

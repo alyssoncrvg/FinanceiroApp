@@ -4,6 +4,7 @@ import { Picker } from '@react-native-picker/picker';
 import { expenses, walletFormat } from '../interfaces/interfaces';
 import { useFetchData } from '../logics/controleScreenLogics';
 import { editWallet } from '../functions/PATH/wallet';
+import { addMovent } from '../functions/POST/movimentacoes';
 
 interface PayModalProps {
     modalVisible: boolean;
@@ -34,7 +35,7 @@ export const PayModal: React.FC<PayModalProps> = ({ modalVisible, onClose, expen
                     w.id === selectedWallet ? updatedWallet : w
                 );
 
-                console.log(`Pagamento de ${expense.valor} feito com a carteira ${selectedWallet}`);
+                await addMovent(expense.valor * (-1))
 
                 onDelete(expense); // Chama a função para deletar a despesa
                 onClose(); // Fecha o modal

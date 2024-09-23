@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { FormDataGoal } from '../interfaces/interfaces';
+import * as Icons from '@expo/vector-icons'; // Importa a biblioteca de ícones
+import { Picker } from '@react-native-picker/picker';
 
 interface FlexModalProps {
     modalVisible: boolean;
@@ -9,22 +11,30 @@ interface FlexModalProps {
     onSubmit: (formData: FormDataGoal) => void;
 }
 
+type IconName = 'phone-portrait' | 'home' | 'car' | 'airplane' | 'book' | 'heart' | 'film' | 'cash' | 'gift' | 'ellipsis-horizontal';
+
+interface IconOption {
+  label: string;
+  icon: IconName;
+}
+
 export const FlexModalGoal: React.FC<FlexModalProps> = ({ modalVisible, onClose, onSubmit }) => {
   const [formData, setFormData] = useState<FormDataGoal>({
     id: '',
-    categoria: '',
+    icon: 'phone-portrait', // Valor padrão
     titulo: '',
     targetAmount: 0,
     currentAmount: 0,
     forecast: new Date(),
   });
   const [showCalendar, setShowCalendar] = useState(false);
+  const [selectedIcon, setSelectedIcon] = useState<IconName>('phone-portrait');
 
   useEffect(() => {
     if (modalVisible) {
       setFormData((prevData) => ({
         ...prevData,
-        categoria: '',
+        icon: 'phone-portrait', // Resetar para valor padrão
         titulo: '',
         targetAmount: 0,
         currentAmount: 0,
@@ -38,6 +48,11 @@ export const FlexModalGoal: React.FC<FlexModalProps> = ({ modalVisible, onClose,
       ...formData,
       [field]: field === 'targetAmount' || field === 'currentAmount' ? Number(value) : value,
     });
+  };
+
+  const handleIconChange = (iconName: IconName) => {
+    setSelectedIcon(iconName);
+    handleInputChange('icon', iconName); // Atualiza o estado do formulário com o ícone selecionado
   };
 
   const handleDateChange = (dateString: string) => {
@@ -58,8 +73,8 @@ export const FlexModalGoal: React.FC<FlexModalProps> = ({ modalVisible, onClose,
   };
 
   const validateForm = (): boolean => {
-    const { categoria, titulo, targetAmount, currentAmount, forecast } = formData;
-    if (!categoria || !titulo || isNaN(targetAmount) || isNaN(currentAmount) || targetAmount <= 0 || currentAmount < 0 || forecast <= new Date()) {
+    const { icon, titulo, targetAmount, currentAmount, forecast } = formData;
+    if (!icon || !titulo || isNaN(targetAmount) || isNaN(currentAmount) || targetAmount <= 0 || currentAmount < 0 || forecast <= new Date()) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos corretamente.');
       return false;
     }
@@ -74,7 +89,20 @@ export const FlexModalGoal: React.FC<FlexModalProps> = ({ modalVisible, onClose,
   };
 
   const today = new Date();
-  const minDate = today.toISOString().split('T')[0]; // Data mínima para seleção
+  const minDate = today.toISOString().split('T')[0];
+
+  const iconOptions: IconOption[] = [
+    { label: 'Eletrônicos', icon: 'phone-portrait' },
+    { label: 'Casa Nova', icon: 'home' },
+    { label: 'Carro Novo', icon: 'car' },
+    { label: 'Férias', icon: 'airplane' },
+    { label: 'Educação', icon: 'book' },
+    { label: 'Saúde', icon: 'heart' },
+    { label: 'Entretenimento', icon: 'film' },
+    { label: 'Investimentos', icon: 'cash' },
+    { label: 'Presentes', icon: 'gift' },
+    { label: 'Outros', icon: 'ellipsis-horizontal' }
+  ];
 
   return (
     <Modal animationType="fade" transparent={true} visible={modalVisible} onRequestClose={onClose}>
@@ -88,13 +116,19 @@ export const FlexModalGoal: React.FC<FlexModalProps> = ({ modalVisible, onClose,
           </View>
 
           <View style={styles.modalBody}>
-            <Text>Categoria</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Categoria"
-              onChangeText={(value) => handleInputChange('categoria', value)}
-              value={formData.categoria}
-            />
+            <Text>Ícone</Text>
+            <View style={styles.iconPickerContainer}>
+              <Icons.Ionicons name={selectedIcon} size={50} color="black" />
+              <Picker
+                selectedValue={selectedIcon}
+                style={styles.picker}
+                onValueChange={(itemValue) => handleIconChange(itemValue as IconName)}
+              >
+                {iconOptions.map((option) => (
+                  <Picker.Item key={option.icon} label={option.label} value={option.icon} />
+                ))}
+              </Picker>
+            </View>
 
             <Text>Título</Text>
             <TextInput
@@ -208,5 +242,14 @@ const styles = StyleSheet.create({
   saveButtonText: {
     color: 'white',
     fontSize: 16,
+  },
+  iconPickerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  picker: {
+    width: 150,
+    height: 50,
   },
 });

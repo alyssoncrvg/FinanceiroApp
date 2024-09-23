@@ -5,6 +5,9 @@ import { Modal, View } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { editGoal } from "../functions/PATH/goal";
 import { deleteGoal } from "../functions/DELETE/goal";
+import * as Icons from '@expo/vector-icons'; // Importa a biblioteca de ícones
+import { Picker } from '@react-native-picker/picker';
+import { Icon } from "react-native-vector-icons/Icon";
 
 interface EditGoalProps {
     modalVisible: boolean;
@@ -13,14 +16,21 @@ interface EditGoalProps {
     item: FormDataGoal;
     setItemUpdated: React.Dispatch<React.SetStateAction<boolean>>;
 }
+interface IconOption {
+    label: string;
+    icon: IconName;
+  }
+  
+type IconName = 'phone-portrait' | 'home' | 'car' | 'airplane' | 'book' | 'heart' | 'film' | 'cash' | 'gift' | 'ellipsis-horizontal';
 
 export const EditGoalModel: React.FC<EditGoalProps> = ({ modalVisible, onClose, onSubmit, item, setItemUpdated }) => {
 
     const [showCalendar, setShowCalendar] = useState(false);
+    const [selectedIcon, setSelectedIcon] = useState<IconName>('phone-portrait');
 
     const [formData, setFormData] = useState<FormDataGoal>({
         id: '',
-        categoria: '',
+        icon: '',
         titulo: '',
         targetAmount: 0,
         currentAmount: 0,
@@ -31,12 +41,13 @@ export const EditGoalModel: React.FC<EditGoalProps> = ({ modalVisible, onClose, 
         if (item) {
             setFormData({
                 id: item.id,
-                categoria: item.categoria,
+                icon: item.icon,
                 titulo: item.titulo,
                 targetAmount: item.targetAmount,
                 currentAmount: item.currentAmount,
                 forecast: item.forecast
             })
+            setSelectedIcon(item.icon as IconName); // Atualiza o ícone selecionado
         }
     }, [item])
 
@@ -65,8 +76,8 @@ export const EditGoalModel: React.FC<EditGoalProps> = ({ modalVisible, onClose, 
     };
 
     const validateForm = (): boolean => {
-        const { categoria, titulo, targetAmount, currentAmount, forecast } = formData;
-        if (!categoria || !titulo || isNaN(targetAmount) || isNaN(currentAmount) || targetAmount <= 0 || currentAmount < 0 || forecast <= new Date()) {
+        const { icon, titulo, targetAmount, currentAmount, forecast } = formData;
+        if (!icon || !titulo || isNaN(targetAmount) || isNaN(currentAmount) || targetAmount <= 0 || currentAmount < 0 || forecast <= new Date()) {
             Alert.alert("Erro", "Por favor, preencha todos os campos corretamente.");
             return false;
         }
@@ -80,9 +91,26 @@ export const EditGoalModel: React.FC<EditGoalProps> = ({ modalVisible, onClose, 
             onClose();
         }
     };
+    const handleIconChange = (iconName: IconName) => {
+        setSelectedIcon(iconName);
+        handleInputChange('icon', iconName); // Atualiza o estado do formulário com o ícone selecionado
+      };
 
     const today = new Date();
     const minDate = today.toISOString().split("T")[0];
+    
+  const iconOptions: IconOption[] = [
+    { label: 'Eletrônicos', icon: 'phone-portrait' },
+    { label: 'Casa Nova', icon: 'home' },
+    { label: 'Carro Novo', icon: 'car' },
+    { label: 'Férias', icon: 'airplane' },
+    { label: 'Educação', icon: 'book' },
+    { label: 'Saúde', icon: 'heart' },
+    { label: 'Entretenimento', icon: 'film' },
+    { label: 'Investimentos', icon: 'cash' },
+    { label: 'Presentes', icon: 'gift' },
+    { label: 'Outros', icon: 'ellipsis-horizontal' }
+  ];
 
     return (
         <Modal animationType="fade" transparent={true} visible={modalVisible} onRequestClose={onClose}>
@@ -96,13 +124,19 @@ export const EditGoalModel: React.FC<EditGoalProps> = ({ modalVisible, onClose, 
                     </View>
 
                     <View style={styles.modalBody}>
-                        <Text>Categoria</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Categoria"
-                            onChangeText={(value) => handleInputChange("categoria", value)}
-                            value={formData.categoria}
-                        />
+                        <Text>Ícone</Text>
+                        <View style={styles.iconPickerContainer}>
+                            <Icons.Ionicons name={selectedIcon} size={50} color="black" />
+                            <Picker
+                                selectedValue={selectedIcon}
+                                style={styles.picker}
+                                onValueChange={(itemValue) => handleIconChange(itemValue as IconName)}
+                            >
+                                {iconOptions.map((option) => (
+                                    <Picker.Item key={option.icon} label={option.label} value={option.icon} />
+                                ))}
+                            </Picker>
+                        </View>
 
                         <Text>Título</Text>
                         <TextInput
@@ -169,6 +203,7 @@ export const EditGoalModel: React.FC<EditGoalProps> = ({ modalVisible, onClose, 
                                 style={styles.saveButton}
                                 onPress={
                                     () => {
+                                        console.log(formData)
                                         editGoal(formData)
                                         setItemUpdated((prev) => !prev);
                                         onClose()
@@ -255,4 +290,13 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontWeight: 'bold',
     },
+    iconPickerContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+      },
+      picker: {
+        width: 150,
+        height: 50,
+      },
 });

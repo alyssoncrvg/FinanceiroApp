@@ -15,7 +15,7 @@ export interface FlexModalProps {
 
 export interface FormDataGoal {
     id: string;
-    categoria: string;
+    icon: string,
     titulo: string;
     targetAmount: number;
     currentAmount: number;

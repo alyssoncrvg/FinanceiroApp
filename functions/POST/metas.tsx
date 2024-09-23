@@ -1,11 +1,11 @@
 import { apiRequest } from "../../api/api";
 
-export const addGoal = async (categoria: string, titulo: string, meta: number,
+export const addGoal = async (icon:string, titulo: string, meta: number,
     previsao: Date, valorGuardado: number) => {
     try {
 
         const response = await apiRequest('/metas', 'POST', {
-            categoria,
+            icon,
             titulo,
             meta,
             previsao,

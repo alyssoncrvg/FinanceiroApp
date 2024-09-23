@@ -12,6 +12,7 @@ export const UsefecthDataGoals = (GoalsAdded: boolean) => {
             const goals = await apiRequest('/get/metas')
             const formatedGoals = goals.map((goal: any) => ({
                 id: goal._id,
+                icon: goal.icon,
                 categoria: goal.categoria,
                 titulo: goal.titulo,
                 // icon: a fazer,
@@ -46,7 +47,7 @@ export const useModalGoalsHandlres = (
 
     const handleAddGoal = async(formData: FormDataGoal) => {
         console.log(formData)
-        const response = addGoal(formData.categoria, formData.titulo, formData.targetAmount,
+        const response = addGoal(formData.icon, formData.titulo, formData.targetAmount,
             formData.forecast, formData.currentAmount
         );
 
