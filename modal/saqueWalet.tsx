@@ -4,6 +4,7 @@ import { Item } from "../interfaces/interfaces";
 import { editWallet } from "../functions/PATH/wallet";
 
 import { useFetchData } from "../logics/controleScreenLogics";
+import { addMovent } from "../functions/POST/movimentacoes";
 
 interface WithdrawModalProps {
     modalVisible: boolean;
@@ -58,6 +59,7 @@ export const WithdrawModalWallet: React.FC<WithdrawModalProps> = ({
 
                 await editWallet(updatedItem);
                 onUpdate(updatedItem);
+                await addMovent(formData.valor * (-1))
                 refetchData();
                 onClose();
             } else {

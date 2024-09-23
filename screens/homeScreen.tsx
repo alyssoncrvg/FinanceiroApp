@@ -8,10 +8,13 @@ import { useFetchData } from '../logics/controleScreenLogics';
 import { useInvestments } from '../context/investmentContext';
 import { useFocusEffect } from '@react-navigation/native';
 import { useFechDataInvestments } from '../logics/investmentsScreenLogics';
+import { getMoviment } from '../functions/GET/movimentacoes';
 
 export function HomeScreen({ navigation }: any) {
 
   const [refreshData, setRefreshData] = useState(false); 
+  const [monthlyMovements, setMonthlyMovements] = useState<{ entradas: number; saidas: number }>({ entradas: 0, saidas: 0 });
+  const [currentMonthYear, setCurrentMonthYear] = useState<string>('09-2024');
 
   const { sumWallet, dataExpensesOthers, topWallets } = useFetchData(refreshData);
 
@@ -31,8 +34,13 @@ export function HomeScreen({ navigation }: any) {
   useEffect(() => {
     if ( refreshData) {
       setRefreshData(false); // Impede a recarga contínua quando os dados já foram atualizados
+
+      getMoviment(currentMonthYear).then((data) => {
+        console.log(data)
+        setMonthlyMovements(data);
+    });
     }
-  }, [ refreshData]);
+  }, [ refreshData, currentMonthYear]);
 
   return (
     <ScrollView style={styleHome.scrollContent}>
@@ -50,11 +58,11 @@ export function HomeScreen({ navigation }: any) {
           <View style={styleHome.summaryContent}>
             <TouchableOpacity style={styleHome.summaryItem}>
               <Ionicons name="arrow-down-circle" size={32} color="green" />
-              <Text style={styleHome.summaryText}>R$ 0.00</Text>
+              <Text style={styleHome.summaryText}>R$ {monthlyMovements.entradas.toFixed(2)}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styleHome.summaryItem}>
               <Ionicons name="arrow-up-circle" size={32} color="red" />
-              <Text style={styleHome.summaryText}>R$ 0.00</Text>
+              <Text style={styleHome.summaryText}>R$ {monthlyMovements.saidas.toFixed(2)}</Text>
             </TouchableOpacity>
           </View>
         </View>

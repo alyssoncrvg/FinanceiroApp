@@ -56,3 +56,9 @@ export interface walletFormat{
   banco: string,
   valor: number,
 }
+
+export interface movent {
+  mesAno: string;       
+  entradas: number;     
+  saidas: number;    
+}
