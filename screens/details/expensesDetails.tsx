@@ -25,7 +25,7 @@ const ExpenseDetails = ({ route }: Props) => {
     const navigation = useNavigation<ExpenseDetailsNavigationProp>();
 
     const [refreshData, setRefreshData] = useState(false); 
-    const { dataExpenses, loading } = useFetchData(refreshData,refreshData);
+    const { dataExpenses, loading } = useFetchData(refreshData);
 
     useFocusEffect(
         useCallback(() => {

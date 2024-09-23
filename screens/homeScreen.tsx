@@ -7,14 +7,17 @@ import { styleHome } from '../styles/styleHome'
 import { useFetchData } from '../logics/controleScreenLogics';
 import { useInvestments } from '../context/investmentContext';
 import { useFocusEffect } from '@react-navigation/native';
+import { useFechDataInvestments } from '../logics/investmentsScreenLogics';
 
 export function HomeScreen({ navigation }: any) {
 
   const [refreshData, setRefreshData] = useState(false); 
 
-  const { sumWallet, dataExpensesOthers, topWallets } = useFetchData(refreshData, refreshData);
+  const { sumWallet, dataExpensesOthers, topWallets } = useFetchData(refreshData);
 
   const { sumInvestments } = useInvestments();
+
+  useFechDataInvestments(refreshData);
 
   const isDataEmpty = dataExpensesOthers.length === 0;
 

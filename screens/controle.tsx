@@ -39,7 +39,7 @@ export function ExpensesScreen() {
 
     const [addItem, setAddItem] = useState(false);
 
-    const { dataWallet, dataExpenses, dataExpensesPiechart, loading } = useFetchData( refreshData || addItem, refreshData); // Passa `expenseAdded` para o hook
+    const { dataWallet, dataExpenses, dataExpensesPiechart, loading } = useFetchData( refreshData || addItem); // Passa `expenseAdded` para o hook
     const { addModalWallet, closeModalWallet, addModalExpense, closeModalExpense, handleAddCarteira, handleAddDespesas } = useModalHandlers(
         setWalletModalVisible,
         setExpenseModalVisible,

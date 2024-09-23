@@ -6,6 +6,8 @@ import { ScrollView, View, Text, StyleSheet } from 'react-native';
 import CustomHeader from '../stack/customHeader';
 import { EditInvestmentsModal } from '../../modal/editInvestments';
 import { deleteInvestment } from '../../functions/DELETE/investments';
+import { DepositModal } from '../../modal/depositInvestments';
+import { WithdrawModal } from '../../modal/saqueInvestmentsModal';
 
 // Defina o tipo das rotas
 type RootStackParamList = {
@@ -18,10 +20,11 @@ type Props = NativeStackScreenProps<RootStackParamList, 'InvestmentDetails'>;
 export const DetailInvestmentScreen = ({ route, navigation }: Props) => {
     const { data } = route.params; // Acessa os dados passados pela navegação
     const [modalVisible, setModalVisible] = useState(false);
-    const [modalPayVisible, setModalPayVisible] = useState(false);
     const [selectedItem, setSelectedItem] = useState<FormDataInvestments | null>(null);
-    const [selectedItemPay, setSelectedItemPay] = useState<FormDataInvestments | null>(null);
+
     const [dataLocal, setData] = useState<FormDataInvestments[]>([]);
+    const [modalDeposito, setModalDeposito] = useState(false)
+    const [modalSaque, setModalSaque] = useState(false)
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -35,11 +38,23 @@ export const DetailInvestmentScreen = ({ route, navigation }: Props) => {
 
     const handleEditSubmit = (formData: { [key: string]: string | number }) => {
         setModalVisible(false);
+        setModalDeposito(false)
+        setModalSaque(false)
     };
 
     const handlePress = (item: FormDataInvestments) => {
         setSelectedItem(item); // Define o item selecionado para edição
         setModalVisible(true); // Abre o modal de edição
+    };
+
+    const handleSaque = (item: FormDataInvestments) => {
+        setSelectedItem(item); // Define o item selecionado para edição
+        setModalSaque(true); // Abre o modal de edição
+    };
+
+    const handleDeposito = (item: FormDataInvestments) => {
+        setSelectedItem(item); // Define o item selecionado para edição
+        setModalDeposito(true); // Abre o modal de edição
     };
 
     const handleUpdate = (updatedItem: FormDataInvestments) => {
@@ -53,16 +68,8 @@ export const DetailInvestmentScreen = ({ route, navigation }: Props) => {
         deleteInvestment(investment)
         const updatedData = dataLocal.filter(item => item._id !== investment._id);
 
-        // Força a criação de um novo array, mesmo que ele esteja vazio
         setData([...updatedData]);
     };
-
-    const handlePay = (investment: FormDataInvestments) => {
-
-        setSelectedItemPay(investment);
-        setModalPayVisible(true); // Abre o modal de pagamento
-    };
-
     return (
         <MenuProvider>
             <ScrollView style={styles.scrollView}>
@@ -86,6 +93,12 @@ export const DetailInvestmentScreen = ({ route, navigation }: Props) => {
                                             <MenuOption onSelect={() => handleDelete(investment)}>
                                                 <Text style={styles.menuOption}>Excluir</Text>
                                             </MenuOption>
+                                            <MenuOption onSelect={() => handleDeposito(investment)}>
+                                                <Text style={styles.menuOption}>Depositar</Text>
+                                            </MenuOption>
+                                            <MenuOption onSelect={() => handleSaque(investment)}>
+                                                <Text style={styles.menuOption}>Sacar</Text>
+                                            </MenuOption>
                                         </MenuOptions>
                                     </Menu>
                                 </View>
@@ -103,6 +116,26 @@ export const DetailInvestmentScreen = ({ route, navigation }: Props) => {
                     onSubmit={handleEditSubmit}
                     onUpdate={handleUpdate}
                     item={selectedItem}
+                />
+            )}
+
+            {selectedItem && (
+                <DepositModal 
+                    modalVisible={modalDeposito}
+                    onClose={() => setModalDeposito(false)}
+                    onSubmit={handleEditSubmit}
+                    onUpdate={handleUpdate}
+                    item={selectedItem}
+                />
+            )}
+
+            {selectedItem && (
+                <WithdrawModal 
+                modalVisible={modalSaque}
+                onClose={() => setModalSaque(false)}
+                onSubmit={handleEditSubmit}
+                onUpdate={handleUpdate}
+                item={selectedItem}
                 />
             )}
 

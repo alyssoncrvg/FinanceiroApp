@@ -14,7 +14,7 @@ interface PayModalProps {
 
 export const PayModal: React.FC<PayModalProps> = ({ modalVisible, onClose, expense, onDelete }) => {
     const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
-    const { dataWallet } = useFetchData(true, true);
+    const { dataWallet } = useFetchData(true);
 
     const handlePay = async () => {
         if (selectedWallet) {

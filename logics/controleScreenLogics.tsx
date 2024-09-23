@@ -23,7 +23,16 @@ const groupByCategory = (gastos: any[]) => {
     }, {} as Record<string, { categoria: string; somaValue: number; gastos: expenses[] }>);
 };
 
-export const useFetchData = (expenseAdded: boolean, itemUpdated: boolean) => {
+const getRandomColor = () => {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+};
+
+export const useFetchData = (expenseAdded: boolean) => {
     const [dataExpenses, setData] = useState<any[]>([]);
     const [dataExpensesPiechart, setDataPiechart] = useState<any[]>([]);
     const [dataExpensesOthers, setDataOthers] = useState<any[]>([]);
@@ -107,20 +116,11 @@ export const useFetchData = (expenseAdded: boolean, itemUpdated: boolean) => {
         }
     };
 
-    const getRandomColor = () => {
-        const letters = '0123456789ABCDEF';
-        let color = '#';
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    };
-
     useEffect(() => {
         fetchData();
     }, [expenseAdded]);
 
-    return { dataWallet, sumWallet, dataExpenses, dataExpensesPiechart, dataExpensesOthers, topWallets, loading };
+    return { dataWallet, sumWallet, dataExpenses, dataExpensesPiechart, dataExpensesOthers, topWallets, loading, refetchData: fetchData };
 };
 
 
