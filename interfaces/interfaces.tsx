@@ -1,5 +1,3 @@
-import { WithSafeAreaInsetsProps } from "react-native-safe-area-context";
-
 export interface Item {
     id: string;
     banco: string;

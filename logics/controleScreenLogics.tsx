@@ -100,6 +100,7 @@ export const useFetchData = (expenseAdded: boolean) => {
                 valor: wallet.saldo,
             }));
 
+            setDataWallet(walletFormat);
             const sortedWallets = walletFormat.sort((a: any, b: any) => b.valor - a.valor);
             const totalSaldo = sortedWallets.reduce((acc: number, wallet: any) => acc + wallet.valor, 0);
 
@@ -107,7 +108,7 @@ export const useFetchData = (expenseAdded: boolean) => {
 
             setTopWallets(topTwoWallets);
             setSumWallet(totalSaldo);
-            setDataWallet(walletFormat);
+            
         } catch (error) {
             console.log('Erro ao buscar os dados de carteiras:', error);
         } finally {

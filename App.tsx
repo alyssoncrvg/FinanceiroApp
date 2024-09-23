@@ -9,6 +9,7 @@ import { BottomNavigationBar } from './screens/bottomNavigationBar';
 import { InvestmentProvider } from './context/investmentContext';
 import ExpensesStackNavigator from './screens/stack/ExpensesStackScreen';
 import { InvestmentsStack } from './screens/stack/investmentsStackScreen';
+import { MenuProvider } from 'react-native-popup-menu';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -19,6 +20,7 @@ export default function App() {
           <NavigationContainer>
             <SafeAreaView style={styles.safeArea}>
               <View style={styles.container}>
+                <MenuProvider>
                 {/* Conteúdo das telas */}
                 <Tab.Navigator
                   initialRouteName="Home"
@@ -37,6 +39,7 @@ export default function App() {
 
                 {/* Barra de navegação fixa */}
                 <BottomNavigationBar />
+                </MenuProvider>
               </View>
             </SafeAreaView>
           </NavigationContainer>

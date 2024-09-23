@@ -15,7 +15,7 @@ interface FlexModalProps {
     modalVisible: boolean;
     onClose: () => void;
     fields: { name: string; placeholder: string; type: string }[];
-    onSubmit: (formData: FormDataGoal) => void; // Ajuste aqui
+    onSubmit: (formData: FormDataGoal) => void;
 }
 
 
@@ -32,16 +32,15 @@ export function GoalsScreen({ navigation }: any) {
 
     useEffect(() => {
         if (itemUpdated) {
-            // Recarregar dados após uma edição ou exclusão
             setExpenseGoals((prev) => !prev);
-            setItemUpdated(false); // Resetar flag
+            setItemUpdated(false);
         }
     }, [itemUpdated]);
 
     const handleEditGoal = (goal: FormDataGoal) => {
         console.log(goal)
-        setSelectedGoal(goal); // Define a meta a ser editada
-        setEditModalGoal(true); // Abre o modal de edição
+        setSelectedGoal(goal);
+        setEditModalGoal(true);
     };
 
     return (

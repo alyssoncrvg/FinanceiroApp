@@ -1,13 +1,14 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { FormDataInvestments } from '../../interfaces/interfaces';
-import { MenuProvider, Menu, MenuTrigger, MenuOptions, MenuOption } from 'react-native-popup-menu';
+import { Menu, MenuTrigger, MenuOptions, MenuOption } from 'react-native-popup-menu';
 import { ScrollView, View, Text, StyleSheet } from 'react-native';
 import CustomHeader from '../stack/customHeader';
 import { EditInvestmentsModal } from '../../modal/editInvestments';
 import { deleteInvestment } from '../../functions/DELETE/investments';
 import { DepositModal } from '../../modal/depositInvestments';
 import { WithdrawModal } from '../../modal/saqueInvestmentsModal';
+import { Ionicons } from '@expo/vector-icons';
 
 // Defina o tipo das rotas
 type RootStackParamList = {
@@ -71,42 +72,40 @@ export const DetailInvestmentScreen = ({ route, navigation }: Props) => {
         setData([...updatedData]);
     };
     return (
-        <MenuProvider>
-            <ScrollView style={styles.scrollView}>
-                <View style={styles.container}>
-                    {dataLocal.map((investment: FormDataInvestments) => (
-                        <View style={styles.investmentItem} key={investment._id}>
-                            <View style={styles.content}>
-                                <View>
-                                    <Text style={styles.investmentName}>{investment.bolsa}</Text>
-                                    <Text style={styles.investmentAmount}>R$ {investment.valor.toFixed(2)}</Text>
-                                </View>
-                                <View style={styles.menuContainer}>
-                                    <Menu>
-                                        <MenuTrigger>
-                                            <Text style={styles.menuTrigger}>...</Text>
-                                        </MenuTrigger>
-                                        <MenuOptions>
-                                            <MenuOption onSelect={() => handlePress(investment)}>
-                                                <Text style={styles.menuOption}>Editar</Text>
-                                            </MenuOption>
-                                            <MenuOption onSelect={() => handleDelete(investment)}>
-                                                <Text style={styles.menuOption}>Excluir</Text>
-                                            </MenuOption>
-                                            <MenuOption onSelect={() => handleDeposito(investment)}>
-                                                <Text style={styles.menuOption}>Depositar</Text>
-                                            </MenuOption>
-                                            <MenuOption onSelect={() => handleSaque(investment)}>
-                                                <Text style={styles.menuOption}>Sacar</Text>
-                                            </MenuOption>
-                                        </MenuOptions>
-                                    </Menu>
-                                </View>
+        <ScrollView style={styles.scrollView}>
+            <View style={styles.container}>
+                {dataLocal.map((investment: FormDataInvestments) => (
+                    <View style={styles.investmentItem} key={investment._id}>
+                        <View style={styles.content}>
+                            <View>
+                                <Text style={styles.investmentName}>{investment.bolsa}</Text>
+                                <Text style={styles.investmentAmount}>R$ {investment.valor.toFixed(2)}</Text>
+                            </View>
+                            <View style={styles.menuContainer}>
+                                <Menu>
+                                    <MenuTrigger>
+                                        <Ionicons name="ellipsis-vertical" size={24} color="black" />
+                                    </MenuTrigger>
+                                    <MenuOptions>
+                                        <MenuOption onSelect={() => handlePress(investment)}>
+                                            <Text style={styles.menuOption}>Editar</Text>
+                                        </MenuOption>
+                                        <MenuOption onSelect={() => handleDelete(investment)}>
+                                            <Text style={styles.menuOption}>Excluir</Text>
+                                        </MenuOption>
+                                        <MenuOption onSelect={() => handleDeposito(investment)}>
+                                            <Text style={styles.menuOption}>Depositar</Text>
+                                        </MenuOption>
+                                        <MenuOption onSelect={() => handleSaque(investment)}>
+                                            <Text style={styles.menuOption}>Sacar</Text>
+                                        </MenuOption>
+                                    </MenuOptions>
+                                </Menu>
                             </View>
                         </View>
-                    ))}
-                </View>
-            </ScrollView>
+                    </View>
+                ))}
+            </View>
 
             {selectedItem && (
                 <EditInvestmentsModal
@@ -120,7 +119,7 @@ export const DetailInvestmentScreen = ({ route, navigation }: Props) => {
             )}
 
             {selectedItem && (
-                <DepositModal 
+                <DepositModal
                     modalVisible={modalDeposito}
                     onClose={() => setModalDeposito(false)}
                     onSubmit={handleEditSubmit}
@@ -130,16 +129,17 @@ export const DetailInvestmentScreen = ({ route, navigation }: Props) => {
             )}
 
             {selectedItem && (
-                <WithdrawModal 
-                modalVisible={modalSaque}
-                onClose={() => setModalSaque(false)}
-                onSubmit={handleEditSubmit}
-                onUpdate={handleUpdate}
-                item={selectedItem}
+                <WithdrawModal
+                    modalVisible={modalSaque}
+                    onClose={() => setModalSaque(false)}
+                    onSubmit={handleEditSubmit}
+                    onUpdate={handleUpdate}
+                    item={selectedItem}
                 />
             )}
 
-        </MenuProvider>
+        </ScrollView>
+
     );
 };
 

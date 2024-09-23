@@ -10,9 +10,10 @@ interface EditWalletModalProps {
     fields: { name: string; placeholder: string; type?: string }[];
     onSubmit: (formData: { [key: string]: string | number }) => void;
     item: walletFormat;
+    refresh: () => void;
 }
 
-export const EditWalletModal: React.FC<EditWalletModalProps> = ({ modalVisible, onClose, fields, onSubmit, item }) => {
+export const EditWalletModal: React.FC<EditWalletModalProps> = ({ modalVisible, onClose, fields, onSubmit, item, refresh }) => {
     const [formData, setFormData] = useState<Item>({
         id: '',
         banco: '',
@@ -68,6 +69,7 @@ export const EditWalletModal: React.FC<EditWalletModalProps> = ({ modalVisible, 
                             onPress={
                                 () => {
                                     editWallet(formData)
+                                    refresh()
                                     onClose()
                                 }} 
                             >
@@ -78,6 +80,7 @@ export const EditWalletModal: React.FC<EditWalletModalProps> = ({ modalVisible, 
                             onPress={
                                 () => {
                                     deleteWallet(formData)
+                                    refresh()
                                     onClose()
                                 }}>
                                 <Text style={styles.buttonText}>Excluir</Text>

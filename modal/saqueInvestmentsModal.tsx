@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Modal, StyleSheet, TextInput, TouchableOpacity, View, Text, Alert } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { FormDataInvestments } from "../interfaces/interfaces";
-import { walletFormat } from "../interfaces/interfaces"; // Assumindo que você tenha esta interface
 import { editInvestment } from "../functions/PATH/investments";
 import { editWallet } from "../functions/PATH/wallet";
 

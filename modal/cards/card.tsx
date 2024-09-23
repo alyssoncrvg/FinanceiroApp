@@ -1,26 +1,57 @@
-// Card.tsx
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { Menu, MenuTrigger, MenuOptions, MenuOption, MenuProvider } from 'react-native-popup-menu';
+import { Ionicons } from '@expo/vector-icons'; // ou qualquer outra biblioteca de ícones que você usa
 
 type CardProps = {
   banco: string;
   valor: number;
+  onEdit: () => void;
+  onDelete: () => void;
+  onWithdraw: () => void;
+  onDeposit: () => void;
 };
 
-const Card: React.FC<CardProps> = ({ banco, valor }) => {
+const { width } = Dimensions.get('window');
+
+const Card: React.FC<CardProps> = ({ banco, valor, onEdit, onDelete, onWithdraw, onDeposit }) => {
   return (
-    <View style={styles.card}>
-      <View style={styles.cardContent}>
-        <Text style={styles.cardTitle}>{banco}</Text>
-        <Text style={styles.cardDescription}>{`${valor} R$`}</Text>
+    
+      <View style={styles.card}>
+        <View style={styles.cardContent}>
+          <View>
+            <Text style={styles.cardTitle}>{banco}</Text>
+            <Text style={styles.cardDescription}>{`${valor} R$`}</Text>
+          </View>
+
+          <View style={styles.buttonsContainer}>
+            <Menu>
+              <MenuTrigger>
+                  <Ionicons name="ellipsis-vertical" size={24} color="black" />
+              </MenuTrigger>
+              <MenuOptions>
+                <MenuOption onSelect={onEdit}>
+                  <Text style={styles.menuOption}>Editar/Excluir</Text>
+                </MenuOption>
+                <MenuOption onSelect={onWithdraw}>
+                  <Text style={styles.menuOption}>Sacar</Text>
+                </MenuOption>
+                <MenuOption onSelect={onDeposit}>
+                  <Text style={styles.menuOption}>Depositar</Text>
+                </MenuOption>
+              </MenuOptions>
+            </Menu>
+          </View>
+        </View>
       </View>
-    </View>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#fff',
+    width: width * 0.8,
+    height: 120,
+    backgroundColor: '#f1f1f1',
     borderRadius: 10,
     shadowColor: '#000',
     shadowOpacity: 0.1,
@@ -30,11 +61,10 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     overflow: 'hidden',
   },
-  cardImage: {
-    width: '100%',
-    height: 200,
-  },
   cardContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     padding: 20,
   },
   cardTitle: {
@@ -46,6 +76,26 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
   },
+  buttonsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  menuContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    marginLeft: 10,
+    position: 'absolute',
+    right: 0,
+    transform: [{ translateY: -12 }],
+},
+menuTrigger: {
+    fontSize: 35,
+    color: 'gray',
+    fontWeight: 'bold',
+},
+menuOption: {
+    padding: 10,
+},
 });
 
 export default Card;

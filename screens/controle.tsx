@@ -1,23 +1,26 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Dimensions, Alert } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { PieChart } from 'react-native-chart-kit';
-import { styleControl } from '../styles/styleControl'; 
+import { styleControl } from '../styles/styleControl';
 import { FlexModal } from '../modal/modalWallet';
 import { useFetchData, useModalHandlers } from '../logics/controleScreenLogics';
 import Card from '../modal/cards/card';
-// import Carousel from 'react-native-reanimated-carousel';
 import { EditWalletModal } from '../modal/modalEditWallet';
 import { Item } from '../interfaces/interfaces';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { expenses } from '../interfaces/interfaces';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
+import Carousel from 'react-native-sideswipe';
+import { WithdrawModalWallet } from '../modal/saqueWalet';
+import { DepositModal } from '../modal/depositWallet';
 
 export type RootStackParamList = {
     ExpensesScreen: undefined;
     ExpenseDetails: { data: expenses[] };
-  };
+};
+
+const { width } = Dimensions.get('window');
 
 type ExpensesScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'ExpensesScreen'>;
 
@@ -30,16 +33,16 @@ export function ExpensesScreen() {
     const [walletModalVisible, setWalletModalVisible] = useState(false);
     const [expenseModalVisible, setExpenseModalVisible] = useState(false);
 
-    const [activeSlide, setActiveSlide] = useState(0); // Variável para rastrear o slide ativo
-
     const [editModalVisible, setEditModalVisible] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+    const [withdrawVisible, setWithdraw] = useState(false);
+    const [depositVisible, setDepositVisible] = useState(false)
 
-    const [refreshData, setRefreshData] = useState(false); 
+    const [refreshData, setRefreshData] = useState(false);
 
     const [addItem, setAddItem] = useState(false);
 
-    const { dataWallet, dataExpenses, dataExpensesPiechart, loading } = useFetchData( refreshData || addItem); // Passa `expenseAdded` para o hook
+    const { dataWallet, dataExpenses, dataExpensesPiechart, loading, refetchData } = useFetchData(refreshData || addItem); // Passa `expenseAdded` para o hook
     const { addModalWallet, closeModalWallet, addModalExpense, closeModalExpense, handleAddCarteira, handleAddDespesas } = useModalHandlers(
         setWalletModalVisible,
         setExpenseModalVisible,
@@ -47,24 +50,22 @@ export function ExpensesScreen() {
 
     useFocusEffect(
         useCallback(() => {
-          setRefreshData(true); // Disparar recarregamento ao focar
+            setRefreshData(true); // Disparar recarregamento ao focar
         }, [])
-      );
-    
-      // Depois que os dados forem carregados, podemos resetar o refreshData
-      useEffect(() => {
-        if ( refreshData) {
-          setRefreshData(false); // Impede a recarga contínua quando os dados já foram atualizados
-        }
-      }, [ refreshData]);
+    );
 
-      useEffect( () => {
-        if(addItem){
+    // Depois que os dados forem carregados, podemos resetar o refreshData
+    useEffect(() => {
+        if (refreshData) {
+            setRefreshData(false); // Impede a recarga contínua quando os dados já foram atualizados
+        }
+    }, [refreshData]);
+
+    useEffect(() => {
+        if (addItem) {
             setAddItem(false)
         }
-      }, [addItem])
-
-    const firstSlide = 1;
+    }, [addItem])
 
     const isDataEmpty = dataExpensesPiechart.length === 0;
     const isDataWalleteEmpty = dataWallet.length === 0;
@@ -75,39 +76,46 @@ export function ExpensesScreen() {
         valor: 0,
     }];
 
-    const carouselRef = useRef(null);
-
-    function handlePress(item: Item) {
-        console.log(item)
-        setSelectedItem(item); // Define o item selecionado
-        setEditModalVisible(true); // Abre o modal
-    }
-
     const handleEditSubmit = (formData: { [key: string]: string | number }) => {
-        // Lógica para editar o item
-        console.log('Dados do formulário:', formData);
         setEditModalVisible(false);
     };
 
     const handlePieChartPress = () => {
         navigation.navigate('ExpenseDetails', { data: dataExpenses }); // Navegar para a tela ExpenseDetails
-      };
+    };
+
+    const handleEdit = (item: Item) => {
+        setSelectedItem(item)
+        setEditModalVisible(true)
+    };
+
+    const handleDelete = (item: Item) => {
+
+    };
+
+    const handleWithdraw = (item: Item) => {
+        setSelectedItem(item)
+        setWithdraw(true)
+    };
+
+    const handleDeposit = (item: Item) => {
+        setSelectedItem(item)
+        setDepositVisible(true)
+    };
 
     const renderItem = ({ item }: { item: Item }) => (
-
         <View style={styleControl.containerCarousel}>
-            {isDataWalleteEmpty ? (
-                <Card banco={item.banco} valor={item.valor} />
-            ) : (
-
-                <TouchableOpacity onPress={() => handlePress(item)}>
-                    <Card banco={item.banco} valor={item.valor} />
-                </TouchableOpacity>
-            )}
+            <Card
+                banco={item.banco}
+                valor={item.valor}
+                onEdit={() => handleEdit(item)}
+                onDelete={() => handleDelete(item)}
+                onWithdraw={() => handleWithdraw(item)}
+                onDeposit={() => handleDeposit(item)}
+            />
         </View>
     );
 
-    const { width } = Dimensions.get('window');
 
     if (loading) {
         return (
@@ -131,40 +139,29 @@ export function ExpensesScreen() {
                             <Text style={styleControl.addButtonText}>Adicionar +</Text>
                         </TouchableOpacity>
                     </View>
-                    {/* <Carousel
-                        ref={carouselRef}
-                        width={width * 0.9} // Largura dos itens do Carousel
-                        data={isDataWalleteEmpty ? walletDefault : dataWallet}
-                        renderItem={({ item }) => renderItem({ item })} // Renderiza os itens
-                        onSnapToItem={(index) => setActiveSlide(index)} // Atualiza o slide ativo
-                        mode="parallax"
-                        modeConfig={{
-                            parallaxScrollingScale: 0.9,
-                            parallaxScrollingOffset: 50,
-                        }}
-                        panGestureHandlerProps={{
-                            activeOffsetX: [-10, 10], // Controle sensibilidade do swipe
-                        }}
-                        loop={false}
-                    /> */}
+                    {isDataWalleteEmpty ? (
+                        <Carousel
+                            data={walletDefault}
+                            itemWidth={width * 0.8}
+                            contentOffset={(width - width * 0.8) / 2}
+                            renderItem={renderItem}
+                            // onIndexChange={(index) => console.log(`Current index: ${index}`)}
+                            threshold={0.5}
+                            useVelocityForIndex={true}
 
-                    {/* <Pagination
-                        dotsLength={isDataWalleteEmpty ? walletDefault.length : dataWallet.length}
-                        activeDotIndex={activeSlide}
-                        dotStyle={{
-                            width: 10,
-                            height: 10,
-                            borderRadius: 5,
-                            backgroundColor: 'rgba(0, 0, 0, 0.92)',
-                        }}
-                        inactiveDotStyle={{
-                            backgroundColor: '#C0C0C0',
-                        }}
-                        inactiveDotOpacity={0.4}
-                        inactiveDotScale={0.6}
-                        tappableDots={!!carouselRef.current}
-                    /> */}
+                        />
+                    ) : (
+                        <Carousel
+                            data={dataWallet}
+                            itemWidth={width * 0.8}
+                            contentOffset={(width - width * 0.8) / 2}
+                            renderItem={renderItem}
+                            // onIndexChange={(index) => console.log(`Current index: ${index}`)}
+                            threshold={0.5}
+                            useVelocityForIndex={true}
 
+                        />
+                    )}
                 </View>
 
                 <View style={styleControl.expensesContainer}>
@@ -177,7 +174,7 @@ export function ExpensesScreen() {
                     <TouchableOpacity onPress={handlePieChartPress}>
                         {isDataEmpty ? (
                             <PieChart
-                                data={[{ name: 'Sem Dados', population: 1 }]} // Dado fictício para exibir o gráfico cinza
+                                data={[{ name: 'Sem Dados', population: 1 }]}
                                 width={350}
                                 height={220}
                                 chartConfig={{
@@ -246,6 +243,25 @@ export function ExpensesScreen() {
                             { name: 'valor', placeholder: 'Saldo', type: 'numeric' },
                         ]}
                         onSubmit={handleEditSubmit}
+                        item={selectedItem}
+                        refresh={refetchData}
+                    />
+                )}
+
+                {selectedItem && (
+                    <WithdrawModalWallet
+                        modalVisible={withdrawVisible}
+                        onClose={() => setWithdraw(false)}
+                        onUpdate={refetchData}
+                        item={selectedItem}
+                    />
+                )}
+
+                {selectedItem && (
+                    <DepositModal
+                        modalVisible={depositVisible}
+                        onClose={() => setDepositVisible(false)}
+                        onUpdate={refetchData}
                         item={selectedItem}
                     />
                 )}
