@@ -6,9 +6,9 @@ import * as Icons from '@expo/vector-icons'; // Importa a biblioteca de ícones
 import { Picker } from '@react-native-picker/picker';
 
 interface FlexModalProps {
-    modalVisible: boolean;
-    onClose: () => void;
-    onSubmit: (formData: FormDataGoal) => void;
+  modalVisible: boolean;
+  onClose: () => void;
+  onSubmit: (formData: FormDataGoal) => void;
 }
 
 type IconName = 'phone-portrait' | 'home' | 'car' | 'airplane' | 'book' | 'heart' | 'film' | 'cash' | 'gift' | 'ellipsis-horizontal';
@@ -111,7 +111,7 @@ export const FlexModalGoal: React.FC<FlexModalProps> = ({ modalVisible, onClose,
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>Adicionar Nova Meta</Text>
             <TouchableOpacity onPress={onClose}>
-              <Text style={styles.closeButton}>X</Text>
+              <Icons.Ionicons name="close" size={24} color="#000" />
             </TouchableOpacity>
           </View>
 

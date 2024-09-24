@@ -83,5 +83,11 @@ export const styleHome = StyleSheet.create({
       paddingVertical: 20,
       paddingBottom: 80,
     },
+    loadingContainer: {
+      flex: 1,                // Ocupar o espaço inteiro da tela
+      justifyContent: 'center', // Centralizar verticalmente
+      alignItems: 'center',    // Centralizar horizontalmente
+      backgroundColor: '#f5f5f5', // Opcional: definir uma cor de fundo suave
+    },
   });
   

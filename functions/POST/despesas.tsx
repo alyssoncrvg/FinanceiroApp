@@ -5,7 +5,6 @@ export const addExpenses = async (descricao: string, valor: number, categoria: s
     try {
 
         if(descricao=='' && !isNaN(valor) && categoria==''){
-            console.log('valores errados')
             Alert.alert('Valores inseridos de forma incorreta!!!')
             return;
         }
@@ -15,10 +14,8 @@ export const addExpenses = async (descricao: string, valor: number, categoria: s
             valor,
             categoria
         })
-
-        console.log('Despesa adicionada:', response);
         return response;
     } catch(error){
-        console.log(error)
+        Alert.alert('Erro ao adicionar despesa')
     }
 }

@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "financeiroApp--template",
-    "slug": "financeiroApp--template",
+    "name": "ORGANIZZE",
+    "slug": "ORGANIZZE - INFORMAÇÕES EM FINANÇAS",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/clashBet.jpg",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/clashBet.jpg",
+      "image": "./assets/intro.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "black"
     },
     "ios": {
       "supportsTablet": true

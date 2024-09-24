@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { PieChart } from 'react-native-chart-kit';
 import { styleControl } from '../styles/styleControl';
@@ -29,20 +29,17 @@ export function ExpensesScreen() {
 
     const navigation = useNavigation<ExpensesScreenNavigationProp>();
 
-
     const [walletModalVisible, setWalletModalVisible] = useState(false);
     const [expenseModalVisible, setExpenseModalVisible] = useState(false);
-
     const [editModalVisible, setEditModalVisible] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Item | null>(null);
     const [withdrawVisible, setWithdraw] = useState(false);
-    const [depositVisible, setDepositVisible] = useState(false)
+    const [depositVisible, setDepositVisible] = useState(false);
 
     const [refreshData, setRefreshData] = useState(false);
-
     const [addItem, setAddItem] = useState(false);
 
-    const { dataWallet, dataExpenses, dataExpensesPiechart, loading, refetchData } = useFetchData(refreshData || addItem); // Passa `expenseAdded` para o hook
+    const { dataWallet, dataExpenses, dataExpensesPiechart, loading, refetchData } = useFetchData(refreshData || addItem);
     const { addModalWallet, closeModalWallet, addModalExpense, closeModalExpense, handleAddCarteira, handleAddDespesas } = useModalHandlers(
         setWalletModalVisible,
         setExpenseModalVisible,
@@ -54,7 +51,6 @@ export function ExpensesScreen() {
         }, [])
     );
 
-    // Depois que os dados forem carregados, podemos resetar o refreshData
     useEffect(() => {
         if (refreshData) {
             setRefreshData(false); // Impede a recarga contínua quando os dados já foram atualizados
@@ -63,9 +59,9 @@ export function ExpensesScreen() {
 
     useEffect(() => {
         if (addItem) {
-            setAddItem(false)
+            setAddItem(false);
         }
-    }, [addItem])
+    }, [addItem]);
 
     const isDataEmpty = dataExpensesPiechart.length === 0;
     const isDataWalleteEmpty = dataWallet.length === 0;
@@ -85,22 +81,22 @@ export function ExpensesScreen() {
     };
 
     const handleEdit = (item: Item) => {
-        setSelectedItem(item)
-        setEditModalVisible(true)
+        setSelectedItem(item);
+        setEditModalVisible(true);
     };
 
     const handleDelete = (item: Item) => {
-
+        // lógica de exclusão
     };
 
     const handleWithdraw = (item: Item) => {
-        setSelectedItem(item)
-        setWithdraw(true)
+        setSelectedItem(item);
+        setWithdraw(true);
     };
 
     const handleDeposit = (item: Item) => {
-        setSelectedItem(item)
-        setDepositVisible(true)
+        setSelectedItem(item);
+        setDepositVisible(true);
     };
 
     const renderItem = ({ item }: { item: Item }) => (
@@ -116,11 +112,11 @@ export function ExpensesScreen() {
         </View>
     );
 
-
+    // Tela de carregamento
     if (loading) {
         return (
-            <View style={styleControl.container}>
-                <Text>Carregando dados...</Text>
+            <View style={styleControl.loadingContainer}>
+                <ActivityIndicator size="large" color="#0000ff" />
             </View>
         );
     }
@@ -145,7 +141,6 @@ export function ExpensesScreen() {
                             itemWidth={width * 0.8}
                             contentOffset={(width - width * 0.8) / 2}
                             renderItem={renderItem}
-                            // onIndexChange={(index) => console.log(`Current index: ${index}`)}
                             threshold={0.5}
                             useVelocityForIndex={true}
 
@@ -156,7 +151,6 @@ export function ExpensesScreen() {
                             itemWidth={width * 0.8}
                             contentOffset={(width - width * 0.8) / 2}
                             renderItem={renderItem}
-                            // onIndexChange={(index) => console.log(`Current index: ${index}`)}
                             threshold={0.5}
                             useVelocityForIndex={true}
 

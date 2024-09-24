@@ -2,18 +2,20 @@
 import React, { useState } from 'react';
 import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { FormDataInvestments } from '../interfaces/interfaces';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface ModalProps {
-    modalVisible: boolean;
-    onClose: () => void;
-    onSubmit: (formData: FormDataInvestments) => void; // Função de submissão
+  modalVisible: boolean;
+  onClose: () => void;
+  onSubmit: (formData: FormDataInvestments) => void; // Função de submissão
 }
 
 export const FlexModalInvestments: React.FC<ModalProps> = ({ modalVisible, onClose, onSubmit }) => {
   const [formData, setFormData] = useState<FormDataInvestments>({
-    id: '',
+    _id: '',
     bolsa: '',
     valor: 0,
+    date: new Date
   });
 
   // Função para lidar com alterações nos inputs
@@ -24,7 +26,7 @@ export const FlexModalInvestments: React.FC<ModalProps> = ({ modalVisible, onClo
     });
   };
 
-  
+
 
   return (
     <Modal animationType="fade" transparent={true} visible={modalVisible} onRequestClose={onClose}>
@@ -33,7 +35,7 @@ export const FlexModalInvestments: React.FC<ModalProps> = ({ modalVisible, onClo
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>Adicionar</Text>
             <TouchableOpacity onPress={onClose}>
-              <Text style={styles.closeButton}>X</Text>
+              <Ionicons name="close" size={24} color="#000" />
             </TouchableOpacity>
           </View>
 
@@ -59,7 +61,7 @@ export const FlexModalInvestments: React.FC<ModalProps> = ({ modalVisible, onClo
               style={styles.saveButton}
               onPress={() => {
                 onSubmit(formData);
-                onClose(); 
+                onClose();
               }}
             >
               <Text style={styles.saveButtonText}>Salvar</Text>

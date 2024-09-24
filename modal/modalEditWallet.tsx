@@ -3,6 +3,7 @@ import { Modal, Text, TextInput, TouchableOpacity, View, StyleSheet } from 'reac
 import { deleteWallet } from '../functions/DELETE/wallet';
 import { editWallet } from '../functions/PATH/wallet';
 import { Item, walletFormat } from '../interfaces/interfaces';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface EditWalletModalProps {
     modalVisible: boolean;
@@ -45,7 +46,7 @@ export const EditWalletModal: React.FC<EditWalletModalProps> = ({ modalVisible, 
                     <View style={styles.modalHeader}>
                         <Text style={styles.modalTitle}>Editar</Text>
                         <TouchableOpacity onPress={onClose}>
-                            <Text style={styles.closeButton}>X</Text>
+                            <Ionicons name="close" size={24} color="#000" />
                         </TouchableOpacity>
                     </View>
 
@@ -64,25 +65,25 @@ export const EditWalletModal: React.FC<EditWalletModalProps> = ({ modalVisible, 
                         ))}
 
                         <View style={styles.buttonContainer}>
-                            <TouchableOpacity 
-                            style={styles.saveButton}
-                            onPress={
-                                () => {
-                                    editWallet(formData)
-                                    refresh()
-                                    onClose()
-                                }} 
+                            <TouchableOpacity
+                                style={styles.saveButton}
+                                onPress={
+                                    () => {
+                                        editWallet(formData)
+                                        refresh()
+                                        onClose()
+                                    }}
                             >
                                 <Text style={styles.buttonText}>Salvar</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity 
-                            style={styles.deleteButton} 
-                            onPress={
-                                () => {
-                                    deleteWallet(formData)
-                                    refresh()
-                                    onClose()
-                                }}>
+                            <TouchableOpacity
+                                style={styles.deleteButton}
+                                onPress={
+                                    () => {
+                                        deleteWallet(formData)
+                                        refresh()
+                                        onClose()
+                                    }}>
                                 <Text style={styles.buttonText}>Excluir</Text>
                             </TouchableOpacity>
                         </View>

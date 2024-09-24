@@ -1,3 +1,4 @@
+import { Alert } from "react-native";
 import { apiRequest } from "../../api/api";
 import { expenses } from "../../interfaces/interfaces";
 
@@ -10,12 +11,10 @@ export const deleteExpense = async (expense: expenses) => {
 
         const response = await apiRequest(`/gastos/${_id}`, 'DELETE')
 
-        console.log(response)
-
         return response;
 
     } catch(error){
-        console.log(error)
+        Alert.alert('Erro ao deletar dispesa')
     }
 
 }

@@ -1,3 +1,4 @@
+import { Alert } from "react-native";
 import { apiRequest } from "../../api/api";
 
 export const addMovent = async (value: number) => {
@@ -9,6 +10,6 @@ export const addMovent = async (value: number) => {
         return response
 
     } catch(error){
-        console.log(error)
+        Alert.alert('Erro ao adicionar movimentacao')
     }
 }

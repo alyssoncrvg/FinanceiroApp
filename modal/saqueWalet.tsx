@@ -5,6 +5,7 @@ import { editWallet } from "../functions/PATH/wallet";
 
 import { useFetchData } from "../logics/controleScreenLogics";
 import { addMovent } from "../functions/POST/movimentacoes";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 interface WithdrawModalProps {
     modalVisible: boolean;
@@ -45,26 +46,26 @@ export const WithdrawModalWallet: React.FC<WithdrawModalProps> = ({
     };
 
     const handleWithdraw = async () => {
-       
-            if (formData.valor > item.valor) {
-                Alert.alert("Saldo insuficiente na carteira.");
-                return;
-            }
 
-            if (item) {
-                const updatedItem = {
-                    ...item,
-                    valor: item.valor - formData.valor,
-                };
+        if (formData.valor > item.valor) {
+            Alert.alert("Saldo insuficiente na carteira.");
+            return;
+        }
 
-                await editWallet(updatedItem);
-                onUpdate(updatedItem);
-                await addMovent(formData.valor * (-1))
-                refetchData();
-                onClose();
-            } else {
-                Alert.alert("Erro ao selecionar a carteira de destino.");
-            }
+        if (item) {
+            const updatedItem = {
+                ...item,
+                valor: item.valor - formData.valor,
+            };
+
+            await editWallet(updatedItem);
+            onUpdate(updatedItem);
+            await addMovent(formData.valor * (-1))
+            refetchData();
+            onClose();
+        } else {
+            Alert.alert("Erro ao selecionar a carteira de destino.");
+        }
 
     };
 
@@ -75,7 +76,7 @@ export const WithdrawModalWallet: React.FC<WithdrawModalProps> = ({
                     <View style={styles.modalHeader}>
                         <Text style={styles.modalTitle}>Sacar de {formData.banco}</Text>
                         <TouchableOpacity onPress={onClose}>
-                            <Text style={styles.closeButton}>X</Text>
+                            <Ionicons name="close" size={24} color="#000" />
                         </TouchableOpacity>
                     </View>
 

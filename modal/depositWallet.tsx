@@ -5,6 +5,7 @@ import { editWallet } from "../functions/PATH/wallet";
 
 import { useFetchData } from "../logics/controleScreenLogics";
 import { addMovent } from "../functions/POST/movimentacoes";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 interface DepositModalProps {
     modalVisible: boolean;
@@ -68,7 +69,7 @@ export const DepositModal: React.FC<DepositModalProps> = ({
                     <View style={styles.modalHeader}>
                         <Text style={styles.modalTitle}>Depositar em {formData.banco}</Text>
                         <TouchableOpacity onPress={onClose}>
-                            <Text style={styles.closeButton}>X</Text>
+                            <Ionicons name="close" size={24} color="#000" />
                         </TouchableOpacity>
                     </View>
 

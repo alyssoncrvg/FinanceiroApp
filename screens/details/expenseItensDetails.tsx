@@ -47,7 +47,6 @@ export const ExpenseItensDetails = ({ route }: Props) => {
 
     const handleEditSubmit = (formData: { [key: string]: string | number }) => {
         // Lógica para editar o item
-        console.log('Dados do formulário:', formData);
         setModalVisible(false);
     };
 
@@ -57,7 +56,6 @@ export const ExpenseItensDetails = ({ route }: Props) => {
     }
 
     const handleUpdate = (updatedItem: expenses) => {
-        console.log(updatedItem)
         const oldItem = dataLocal.find(item => item._id === updatedItem._id);
         if (oldItem && oldItem.categoria !== updatedItem.categoria) {
             // Remove o item da lista se a categoria mudou

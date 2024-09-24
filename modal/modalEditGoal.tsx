@@ -19,8 +19,8 @@ interface EditGoalProps {
 interface IconOption {
     label: string;
     icon: IconName;
-  }
-  
+}
+
 type IconName = 'phone-portrait' | 'home' | 'car' | 'airplane' | 'book' | 'heart' | 'film' | 'cash' | 'gift' | 'ellipsis-horizontal';
 
 export const EditGoalModel: React.FC<EditGoalProps> = ({ modalVisible, onClose, onSubmit, item, setItemUpdated }) => {
@@ -94,23 +94,23 @@ export const EditGoalModel: React.FC<EditGoalProps> = ({ modalVisible, onClose, 
     const handleIconChange = (iconName: IconName) => {
         setSelectedIcon(iconName);
         handleInputChange('icon', iconName); // Atualiza o estado do formulário com o ícone selecionado
-      };
+    };
 
     const today = new Date();
     const minDate = today.toISOString().split("T")[0];
-    
-  const iconOptions: IconOption[] = [
-    { label: 'Eletrônicos', icon: 'phone-portrait' },
-    { label: 'Casa Nova', icon: 'home' },
-    { label: 'Carro Novo', icon: 'car' },
-    { label: 'Férias', icon: 'airplane' },
-    { label: 'Educação', icon: 'book' },
-    { label: 'Saúde', icon: 'heart' },
-    { label: 'Entretenimento', icon: 'film' },
-    { label: 'Investimentos', icon: 'cash' },
-    { label: 'Presentes', icon: 'gift' },
-    { label: 'Outros', icon: 'ellipsis-horizontal' }
-  ];
+
+    const iconOptions: IconOption[] = [
+        { label: 'Eletrônicos', icon: 'phone-portrait' },
+        { label: 'Casa Nova', icon: 'home' },
+        { label: 'Carro Novo', icon: 'car' },
+        { label: 'Férias', icon: 'airplane' },
+        { label: 'Educação', icon: 'book' },
+        { label: 'Saúde', icon: 'heart' },
+        { label: 'Entretenimento', icon: 'film' },
+        { label: 'Investimentos', icon: 'cash' },
+        { label: 'Presentes', icon: 'gift' },
+        { label: 'Outros', icon: 'ellipsis-horizontal' }
+    ];
 
     return (
         <Modal animationType="fade" transparent={true} visible={modalVisible} onRequestClose={onClose}>
@@ -119,7 +119,7 @@ export const EditGoalModel: React.FC<EditGoalProps> = ({ modalVisible, onClose, 
                     <View style={styles.modalHeader}>
                         <Text style={styles.modalTitle}>Editar Meta</Text>
                         <TouchableOpacity onPress={onClose}>
-                            <Text style={styles.closeButton}>X</Text>
+                            <Icons.Ionicons name="close" size={24} color="#000" />
                         </TouchableOpacity>
                     </View>
 
@@ -203,7 +203,6 @@ export const EditGoalModel: React.FC<EditGoalProps> = ({ modalVisible, onClose, 
                                 style={styles.saveButton}
                                 onPress={
                                     () => {
-                                        console.log(formData)
                                         editGoal(formData)
                                         setItemUpdated((prev) => !prev);
                                         onClose()
@@ -294,9 +293,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 10,
-      },
-      picker: {
+    },
+    picker: {
         width: 150,
         height: 50,
-      },
+    },
 });

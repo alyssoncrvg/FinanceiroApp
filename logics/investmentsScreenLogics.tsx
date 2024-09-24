@@ -3,6 +3,7 @@ import { apiRequest } from "../api/api";
 import { FormDataInvestments } from "../interfaces/interfaces";
 import { addInvestments } from "../functions/POST/investimentos";
 import { useInvestments } from "../context/investmentContext";
+import { Alert } from "react-native";
 
 
 export const useFechDataInvestments = (InvestmentsAdded: boolean) => {
@@ -29,7 +30,7 @@ export const useFechDataInvestments = (InvestmentsAdded: boolean) => {
             const total = formDataInvestments.reduce((acc: any, investment: { population: any; }) => acc + investment.population, 0);
             setSumInvestments(total); // Atualiza o valor no contexto
         } catch (error) {
-            console.log(error);
+            Alert.alert('Erro ao buscar investimentos')
         }
     };
 

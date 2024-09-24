@@ -1,3 +1,4 @@
+import { Alert } from "react-native";
 import { apiRequest } from "../../api/api";
 import { expenses } from "../../interfaces/interfaces";
 
@@ -15,7 +16,7 @@ export const editExpenses = async (item: expenses) => {
 
         return response;
     } catch (error){
-        console.log(error)
+        Alert.alert('Erro ao editar carteira')
     }
 
 }

@@ -1,3 +1,4 @@
+import { Alert } from "react-native";
 import { apiRequest } from "../../api/api";
 import { FormDataGoal } from "../../interfaces/interfaces";
 
@@ -7,10 +8,8 @@ export const deleteGoal = async (item: FormDataGoal) => {
 
         const response = await apiRequest(`/metas/${item.id}`,'DELETE')
 
-        console.log('Deletado meta', response)
-
         return response
     } catch(error){
-        console.log(error)
+        Alert.alert('Erro ao deletar meta')
     }
 }

@@ -3,6 +3,7 @@ import { addWallet } from '../functions/POST/caretira';
 import { addExpenses } from '../functions/POST/despesas';
 import { apiRequest } from '../api/api';
 import { expenses, GroupedExpense } from '../interfaces/interfaces';
+import { Alert } from 'react-native';
 
 interface FormData {
     [key: string]: string | number;
@@ -110,7 +111,7 @@ export const useFetchData = (expenseAdded: boolean) => {
             setSumWallet(totalSaldo);
             
         } catch (error) {
-            console.log('Erro ao buscar os dados de carteiras:', error);
+            Alert.alert('Erro ao buscar carteiras')
         } finally {
             // Loading só será atualizado aqui, após todas as requisições serem finalizadas
             setLoading(false);

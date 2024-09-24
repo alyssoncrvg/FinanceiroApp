@@ -2,9 +2,10 @@
 import React, { useState } from 'react';
 import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { FlexModalProps } from '../interfaces/interfaces';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export const FlexModal: React.FC<FlexModalProps> = ({ modalVisible, onClose, fields, onSubmit, setAddItem }) => {
-  const [formData, setFormData] = useState<{ [key: string]: string | number  }>({});
+  const [formData, setFormData] = useState<{ [key: string]: string | number }>({});
 
   // Função para lidar com alterações nos inputs
   const handleInputChange = (field: string, value: string) => {
@@ -21,7 +22,7 @@ export const FlexModal: React.FC<FlexModalProps> = ({ modalVisible, onClose, fie
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>Adicionar</Text>
             <TouchableOpacity onPress={onClose}>
-              <Text style={styles.closeButton}>X</Text>
+              <Ionicons name="close" size={24} color="#000" />
             </TouchableOpacity>
           </View>
 

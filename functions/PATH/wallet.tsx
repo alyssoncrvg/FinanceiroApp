@@ -1,10 +1,9 @@
+import { Alert } from "react-native";
 import { apiRequest } from "../../api/api";
 import { walletFormat } from "../../interfaces/interfaces";
 
 export const editWallet = async (item: walletFormat) => {
-    console.log(item)
     try{
-        console.log(item.id)
         const response = await apiRequest(`/carteiras/${item.id}`, 'PATCH', {
             "novoBanco" : item.banco,
             "saldo": item.valor
@@ -13,6 +12,6 @@ export const editWallet = async (item: walletFormat) => {
         return response
 
     } catch(error){
-        console.log(error)
+        Alert.alert('Erro ao editar a carteira')
     }
 }

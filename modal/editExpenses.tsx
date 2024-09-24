@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-native';
 import { editExpenses } from '../functions/PATH/expenses';
 import { expenses } from '../interfaces/interfaces';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface EditExpensesModalProps {
     modalVisible: boolean;
@@ -54,7 +55,7 @@ export const EditExpensesModal: React.FC<EditExpensesModalProps> = ({ modalVisib
                     <View style={styles.modalHeader}>
                         <Text style={styles.modalTitle}>Editar Despesa</Text>
                         <TouchableOpacity onPress={onClose}>
-                            <Text style={styles.closeButton}>X</Text>
+                            <Ionicons name="close" size={24} color="#000" />
                         </TouchableOpacity>
                     </View>
 
@@ -73,7 +74,7 @@ export const EditExpensesModal: React.FC<EditExpensesModalProps> = ({ modalVisib
                         ))}
 
                         <View style={styles.buttonContainer}>
-                            <TouchableOpacity 
+                            <TouchableOpacity
                                 style={styles.saveButton}
                                 onPress={() => {
                                     handleSubmit() // Função para editar a despesa

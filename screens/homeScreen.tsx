@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, View, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { PieChart } from 'react-native-chart-kit';
 
-import { styleHome } from '../styles/styleHome'
+import { styleHome } from '../styles/styleHome';
 import { useFetchData } from '../logics/controleScreenLogics';
 import { useInvestments } from '../context/investmentContext';
 import { useFocusEffect } from '@react-navigation/native';
@@ -11,13 +11,12 @@ import { useFechDataInvestments } from '../logics/investmentsScreenLogics';
 import { getMoviment } from '../functions/GET/movimentacoes';
 
 export function HomeScreen({ navigation }: any) {
-
   const [refreshData, setRefreshData] = useState(false); 
   const [monthlyMovements, setMonthlyMovements] = useState<{ entradas: number; saidas: number }>({ entradas: 0, saidas: 0 });
   const [currentMonthYear, setCurrentMonthYear] = useState<string>('09-2024');
+  const [isLoading, setIsLoading] = useState(true); // Estado para controlar o carregamento
 
   const { sumWallet, dataExpensesOthers, topWallets } = useFetchData(refreshData);
-
   const { sumInvestments } = useInvestments();
 
   useFechDataInvestments(refreshData);
@@ -30,17 +29,26 @@ export function HomeScreen({ navigation }: any) {
     }, [])
   );
 
-  // Depois que os dados forem carregados, podemos resetar o refreshData
+  // Quando os dados forem carregados, podemos resetar o refreshData e mudar o estado de carregamento
   useEffect(() => {
-    if ( refreshData) {
+    if (refreshData) {
       setRefreshData(false); // Impede a recarga contínua quando os dados já foram atualizados
 
       getMoviment(currentMonthYear).then((data) => {
-        console.log(data)
         setMonthlyMovements(data);
-    });
+        setIsLoading(false); // Dados carregados, parar o carregamento
+      });
     }
-  }, [ refreshData, currentMonthYear]);
+  }, [refreshData, currentMonthYear]);
+
+  // Mostrar o loader enquanto os dados estão carregando
+  if (isLoading) {
+    return (
+      <View style={styleHome.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   return (
     <ScrollView style={styleHome.scrollContent}>
@@ -78,7 +86,7 @@ export function HomeScreen({ navigation }: any) {
           {/* Exibir a primeira carteira apenas se ela existir */}
           {topWallets.length > 0 && (
             <View style={styleHome.accountItem}>
-              <Ionicons name="logo-usd" size={32} color="#5D3FD3" />
+              <Ionicons name="wallet" size={32} color="black" />
               <Text style={styleHome.accountText}>{topWallets[0].banco}</Text>
               <Text style={styleHome.accountBalance}>R$ {topWallets[0].valor.toFixed(2)}</Text>
             </View>
@@ -87,7 +95,7 @@ export function HomeScreen({ navigation }: any) {
           {/* Exibir a segunda carteira apenas se ela existir */}
           {topWallets.length > 1 && (
             <View style={styleHome.accountItem}>
-              <Ionicons name="logo-usd" size={32} color="green" />
+              <Ionicons name="wallet" size={32} color="black" />
               <Text style={styleHome.accountText}>{topWallets[1].banco}</Text>
               <Text style={styleHome.accountBalance}>R$ {topWallets[1].valor.toFixed(2)}</Text>
             </View>
@@ -131,8 +139,7 @@ export function HomeScreen({ navigation }: any) {
             absolute
           />
         )}
-
       </View>
-    </ScrollView >
+    </ScrollView>
   );
 }

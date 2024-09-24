@@ -6,6 +6,7 @@ import { editInvestment } from "../functions/PATH/investments";
 import { editWallet } from "../functions/PATH/wallet";
 
 import { useFetchData } from "../logics/controleScreenLogics";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 interface DepositInvestmentsModalProps {
     modalVisible: boolean;
@@ -91,7 +92,7 @@ export const WithdrawModal: React.FC<DepositInvestmentsModalProps> = ({
                     <View style={styles.modalHeader}>
                         <Text style={styles.modalTitle}>Sacar de {formData.bolsa}</Text>
                         <TouchableOpacity onPress={onClose}>
-                            <Text style={styles.closeButton}>X</Text>
+                            <Ionicons name="close" size={24} color="#000" />
                         </TouchableOpacity>
                     </View>
 
@@ -138,7 +139,7 @@ const styles = StyleSheet.create({
     },
     modalHeader: {
         flexDirection:
-        'row',
+            'row',
         justifyContent: 'space-between',
     },
     modalTitle: {

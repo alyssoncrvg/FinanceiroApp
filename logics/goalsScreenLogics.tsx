@@ -2,12 +2,16 @@ import { useEffect, useState } from "react"
 import { apiRequest } from "../api/api"
 import { FormDataGoal } from "../interfaces/interfaces";
 import { addGoal } from "../functions/POST/metas";
+import { Alert } from "react-native";
 
 
 export const UsefecthDataGoals = (GoalsAdded: boolean) => {
 
     const [dataGoals, setDataGoals] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
     const fetchData = async () => {
+        setLoading(true);
         try {
             const goals = await apiRequest('/get/metas')
             const formatedGoals = goals.map((goal: any) => ({
@@ -24,8 +28,10 @@ export const UsefecthDataGoals = (GoalsAdded: boolean) => {
             setDataGoals(formatedGoals);
 
         } catch (error) {
-            console.log(error)
+            Alert.alert('Erro ao buscar metas')
             return { dataGoals: [] }
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -33,7 +39,7 @@ export const UsefecthDataGoals = (GoalsAdded: boolean) => {
         fetchData();
     }, [GoalsAdded]); // Reexecuta o fetch sempre que `expenseAdded` mudar
 
-    return { dataGoals }
+    return { dataGoals, loading }
 
 }
 
@@ -46,7 +52,6 @@ export const useModalGoalsHandlres = (
     const closeModalGoal = () => setModalGoal(false);
 
     const handleAddGoal = async(formData: FormDataGoal) => {
-        console.log(formData)
         const response = addGoal(formData.icon, formData.titulo, formData.targetAmount,
             formData.forecast, formData.currentAmount
         );

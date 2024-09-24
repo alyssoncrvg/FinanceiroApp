@@ -21,7 +21,7 @@ const Card: React.FC<CardProps> = ({ banco, valor, onEdit, onDelete, onWithdraw,
         <View style={styles.cardContent}>
           <View>
             <Text style={styles.cardTitle}>{banco}</Text>
-            <Text style={styles.cardDescription}>{`${valor} R$`}</Text>
+            <Text style={styles.cardDescription}>{`${valor.toFixed(2)} R$`}</Text>
           </View>
 
           <View style={styles.buttonsContainer}>

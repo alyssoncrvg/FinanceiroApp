@@ -1,3 +1,4 @@
+import { Alert } from "react-native";
 import { apiRequest } from "../../api/api";
 
 export const addGoal = async (icon:string, titulo: string, meta: number,
@@ -12,10 +13,9 @@ export const addGoal = async (icon:string, titulo: string, meta: number,
             valorGuardado,
         })
 
-        console.log('meta adicionada', response)
         return response
 
     } catch (error) {
-        console.log(error)
+        Alert.alert('Erro ao adicionar meta')
     }
 }

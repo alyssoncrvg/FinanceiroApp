@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-native';
 import { editInvestment } from '../functions/PATH/investments';
 import { FormDataInvestments } from '../interfaces/interfaces';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface EditInvestmentsModalProps {
     modalVisible: boolean;
@@ -51,7 +52,7 @@ export const EditInvestmentsModal: React.FC<EditInvestmentsModalProps> = ({ moda
                     <View style={styles.modalHeader}>
                         <Text style={styles.modalTitle}>Editar Investimento</Text>
                         <TouchableOpacity onPress={onClose}>
-                            <Text style={styles.closeButton}>X</Text>
+                            <Ionicons name="close" size={24} color="#000" />
                         </TouchableOpacity>
                     </View>
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, View, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Progress from 'react-native-progress';
 
@@ -18,7 +18,7 @@ interface FlexModalProps {
 }
 
 
-export function GoalsScreen({ navigation }: any) {
+export function GoalsScreen() {
 
     const [ExpenseGoals, setExpenseGoals] = useState(false);
     const [ModalGoal, setModalGoal] = useState(false);
@@ -26,8 +26,8 @@ export function GoalsScreen({ navigation }: any) {
     const [itemUpdated, setItemUpdated] = useState(false);
     const [selectedGoal, setSelectedGoal] = useState<FormDataGoal | null>(null);
 
-    const { dataGoals } = UsefecthDataGoals(ExpenseGoals); // Espera os dados
-    const { addModelGoal, closeModalGoal, handleAddGoal } = useModalGoalsHandlres(setModalGoal, setExpenseGoals)
+    const { dataGoals, loading } = UsefecthDataGoals(ExpenseGoals);
+    const { addModelGoal, closeModalGoal, handleAddGoal } = useModalGoalsHandlres(setModalGoal, setExpenseGoals);
 
     useEffect(() => {
         if (itemUpdated) {
@@ -37,12 +37,18 @@ export function GoalsScreen({ navigation }: any) {
     }, [itemUpdated]);
 
     const handleEditGoal = (goal: FormDataGoal) => {
-        console.log(goal)
         setSelectedGoal(goal);
         setEditModalGoal(true);
     };
 
-    console.log(dataGoals)
+    // Tela de carregamento
+    if (loading) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+        );
+    }
 
     return (
         <ScrollView style={styleGoals.scrollContent}>

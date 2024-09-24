@@ -1,3 +1,4 @@
+import { Alert } from "react-native";
 import { apiRequest } from "../../api/api";
 
 export const addWallet = async (banco: string, saldo: number) => {
@@ -6,9 +7,8 @@ export const addWallet = async (banco: string, saldo: number) => {
             banco,
             saldo
         });
-        console.log('Carteira adicionada:', response);
         return response;
     } catch (error) {
-        console.error('Erro ao adicionar carteira:', error);
+        Alert.alert('Erro ao adicionar a carteira')
     }
 };

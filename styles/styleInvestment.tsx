@@ -123,5 +123,11 @@ export const styleInvestment = StyleSheet.create({
       marginTop: 20,
       alignItems: 'center',
     },
+    loadingContainer: {
+      flex: 1,                // Ocupar o espaço inteiro da tela
+      justifyContent: 'center', // Centralizar verticalmente
+      alignItems: 'center',    // Centralizar horizontalmente
+      backgroundColor: '#f5f5f5', // Opcional: definir uma cor de fundo suave
+    },
   });
   
