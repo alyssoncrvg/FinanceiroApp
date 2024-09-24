@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Modal, StyleSheet, TextInput, TouchableOpacity, View, Text, Alert } from "react-native";
+import { Modal, StyleSheet, TextInput, TouchableOpacity, View, Text, Alert, ActivityIndicator } from "react-native";
 import { Item } from "../interfaces/interfaces";
 import { editWallet } from "../functions/PATH/wallet";
 
@@ -28,6 +28,8 @@ export const DepositModal: React.FC<DepositModalProps> = ({
 
     const { dataWallet, refetchData } = useFetchData(true);
 
+    const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         if (item && modalVisible) {
             setFormData({
@@ -47,16 +49,23 @@ export const DepositModal: React.FC<DepositModalProps> = ({
 
     const handleDeposit = async () => {
         if (item) {
-            const updatedItem = {
-                ...item,
-                valor: item.valor + formData.valor,
-            };
+            setLoading(true); // Start loading
+            try {
+                const updatedItem = {
+                    ...item,
+                    valor: item.valor + formData.valor,
+                };
 
-            await editWallet(updatedItem);
-            onUpdate(updatedItem);
-            await addMovent(formData.valor)
-            refetchData();
-            onClose();
+                await editWallet(updatedItem);
+                onUpdate(updatedItem);
+                await addMovent(formData.valor);
+                refetchData();
+                onClose();
+            } catch (error) {
+                Alert.alert("Erro", "Ocorreu um erro ao realizar o depósito.");
+            } finally {
+                setLoading(false); // Stop loading
+            }
         } else {
             Alert.alert("Erro ao selecionar a carteira de origem.");
         }
@@ -81,8 +90,16 @@ export const DepositModal: React.FC<DepositModalProps> = ({
                     />
 
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.saveButton} onPress={handleDeposit}>
-                            <Text style={styles.buttonText}>Depositar</Text>
+                        <TouchableOpacity 
+                            style={[styles.saveButton, loading && styles.saveButtonDisabled]} 
+                            onPress={handleDeposit} 
+                            disabled={loading}
+                        >
+                            {loading ? (
+                                <ActivityIndicator size="small" color="#fff" />
+                            ) : (
+                                <Text style={styles.buttonText}>Depositar</Text>
+                            )}
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -128,6 +145,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#007AFF',
         padding: 10,
         borderRadius: 5,
+    },
+    saveButtonDisabled: {
+        backgroundColor: '#a5a5a5',
     },
     buttonText: {
         color: '#fff',

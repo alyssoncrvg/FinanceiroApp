@@ -70,8 +70,8 @@ export const ExpenseItensDetails = ({ route }: Props) => {
         }
     };
 
-    const handleDelete = (expense: expenses) => {
-        deleteExpense(expense).then(() => {
+    const handleDelete = async (expense: expenses) => {
+        await deleteExpense(expense).then(() => {
             // Remover o item do array localmente após exclusão
             const updatedData = data.filter(item => item._id !== expense._id);
             setData(updatedData); // Atualiza o array localmente

@@ -52,7 +52,7 @@ export const useModalGoalsHandlres = (
     const closeModalGoal = () => setModalGoal(false);
 
     const handleAddGoal = async(formData: FormDataGoal) => {
-        const response = addGoal(formData.icon, formData.titulo, formData.targetAmount,
+        const response = await addGoal(formData.icon, formData.titulo, formData.targetAmount,
             formData.forecast, formData.currentAmount
         );
 

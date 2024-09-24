@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-native';
+import { Modal, Text, TextInput, TouchableOpacity, View, StyleSheet, ActivityIndicator } from 'react-native';
 import { deleteWallet } from '../functions/DELETE/wallet';
 import { editWallet } from '../functions/PATH/wallet';
 import { Item, walletFormat } from '../interfaces/interfaces';
@@ -12,9 +12,11 @@ interface EditWalletModalProps {
     onSubmit: (formData: { [key: string]: string | number }) => void;
     item: walletFormat;
     refresh: () => void;
+    loading: boolean;
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const EditWalletModal: React.FC<EditWalletModalProps> = ({ modalVisible, onClose, fields, onSubmit, item, refresh }) => {
+export const EditWalletModal: React.FC<EditWalletModalProps> = ({ modalVisible, onClose, fields, onSubmit, item, refresh, loading, setLoading }) => {
     const [formData, setFormData] = useState<Item>({
         id: '',
         banco: '',
@@ -37,6 +39,32 @@ export const EditWalletModal: React.FC<EditWalletModalProps> = ({ modalVisible, 
             ...formData,
             [field]: field === 'valor' ? Number(value) : value,
         });
+    };
+
+    const handleSave = async () => {
+        setLoading(true); // Inicia o carregamento
+        try {
+            await editWallet(formData); // Chama a função de edição da carteira
+            refresh(); // Atualiza a lista de carteiras
+            onClose(); // Fecha o modal
+        } catch (error) {
+            console.error("Erro ao salvar:", error);
+        } finally {
+            setLoading(false); // Para o carregamento
+        }
+    };
+
+    const handleDelete = async () => {
+        setLoading(true); // Inicia o carregamento
+        try {
+            await deleteWallet(formData); // Chama a função de exclusão da carteira
+            refresh(); // Atualiza a lista de carteiras
+            onClose(); // Fecha o modal
+        } catch (error) {
+            console.error("Erro ao excluir:", error);
+        } finally {
+            setLoading(false); // Para o carregamento
+        }
     };
 
     return (
@@ -66,25 +94,26 @@ export const EditWalletModal: React.FC<EditWalletModalProps> = ({ modalVisible, 
 
                         <View style={styles.buttonContainer}>
                             <TouchableOpacity
-                                style={styles.saveButton}
-                                onPress={
-                                    () => {
-                                        editWallet(formData)
-                                        refresh()
-                                        onClose()
-                                    }}
+                                style={[styles.saveButton, loading && styles.buttonDisabled]}
+                                onPress={handleSave}
+                                disabled={loading}
                             >
-                                <Text style={styles.buttonText}>Salvar</Text>
+                                {loading ? (
+                                    <ActivityIndicator size="small" color="#fff" />
+                                ) : (
+                                    <Text style={styles.buttonText}>Salvar</Text>
+                                )}
                             </TouchableOpacity>
                             <TouchableOpacity
-                                style={styles.deleteButton}
-                                onPress={
-                                    () => {
-                                        deleteWallet(formData)
-                                        refresh()
-                                        onClose()
-                                    }}>
-                                <Text style={styles.buttonText}>Excluir</Text>
+                                style={[styles.deleteButton, loading && styles.buttonDisabled]}
+                                onPress={handleDelete}
+                                disabled={loading}
+                            >
+                                {loading ? (
+                                    <ActivityIndicator size="small" color="#fff" />
+                                ) : (
+                                    <Text style={styles.buttonText}>Excluir</Text>
+                                )}
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -135,11 +164,20 @@ const styles = StyleSheet.create({
         backgroundColor: '#007AFF',
         padding: 10,
         borderRadius: 5,
+        alignItems: 'center',
+        flex: 1,
+        marginRight: 5,
     },
     deleteButton: {
         backgroundColor: '#FF3B30',
         padding: 10,
         borderRadius: 5,
+        alignItems: 'center',
+        flex: 1,
+        marginLeft: 5,
+    },
+    buttonDisabled: {
+        backgroundColor: '#a5a5a5', // Cor de fundo para o botão desativado
     },
     buttonText: {
         color: '#fff',

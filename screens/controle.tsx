@@ -45,6 +45,8 @@ export function ExpensesScreen() {
         setExpenseModalVisible,
     );
 
+    const [loadingButton, setLoadingButton] = useState(false)
+
     useFocusEffect(
         useCallback(() => {
             setRefreshData(true); // Disparar recarregamento ao focar
@@ -212,6 +214,8 @@ export function ExpensesScreen() {
                     ]}
                     onSubmit={handleAddCarteira}
                     setAddItem={setAddItem}
+                    loading={loadingButton}
+                    setLoading={setLoadingButton}
                 />
 
                 <FlexModal
@@ -224,6 +228,8 @@ export function ExpensesScreen() {
                     ]}
                     onSubmit={handleAddDespesas}
                     setAddItem={setAddItem}
+                    loading={loadingButton}
+                    setLoading={setLoadingButton}
                 />
 
                 {selectedItem && (
@@ -239,6 +245,8 @@ export function ExpensesScreen() {
                         onSubmit={handleEditSubmit}
                         item={selectedItem}
                         refresh={refetchData}
+                        loading={loadingButton}
+                        setLoading={setLoadingButton}
                     />
                 )}
 

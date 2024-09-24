@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ORGANIZZE",
-    "slug": "ORGANIZZE - INFORMAÇÕES EM FINANÇAS",
+    "name": "ORGANIZZE - INFORMAÇÕES EM FINANÇAS",
+    "slug": "ORGANIZZE",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/clashBet.jpg",
@@ -18,7 +18,9 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/clashBet.jpg",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.example.organize",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -60,7 +60,7 @@ export const useModalInvestmentsHandle = (
 
     const handleInvestments = async (formData: FormDataInvestments) => {
 
-        addInvestments(formData);
+        await addInvestments(formData);
         setInvestmentAdded((prev) => !prev)
         closeModalInvestment();
     }

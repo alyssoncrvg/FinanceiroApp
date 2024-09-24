@@ -1,13 +1,13 @@
-// FlexModal.tsx
+
 import React, { useState } from 'react';
-import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { FormDataInvestments } from '../interfaces/interfaces';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface ModalProps {
   modalVisible: boolean;
   onClose: () => void;
-  onSubmit: (formData: FormDataInvestments) => void; // Função de submissão
+  onSubmit: (formData: FormDataInvestments) => void;
 }
 
 export const FlexModalInvestments: React.FC<ModalProps> = ({ modalVisible, onClose, onSubmit }) => {
@@ -17,8 +17,8 @@ export const FlexModalInvestments: React.FC<ModalProps> = ({ modalVisible, onClo
     valor: 0,
     date: new Date
   });
+  const [loading, setLoading] = useState(false); 
 
-  // Função para lidar com alterações nos inputs
   const handleInputChange = (field: keyof FormDataInvestments, value: string | number) => {
     setFormData({
       ...formData,
@@ -26,7 +26,17 @@ export const FlexModalInvestments: React.FC<ModalProps> = ({ modalVisible, onClo
     });
   };
 
-
+  const handleSave = async () => {
+    setLoading(true); 
+    try {
+      await onSubmit(formData); 
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    } finally {
+      setLoading(false); 
+      onClose();
+    }
+  };
 
   return (
     <Modal animationType="fade" transparent={true} visible={modalVisible} onRequestClose={onClose}>
@@ -59,12 +69,14 @@ export const FlexModalInvestments: React.FC<ModalProps> = ({ modalVisible, onClo
             {/* Botão de Salvar */}
             <TouchableOpacity
               style={styles.saveButton}
-              onPress={() => {
-                onSubmit(formData);
-                onClose();
-              }}
+              onPress={handleSave} 
+              disabled={loading}
             >
-              <Text style={styles.saveButtonText}>Salvar</Text>
+              {loading ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.saveButtonText}>Salvar</Text>
+              )}
             </TouchableOpacity>
           </View>
         </View>
@@ -111,6 +123,8 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',
+    flexDirection: 'row', // Para alinhar o indicador de carregamento e o texto
+    justifyContent: 'center', // Centraliza o texto e o indicador
   },
   saveButtonText: {
     color: 'white',

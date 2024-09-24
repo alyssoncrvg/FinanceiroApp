@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-native';
+import { Modal, Text, TextInput, TouchableOpacity, View, StyleSheet, ActivityIndicator } from 'react-native';
 import { editInvestment } from '../functions/PATH/investments';
 import { FormDataInvestments } from '../interfaces/interfaces';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -20,7 +20,8 @@ export const EditInvestmentsModal: React.FC<EditInvestmentsModalProps> = ({ moda
         date: new Date(),
     });
 
-    // Atualiza formData com os valores do investimento selecionado
+    const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         if (item) {
             setFormData({
@@ -39,10 +40,17 @@ export const EditInvestmentsModal: React.FC<EditInvestmentsModalProps> = ({ moda
         });
     };
 
-    const handleSubmit = () => {
-        editInvestment(formData); // Função para editar o investimento
-        onUpdate(formData); // Atualiza o investimento
-        onClose();
+    const handleSubmit = async () => {
+        setLoading(true);
+        try {
+            await editInvestment(formData);
+            onUpdate(formData);
+            onClose();
+        } catch (error) {
+            console.error("Erro ao salvar:", error);
+        } finally {
+            setLoading(false); 
+        }
     };
 
     return (
@@ -74,8 +82,16 @@ export const EditInvestmentsModal: React.FC<EditInvestmentsModalProps> = ({ moda
                         />
 
                         <View style={styles.buttonContainer}>
-                            <TouchableOpacity style={styles.saveButton} onPress={handleSubmit}>
-                                <Text style={styles.buttonText}>Salvar</Text>
+                            <TouchableOpacity
+                                style={[styles.saveButton, loading && styles.buttonDisabled]}
+                                onPress={handleSubmit}
+                                disabled={loading}
+                            >
+                                {loading ? (
+                                    <ActivityIndicator size="small" color="#fff" />
+                                ) : (
+                                    <Text style={styles.buttonText}>Salvar</Text>
+                                )}
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -120,12 +136,17 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
     },
     saveButton: {
         backgroundColor: '#007AFF',
         padding: 10,
         borderRadius: 5,
+        alignItems: 'center',
+        flex: 1,
+    },
+    buttonDisabled: {
+        backgroundColor: '#a5a5a5', // Cor de fundo para o botão desativado
     },
     buttonText: {
         color: '#fff',

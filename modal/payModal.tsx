@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
+import { Modal, Text, TouchableOpacity, View, StyleSheet, ActivityIndicator } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { expenses, walletFormat } from '../interfaces/interfaces';
 import { useFetchData } from '../logics/controleScreenLogics';
@@ -15,10 +15,12 @@ interface PayModalProps {
 
 export const PayModal: React.FC<PayModalProps> = ({ modalVisible, onClose, expense, onDelete }) => {
     const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
     const { dataWallet } = useFetchData(true);
 
     const handlePay = async () => {
         if (selectedWallet) {
+            setLoading(true); // Inicia o carregamento
             const wallet = dataWallet.find(w => w.id === selectedWallet);
 
             if (wallet) {
@@ -28,17 +30,18 @@ export const PayModal: React.FC<PayModalProps> = ({ modalVisible, onClose, expen
                     valor: wallet.valor - expense.valor // Subtrai o valor da despesa
                 };
 
-                await editWallet(updatedWallet); // Atualiza a carteira na API
-
-                // Atualize o estado local
-                const updatedWallets = dataWallet.map(w =>
-                    w.id === selectedWallet ? updatedWallet : w
-                );
-
-                await addMovent(expense.valor * (-1))
-
-                onDelete(expense); // Chama a função para deletar a despesa
-                onClose(); // Fecha o modal
+                try {
+                    await editWallet(updatedWallet); // Atualiza a carteira na API
+                    await addMovent(expense.valor * (-1));
+                    onDelete(expense); // Chama a função para deletar a despesa
+                    onClose(); // Fecha o modal
+                } catch (error) {
+                    console.error("Erro ao pagar despesa:", error);
+                } finally {
+                    setLoading(false); // Para o carregamento
+                }
+            } else {
+                console.error("Carteira não encontrada");
             }
         }
     };
@@ -59,8 +62,16 @@ export const PayModal: React.FC<PayModalProps> = ({ modalVisible, onClose, expen
                             <Picker.Item key={wallet.id} label={`${wallet.banco} - R$ ${wallet.valor}`} value={wallet.id} />
                         ))}
                     </Picker>
-                    <TouchableOpacity style={styles.payButton} onPress={handlePay}>
-                        <Text style={styles.buttonText}>Pagar</Text>
+                    <TouchableOpacity
+                        style={[styles.payButton, loading && styles.payButtonDisabled]}
+                        onPress={handlePay}
+                        disabled={loading}
+                    >
+                        {loading ? (
+                            <ActivityIndicator size="small" color="#fff" />
+                        ) : (
+                            <Text style={styles.buttonText}>Pagar</Text>
+                        )}
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.closeButton} onPress={onClose}>
                         <Text style={styles.buttonText}>Fechar</Text>
@@ -94,6 +105,9 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
         marginTop: 10,
+    },
+    payButtonDisabled: {
+        backgroundColor: '#a5a5a5', // Cor de fundo para o botão desativado
     },
     closeButton: {
         backgroundColor: '#ccc',

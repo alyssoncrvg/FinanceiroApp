@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { FormDataGoal } from '../interfaces/interfaces';
 import * as Icons from '@expo/vector-icons'; // Importa a biblioteca de ícones
@@ -29,6 +29,7 @@ export const FlexModalGoal: React.FC<FlexModalProps> = ({ modalVisible, onClose,
   });
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedIcon, setSelectedIcon] = useState<IconName>('phone-portrait');
+  const [loading, setLoading] = useState(false); // Estado para controlar o carregamento
 
   useEffect(() => {
     if (modalVisible) {
@@ -81,10 +82,17 @@ export const FlexModalGoal: React.FC<FlexModalProps> = ({ modalVisible, onClose,
     return true;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (validateForm()) {
-      onSubmit(formData);
-      onClose();
+      setLoading(true); // Inicia o carregamento
+      try {
+        await onSubmit(formData);
+      } catch (error) {
+        Alert.alert('Erro', 'Houve um problema ao salvar a meta.');
+      } finally {
+        setLoading(false); // Termina o carregamento
+        onClose();
+      }
     }
   };
 
@@ -184,10 +192,15 @@ export const FlexModalGoal: React.FC<FlexModalProps> = ({ modalVisible, onClose,
             )}
 
             <TouchableOpacity
-              style={styles.saveButton}
+              style={[styles.saveButton, loading && styles.buttonDisabled]}
               onPress={handleSubmit}
+              disabled={loading} // Desativa o botão enquanto carrega
             >
-              <Text style={styles.saveButtonText}>Salvar</Text>
+              {loading ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.saveButtonText}>Salvar</Text>
+              )}
             </TouchableOpacity>
           </View>
         </View>
@@ -239,17 +252,19 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
   },
+  buttonDisabled: {
+    backgroundColor: '#B0B0B0',
+  },
   saveButtonText: {
     color: 'white',
     fontSize: 16,
   },
+  picker: {
+    height: 50,
+    width: 150,
+  },
   iconPickerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
-  },
-  picker: {
-    width: 150,
-    height: 50,
   },
 });

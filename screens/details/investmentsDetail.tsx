@@ -65,8 +65,8 @@ export const DetailInvestmentScreen = ({ route, navigation }: Props) => {
         setData(updatedData); // Atualiza o estado local com os dados editados
     };
 
-    const handleDelete = (investment: FormDataInvestments) => {
-        deleteInvestment(investment)
+    const handleDelete = async (investment: FormDataInvestments) => {
+        await deleteInvestment(investment)
         const updatedData = dataLocal.filter(item => item._id !== investment._id);
 
         setData([...updatedData]);

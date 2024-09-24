@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { Alert, StyleSheet, TextInput, TouchableOpacity, Text } from "react-native";
+import { Alert, StyleSheet, TextInput, TouchableOpacity, Text, ActivityIndicator } from "react-native";
 import { FormDataGoal } from "../interfaces/interfaces";
 import { Modal, View } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { editGoal } from "../functions/PATH/goal";
 import { deleteGoal } from "../functions/DELETE/goal";
-import * as Icons from '@expo/vector-icons'; // Importa a biblioteca de ícones
+import * as Icons from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
 import { Icon } from "react-native-vector-icons/Icon";
 
@@ -24,10 +24,8 @@ interface IconOption {
 type IconName = 'phone-portrait' | 'home' | 'car' | 'airplane' | 'book' | 'heart' | 'film' | 'cash' | 'gift' | 'ellipsis-horizontal';
 
 export const EditGoalModel: React.FC<EditGoalProps> = ({ modalVisible, onClose, onSubmit, item, setItemUpdated }) => {
-
     const [showCalendar, setShowCalendar] = useState(false);
     const [selectedIcon, setSelectedIcon] = useState<IconName>('phone-portrait');
-
     const [formData, setFormData] = useState<FormDataGoal>({
         id: '',
         icon: '',
@@ -35,7 +33,8 @@ export const EditGoalModel: React.FC<EditGoalProps> = ({ modalVisible, onClose, 
         targetAmount: 0,
         currentAmount: 0,
         forecast: new Date(),
-    })
+    });
+    const [loading, setLoading] = useState(false); // Adicionado estado para carregamento
 
     useEffect(() => {
         if (item) {
@@ -46,10 +45,10 @@ export const EditGoalModel: React.FC<EditGoalProps> = ({ modalVisible, onClose, 
                 targetAmount: item.targetAmount,
                 currentAmount: item.currentAmount,
                 forecast: item.forecast
-            })
-            setSelectedIcon(item.icon as IconName); // Atualiza o ícone selecionado
+            });
+            setSelectedIcon(item.icon as IconName);
         }
-    }, [item])
+    }, [item]);
 
     const handleInputChange = (field: keyof FormDataGoal, value: string) => {
         setFormData({
@@ -84,16 +83,37 @@ export const EditGoalModel: React.FC<EditGoalProps> = ({ modalVisible, onClose, 
         return true;
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (validateForm()) {
-            onSubmit(formData);
-            setItemUpdated(true); // Marca o item como atualizado
-            onClose();
+            setLoading(true); // Ativa o indicador de carregamento
+            try {
+                await editGoal(formData);
+                setItemUpdated(true);
+                onClose();
+            } catch (error) {
+                Alert.alert("Erro", "Ocorreu um erro ao salvar a meta.");
+            } finally {
+                setLoading(false); // Desativa o indicador de carregamento
+            }
         }
     };
+
+    const handleDelete = async () => {
+        setLoading(true);
+        try {
+            await deleteGoal(formData);
+            setItemUpdated(true);
+            onClose();
+        } catch (error) {
+            Alert.alert("Erro", "Ocorreu um erro ao excluir a meta.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleIconChange = (iconName: IconName) => {
         setSelectedIcon(iconName);
-        handleInputChange('icon', iconName); // Atualiza o estado do formulário com o ícone selecionado
+        handleInputChange('icon', iconName);
     };
 
     const today = new Date();
@@ -198,104 +218,103 @@ export const EditGoalModel: React.FC<EditGoalProps> = ({ modalVisible, onClose, 
                             </View>
                         )}
 
-                        <View style={styles.buttonContainer}>
-                            <TouchableOpacity
-                                style={styles.saveButton}
-                                onPress={
-                                    () => {
-                                        editGoal(formData)
-                                        setItemUpdated((prev) => !prev);
-                                        onClose()
-                                    }}
-                            >
-                                <Text style={styles.buttonText}>Salvar</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.deleteButton}
-                                onPress={
-                                    () => {
-                                        deleteGoal(formData)
-                                        setItemUpdated((prev) => !prev);
-                                        onClose()
-                                    }}>
-                                <Text style={styles.buttonText}>Excluir</Text>
-                            </TouchableOpacity>
-                        </View>
+                        {loading ? (
+                            <ActivityIndicator size="large" color="#007AFF" style={styles.loadingIndicator} />
+                        ) : (
+                            <View style={styles.buttonContainer}>
+                                <TouchableOpacity
+                                    style={styles.saveButton}
+                                    onPress={handleSubmit}
+                                    disabled={loading} // Desativa o botão enquanto carrega
+                                >
+                                    <Text style={styles.buttonText}>Salvar</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={styles.deleteButton}
+                                    onPress={handleDelete}
+                                    disabled={loading} // Desativa o botão enquanto carrega
+                                >
+                                    <Text style={styles.buttonText}>Excluir</Text>
+                                </TouchableOpacity>
+                            </View>
+                        )}
                     </View>
                 </View>
             </View>
-        </Modal >
+        </Modal>
     );
 };
-
 
 const styles = StyleSheet.create({
     modalBackground: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "rgba(0,0,0,0.5)",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
     },
     modalContainer: {
-        width: 300,
-        backgroundColor: "white",
+        width: "80%",
+        backgroundColor: "#fff",
         borderRadius: 10,
         padding: 20,
+        elevation: 5,
     },
     modalHeader: {
         flexDirection: "row",
         justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 20,
     },
     modalTitle: {
         fontSize: 18,
         fontWeight: "bold",
     },
-    closeButton: {
-        fontSize: 18,
-        color: "red",
-    },
     modalBody: {
-        marginTop: 10,
+        flex: 1,
     },
     input: {
         borderBottomWidth: 1,
-        borderBottomColor: "#ccc",
+        borderBottomColor: "#ddd",
         marginBottom: 10,
-        padding: 5,
-    },
-    calendarContainer: {
-        marginBottom: 10,
-    },
-    saveButtonText: {
-        color: "white",
-        fontSize: 16,
-    },
-
-    buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-    saveButton: {
-        backgroundColor: '#007AFF',
-        padding: 10,
-        borderRadius: 5,
-    },
-    deleteButton: {
-        backgroundColor: '#FF3B30',
-        padding: 10,
-        borderRadius: 5,
-    },
-    buttonText: {
-        color: '#fff',
-        fontWeight: 'bold',
+        paddingVertical: 5,
     },
     iconPickerContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
+        flexDirection: "row",
+        alignItems: "center",
         marginBottom: 10,
     },
     picker: {
-        width: 150,
-        height: 50,
+        flex: 1,
+    },
+    calendarContainer: {
+        marginTop: 10,
+    },
+    buttonContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginTop: 20,
+    },
+    saveButton: {
+        backgroundColor: "#007AFF",
+        padding: 10,
+        borderRadius: 5,
+        flex: 1,
+        alignItems: "center",
+        marginRight: 10,
+    },
+    deleteButton: {
+        backgroundColor: "#FF3B30",
+        padding: 10,
+        borderRadius: 5,
+        flex: 1,
+        alignItems: "center",
+    },
+    buttonText: {
+        color: "#fff",
+        fontWeight: "bold",
+    },
+    loadingIndicator: {
+        alignSelf: "center",
+        marginVertical: 20,
     },
 });

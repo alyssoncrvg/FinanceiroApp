@@ -11,6 +11,8 @@ export interface FlexModalProps {
     fields: { name: string; placeholder: string; type?: string }[]; // Lista de campos dinâmicos
     onSubmit: (formData: { [key: string]: string | number }) => void; // Função de submissão
     setAddItem: React.Dispatch<React.SetStateAction<boolean>>
+    loading: boolean
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>
   }
 
 export interface FormDataGoal {

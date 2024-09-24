@@ -1,10 +1,9 @@
-// FlexModal.tsx
 import React, { useState } from 'react';
-import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { FlexModalProps } from '../interfaces/interfaces';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-export const FlexModal: React.FC<FlexModalProps> = ({ modalVisible, onClose, fields, onSubmit, setAddItem }) => {
+export const FlexModal: React.FC<FlexModalProps> = ({ modalVisible, onClose, fields, onSubmit, setAddItem, loading, setLoading }) => {
   const [formData, setFormData] = useState<{ [key: string]: string | number }>({});
 
   // Função para lidar com alterações nos inputs
@@ -13,6 +12,19 @@ export const FlexModal: React.FC<FlexModalProps> = ({ modalVisible, onClose, fie
       ...formData,
       [field]: value,
     });
+  };
+
+  const handleSave = async () => {
+    setLoading(true); // Inicia o carregamento
+    try {
+      await onSubmit(formData); // Chama a função de submissão com os dados do formulário
+      setAddItem(true);
+      onClose(); // Fecha o modal
+    } catch (error) {
+      console.error("Erro ao salvar:", error);
+    } finally {
+      setLoading(false); // Para o carregamento
+    }
   };
 
   return (
@@ -42,14 +54,15 @@ export const FlexModal: React.FC<FlexModalProps> = ({ modalVisible, onClose, fie
 
             {/* Botão de Salvar */}
             <TouchableOpacity
-              style={styles.saveButton}
-              onPress={() => {
-                onSubmit(formData); // Chama a função de submissão com os dados do formulário
-                setAddItem(true);
-                onClose(); // Fecha o modal
-              }}
+              style={[styles.saveButton, loading && styles.saveButtonDisabled]}
+              onPress={handleSave}
+              disabled={loading}
             >
-              <Text style={styles.saveButtonText}>Salvar</Text>
+              {loading ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                <Text style={styles.saveButtonText}>Salvar</Text>
+              )}
             </TouchableOpacity>
           </View>
         </View>
@@ -96,6 +109,9 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',
+  },
+  saveButtonDisabled: {
+    backgroundColor: '#a5a5a5', // Cor de fundo para o botão desativado
   },
   saveButtonText: {
     color: 'white',

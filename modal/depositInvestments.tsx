@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Modal, StyleSheet, TextInput, TouchableOpacity, View, Text, Alert } from "react-native";
+import { Modal, StyleSheet, TextInput, TouchableOpacity, View, Text, Alert, ActivityIndicator } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { FormDataInvestments } from "../interfaces/interfaces";
 import { editInvestment } from "../functions/PATH/investments";
@@ -29,6 +29,8 @@ export const DepositModal: React.FC<DepositInvestmentsModalProps> = ({ modalVisi
     const { dataWallet, refetchData } = useFetchData(true); // Hook para buscar carteiras
     const [selectedWallet, setSelectedWallet] = useState<string | null>(null); // Carteira selecionada
 
+    const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         if (item) {
             setFormData({
@@ -50,25 +52,32 @@ export const DepositModal: React.FC<DepositInvestmentsModalProps> = ({ modalVisi
     const handleSubmit = async () => {
         if (selectedWallet) {
             const wallet = dataWallet.find(w => w.id === selectedWallet);
-
+            
             if (wallet && wallet.valor >= formData.valor) {
-                // Atualize o saldo da carteira
-                const updatedWallet = {
-                    ...wallet,
-                    valor: wallet.valor - formData.valor, // Subtrai o valor do depósito
-                };
+                setLoading(true); // Start loading
+                try {
+                    // Atualize o saldo da carteira
+                    const updatedWallet = {
+                        ...wallet,
+                        valor: wallet.valor - formData.valor, // Subtrai o valor do depósito
+                    };
 
-                const updatedInvestment = {
-                    ...formData,
-                    valor: item.valor + formData.valor, // Soma o valor do depósito ao valor atual do investimento
-                };
+                    const updatedInvestment = {
+                        ...formData,
+                        valor: item.valor + formData.valor, // Soma o valor do depósito ao valor atual do investimento
+                    };
 
-                await editWallet(updatedWallet); // Atualiza a carteira na API
-                await editInvestment(updatedInvestment);  // Atualiza o investimento
+                    await editWallet(updatedWallet); // Atualiza a carteira na API
+                    await editInvestment(updatedInvestment);  // Atualiza o investimento
 
-                refetchData()
-                onUpdate(updatedInvestment); // Atualiza o investimento no estado local
-                onClose(); // Fecha o modal
+                    refetchData()
+                    onUpdate(updatedInvestment); // Atualiza o investimento no estado local
+                    onClose(); // Fecha o modal
+                } catch (error) {
+                    Alert.alert("Erro", "Ocorreu um erro ao realizar o depósito.");
+                } finally {
+                    setLoading(false); // Stop loading
+                }
             } else {
                 Alert.alert("Saldo insuficiente na carteira selecionada: ", selectedWallet);
             }
@@ -106,8 +115,16 @@ export const DepositModal: React.FC<DepositInvestmentsModalProps> = ({ modalVisi
                     </Picker>
 
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.saveButton} onPress={handleSubmit}>
-                            <Text style={styles.buttonText}>Depositar</Text>
+                    <TouchableOpacity 
+                            style={[styles.saveButton, loading && styles.saveButtonDisabled]} 
+                            onPress={handleSubmit} 
+                            disabled={loading}
+                        >
+                            {loading ? (
+                                <ActivityIndicator size="small" color="#fff" />
+                            ) : (
+                                <Text style={styles.buttonText}>Depositar</Text>
+                            )}
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -156,6 +173,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#007AFF',
         padding: 10,
         borderRadius: 5,
+    },
+    saveButtonDisabled: {
+        backgroundColor: '#a5a5a5',
     },
     buttonText: {
         color: '#fff',

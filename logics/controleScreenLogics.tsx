@@ -136,7 +136,7 @@ export const useModalHandlers = (
     const addModalExpense = () => setExpenseModalVisible(true);
     const closeModalExpense = () => setExpenseModalVisible(false);
 
-    const handleAddCarteira = (formData: FormData) => {
+    const handleAddCarteira = async (formData: FormData) => {
         const banco = String(formData.banco);
         const saldo = Number(formData.saldo);
 
@@ -144,7 +144,7 @@ export const useModalHandlers = (
             console.error('Erro: O saldo informado não é um número válido');
             return;
         }
-        addWallet(banco, saldo);
+        await addWallet(banco, saldo);
         closeModalWallet();
     };
 

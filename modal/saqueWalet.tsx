@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Modal, StyleSheet, TextInput, TouchableOpacity, View, Text, Alert } from "react-native";
+import { Modal, StyleSheet, TextInput, TouchableOpacity, View, Text, Alert, ActivityIndicator } from "react-native";
 import { Item } from "../interfaces/interfaces";
 import { editWallet } from "../functions/PATH/wallet";
 
@@ -28,6 +28,8 @@ export const WithdrawModalWallet: React.FC<WithdrawModalProps> = ({
 
     const { dataWallet, refetchData } = useFetchData(true);
 
+    const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         if (item && modalVisible) {
             setFormData({
@@ -53,16 +55,21 @@ export const WithdrawModalWallet: React.FC<WithdrawModalProps> = ({
         }
 
         if (item) {
-            const updatedItem = {
-                ...item,
-                valor: item.valor - formData.valor,
-            };
+            setLoading(true); // Start loading
+            try {
+                const updatedItem = {
+                    ...item,
+                    valor: item.valor - formData.valor,
+                };
 
-            await editWallet(updatedItem);
-            onUpdate(updatedItem);
-            await addMovent(formData.valor * (-1))
-            refetchData();
-            onClose();
+                await editWallet(updatedItem);
+                onUpdate(updatedItem);
+                await addMovent(formData.valor * (-1))
+                refetchData();
+                onClose();
+            } catch (error) {
+                Alert.alert("Erro", "Ocorreu um erro ao realizar o saque.");
+            }
         } else {
             Alert.alert("Erro ao selecionar a carteira de destino.");
         }
@@ -87,8 +94,16 @@ export const WithdrawModalWallet: React.FC<WithdrawModalProps> = ({
                         onChangeText={handleInputChange}
                     />
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.saveButton} onPress={handleWithdraw}>
-                            <Text style={styles.buttonText}>Sacar</Text>
+                        <TouchableOpacity
+                            style={[styles.saveButton, loading && styles.saveButtonDisabled]}
+                            onPress={handleWithdraw}
+                            disabled={loading}
+                        >
+                            {loading ? (
+                                <ActivityIndicator size="small" color="#fff" />
+                            ) : (
+                                <Text style={styles.buttonText}>Depositar</Text>
+                            )}
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -134,6 +149,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#007AFF',
         padding: 10,
         borderRadius: 5,
+    },
+    saveButtonDisabled: {
+        backgroundColor: '#a5a5a5',
     },
     buttonText: {
         color: '#fff',

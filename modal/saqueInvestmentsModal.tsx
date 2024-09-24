@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Modal, StyleSheet, TextInput, TouchableOpacity, View, Text, Alert } from "react-native";
+import { Modal, StyleSheet, TextInput, TouchableOpacity, View, Text, Alert, ActivityIndicator } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { FormDataInvestments } from "../interfaces/interfaces";
 import { editInvestment } from "../functions/PATH/investments";
@@ -33,6 +33,8 @@ export const WithdrawModal: React.FC<DepositInvestmentsModalProps> = ({
     const { dataWallet, refetchData } = useFetchData(true); // Hook para buscar carteiras
     const [selectedWallet, setSelectedWallet] = useState<string | null>(null); // Carteira selecionada
 
+    const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         if (item && modalVisible) {
             setFormData({
@@ -60,25 +62,33 @@ export const WithdrawModal: React.FC<DepositInvestmentsModalProps> = ({
 
             const wallet = dataWallet.find(w => w.id === selectedWallet);
 
+            
             if (wallet) {
-                // Atualize o saldo do investimento (subtrai o valor do saque)
-                const updatedInvestment = {
-                    ...formData,
-                    valor: item.valor - formData.valor, // Subtrai o valor do saque do valor atual do investimento
-                };
+                setLoading(true); // Start loading
+                try {
+                    // Atualize o saldo do investimento (subtrai o valor do saque)
+                    const updatedInvestment = {
+                        ...formData,
+                        valor: item.valor - formData.valor, // Subtrai o valor do saque do valor atual do investimento
+                    };
 
-                // Atualize o saldo da carteira (adiciona o valor do saque)
-                const updatedWallet = {
-                    ...wallet,
-                    valor: wallet.valor + formData.valor, // Soma o valor do saque ao saldo da carteira
-                };
+                    // Atualize o saldo da carteira (adiciona o valor do saque)
+                    const updatedWallet = {
+                        ...wallet,
+                        valor: wallet.valor + formData.valor, // Soma o valor do saque ao saldo da carteira
+                    };
 
-                await editWallet(updatedWallet); // Atualiza a carteira na API
-                await editInvestment(updatedInvestment);  // Atualiza o investimento
+                    await editWallet(updatedWallet); // Atualiza a carteira na API
+                    await editInvestment(updatedInvestment);  // Atualiza o investimento
 
-                refetchData(); // Recarregue os dados da carteira
-                onUpdate(updatedInvestment); // Atualiza o investimento no estado local
-                onClose(); // Fecha o modal
+                    refetchData(); // Recarregue os dados da carteira
+                    onUpdate(updatedInvestment); // Atualiza o investimento no estado local
+                    onClose(); // Fecha o modal
+                } catch (error) {
+                    Alert.alert("Erro", "Ocorreu um erro ao realizar o saque.");
+                } finally {
+                    setLoading(false); // Stop loading
+                }
             } else {
                 Alert.alert("Erro ao selecionar a carteira de destino.");
             }
@@ -114,8 +124,16 @@ export const WithdrawModal: React.FC<DepositInvestmentsModalProps> = ({
                     </Picker>
 
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.saveButton} onPress={handleSubmit}>
-                            <Text style={styles.buttonText}>Sacar</Text>
+                    <TouchableOpacity 
+                            style={[styles.saveButton, loading && styles.saveButtonDisabled]} 
+                            onPress={handleSubmit} 
+                            disabled={loading}
+                        >
+                            {loading ? (
+                                <ActivityIndicator size="small" color="#fff" />
+                            ) : (
+                                <Text style={styles.buttonText}>Sacar</Text>
+                            )}
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -164,6 +182,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#007AFF',
         padding: 10,
         borderRadius: 5,
+    },
+    saveButtonDisabled: {
+        backgroundColor: '#a5a5a5',
     },
     buttonText: {
         color: '#fff',
