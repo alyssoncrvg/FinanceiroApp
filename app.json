@@ -4,26 +4,28 @@
     "slug": "ORGANIZZE",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/clashBet.jpg",
+    "icon": "./assets/adaptive-icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/intro.png",
       "resizeMode": "contain",
-      "backgroundColor": "black"
+      "backgroundColor": "#000000"
     },
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/clashBet.jpg",
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.example.organize",
       "versionCode": 1
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
+    "extra": {
+      "eas": {
+        "projectId": "0464ea45-930d-44b9-86f3-cb367c8fef04"
+      }
     }
   }
 }
