@@ -2,7 +2,7 @@ export interface Item {
     id: string;
     banco: string;
     valor: number;
-    [key: string]: string | number; // Permite indexar com string
+    [key: string]: string | number; 
 }
 
 export interface FlexModalProps {
@@ -21,10 +21,9 @@ export interface FormDataGoal {
     titulo: string;
     targetAmount: number;
     currentAmount: number;
-    forecast: Date; // formato de data em string ou Date
+    forecast: Date; 
 }
 
-// types.ts
 export type RootStackParamList = {
     Home: undefined;
     Investments: undefined;

@@ -7,7 +7,7 @@ import { Alert } from "react-native";
 
 
 export const useFechDataInvestments = (InvestmentsAdded: boolean) => {
-    const { setSumInvestments } = useInvestments(); // Use o contexto para atualizar a soma total
+    const { setSumInvestments } = useInvestments(); 
     const [investmentsDataFormated, setInvestmentDataFormated] = useState<any[]>([]);
     const [ investmentData, setInvesntmentData ] = useState<FormDataInvestments[]>([]);
 
@@ -26,9 +26,8 @@ export const useFechDataInvestments = (InvestmentsAdded: boolean) => {
 
             setInvestmentDataFormated(formDataInvestments);
 
-            // Calcular a soma total dos investimentos
             const total = formDataInvestments.reduce((acc: any, investment: { population: any; }) => acc + investment.population, 0);
-            setSumInvestments(total); // Atualiza o valor no contexto
+            setSumInvestments(total); 
         } catch (error) {
             Alert.alert('Erro ao buscar investimentos')
         }

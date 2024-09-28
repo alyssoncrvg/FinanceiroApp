@@ -10,10 +10,8 @@ type RootStackParamList = {
     ExpenseItensDetails: { group: string, data: expenses[] }
 };
 
-// Tipo para as propriedades da rota
 type ExpenseDetailsRouteProp = RouteProp<RootStackParamList, 'ExpenseDetails'>;
 
-// Tipo para as propriedades de navegação
 type ExpenseDetailsNavigationProp = NativeStackNavigationProp<RootStackParamList, 'ExpenseDetails'>;
 
 type Props = {
@@ -24,25 +22,23 @@ const ExpenseDetails = ({ route }: Props) => {
 
     const navigation = useNavigation<ExpenseDetailsNavigationProp>();
 
-    const [refreshData, setRefreshData] = useState(false); 
+    const [refreshData, setRefreshData] = useState(false);
     const { dataExpenses, loading } = useFetchData(refreshData);
 
     useFocusEffect(
         useCallback(() => {
-          setRefreshData(true); // Disparar recarregamento ao focar
+            setRefreshData(true); 
         }, [])
-      );
-    
-      // Depois que os dados forem carregados, podemos resetar o refreshData
-      useEffect(() => {
+    );
+
+    useEffect(() => {
         if (refreshData) {
-          setRefreshData(false); // Impede a recarga contínua quando os dados já foram atualizados
+            setRefreshData(false);
         }
-      }, [ refreshData]);
-    
+    }, [refreshData]);
+
 
     const handlePieChartPress = (data: expenses[]) => {
-        // Navegar para a tela ExpenseItensDetails
         navigation.navigate('ExpenseItensDetails', { group: data[0].categoria, data: data });
     };
 

@@ -23,7 +23,6 @@ export const EditWalletModal: React.FC<EditWalletModalProps> = ({ modalVisible, 
         valor: 0,
     });
 
-    // Sempre que o item mudar, atualiza o formData com os valores do item selecionado
     useEffect(() => {
         if (item) {
             setFormData({
@@ -42,28 +41,28 @@ export const EditWalletModal: React.FC<EditWalletModalProps> = ({ modalVisible, 
     };
 
     const handleSave = async () => {
-        setLoading(true); // Inicia o carregamento
+        setLoading(true); 
         try {
-            await editWallet(formData); // Chama a função de edição da carteira
-            refresh(); // Atualiza a lista de carteiras
-            onClose(); // Fecha o modal
+            await editWallet(formData);
+            refresh(); 
+            onClose(); 
         } catch (error) {
             console.error("Erro ao salvar:", error);
         } finally {
-            setLoading(false); // Para o carregamento
+            setLoading(false); 
         }
     };
 
     const handleDelete = async () => {
-        setLoading(true); // Inicia o carregamento
+        setLoading(true); 
         try {
-            await deleteWallet(formData); // Chama a função de exclusão da carteira
-            refresh(); // Atualiza a lista de carteiras
-            onClose(); // Fecha o modal
+            await deleteWallet(formData);
+            refresh();
+            onClose();
         } catch (error) {
             console.error("Erro ao excluir:", error);
         } finally {
-            setLoading(false); // Para o carregamento
+            setLoading(false); 
         }
     };
 
@@ -177,7 +176,7 @@ const styles = StyleSheet.create({
         marginLeft: 5,
     },
     buttonDisabled: {
-        backgroundColor: '#a5a5a5', // Cor de fundo para o botão desativado
+        backgroundColor: '#a5a5a5', 
     },
     buttonText: {
         color: '#fff',

@@ -34,7 +34,7 @@ export const EditGoalModel: React.FC<EditGoalProps> = ({ modalVisible, onClose, 
         currentAmount: 0,
         forecast: new Date(),
     });
-    const [loading, setLoading] = useState(false); // Adicionado estado para carregamento
+    const [loading, setLoading] = useState(false); 
 
     useEffect(() => {
         if (item) {
@@ -85,7 +85,7 @@ export const EditGoalModel: React.FC<EditGoalProps> = ({ modalVisible, onClose, 
 
     const handleSubmit = async () => {
         if (validateForm()) {
-            setLoading(true); // Ativa o indicador de carregamento
+            setLoading(true);
             try {
                 await editGoal(formData);
                 setItemUpdated(true);
@@ -93,7 +93,7 @@ export const EditGoalModel: React.FC<EditGoalProps> = ({ modalVisible, onClose, 
             } catch (error) {
                 Alert.alert("Erro", "Ocorreu um erro ao salvar a meta.");
             } finally {
-                setLoading(false); // Desativa o indicador de carregamento
+                setLoading(false); 
             }
         }
     };
@@ -225,14 +225,14 @@ export const EditGoalModel: React.FC<EditGoalProps> = ({ modalVisible, onClose, 
                                 <TouchableOpacity
                                     style={styles.saveButton}
                                     onPress={handleSubmit}
-                                    disabled={loading} // Desativa o botão enquanto carrega
+                                    disabled={loading} 
                                 >
                                     <Text style={styles.buttonText}>Salvar</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     style={styles.deleteButton}
                                     onPress={handleDelete}
-                                    disabled={loading} // Desativa o botão enquanto carrega
+                                    disabled={loading} 
                                 >
                                     <Text style={styles.buttonText}>Excluir</Text>
                                 </TouchableOpacity>
@@ -248,48 +248,56 @@ export const EditGoalModel: React.FC<EditGoalProps> = ({ modalVisible, onClose, 
 const styles = StyleSheet.create({
     modalBackground: {
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-    },
-    modalContainer: {
-        width: "80%",
-        backgroundColor: "#fff",
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+      },
+      modalContainer: {
+        width: 300,
+        backgroundColor: 'white',
         borderRadius: 10,
         padding: 20,
-        elevation: 5,
-    },
-    modalHeader: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: 20,
-    },
-    modalTitle: {
+      },
+      modalHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+      },
+      modalTitle: {
         fontSize: 18,
-        fontWeight: "bold",
-    },
-    modalBody: {
-        flex: 1,
-    },
-    input: {
-        borderBottomWidth: 1,
-        borderBottomColor: "#ddd",
-        marginBottom: 10,
-        paddingVertical: 5,
-    },
-    iconPickerContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginBottom: 10,
-    },
-    picker: {
-        flex: 1,
-    },
-    calendarContainer: {
+        fontWeight: 'bold',
+      },
+      closeButton: {
+        fontSize: 18,
+        color: 'red',
+      },
+      modalBody: {
         marginTop: 10,
-    },
-    buttonContainer: {
+      },
+      input: {
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+        marginBottom: 10,
+        padding: 5,
+      },
+      calendarContainer: {
+        marginBottom: 10,
+      },
+      buttonDisabled: {
+        backgroundColor: '#B0B0B0',
+      },
+      saveButtonText: {
+        color: 'white',
+        fontSize: 16,
+      },
+      picker: {
+        height: 50,
+        width: 150,
+      },
+      iconPickerContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+      },
+      buttonContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
         marginTop: 20,
@@ -311,7 +319,6 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: "#fff",
-        fontWeight: "bold",
     },
     loadingIndicator: {
         alignSelf: "center",

@@ -5,7 +5,7 @@ export const styleModalWallet = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fundo escurecido com opacidade
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', 
     },
     modalContainer: {
         width: 300,

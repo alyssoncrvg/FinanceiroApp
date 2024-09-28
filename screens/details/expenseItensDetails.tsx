@@ -46,23 +46,20 @@ export const ExpenseItensDetails = ({ route }: Props) => {
     }, [data]);
 
     const handleEditSubmit = (formData: { [key: string]: string | number }) => {
-        // Lógica para editar o item
         setModalVisible(false);
     };
 
     function handlePress(item: expenses) {
-        setSelectedItem(item); // Define o item selecionado
-        setModalVisible(true); // Abre o modal
+        setSelectedItem(item); 
+        setModalVisible(true); 
     }
 
     const handleUpdate = (updatedItem: expenses) => {
         const oldItem = dataLocal.find(item => item._id === updatedItem._id);
         if (oldItem && oldItem.categoria !== updatedItem.categoria) {
-            // Remove o item da lista se a categoria mudou
             const updatedData = dataLocal.filter(item => item._id !== updatedItem._id);
             setData(updatedData);
         } else {
-            // Atualiza o item na lista local
             const updatedData = dataLocal.map((item) =>
                 item._id === updatedItem._id ? updatedItem : item
             );
@@ -72,9 +69,8 @@ export const ExpenseItensDetails = ({ route }: Props) => {
 
     const handleDelete = async (expense: expenses) => {
         await deleteExpense(expense).then(() => {
-            // Remover o item do array localmente após exclusão
             const updatedData = data.filter(item => item._id !== expense._id);
-            setData(updatedData); // Atualiza o array localmente
+            setData(updatedData); 
         }).catch(error => {
             console.error("Erro ao excluir despesa:", error);
         });
@@ -165,13 +161,13 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#f0f0f0',
         borderRadius: 20,
-        flexDirection: 'row', // Alinha os itens horizontalmente
-        alignItems: 'center', // Alinha verticalmente os itens no centro
+        flexDirection: 'row', 
+        alignItems: 'center',
     },
     content: {
-        flexDirection: 'row', // Alinha os itens horizontalmente
-        alignItems: 'center', // Alinha verticalmente os itens no centro
-        flex: 1, // Faz o conteúdo ocupar o espaço disponível
+        flexDirection: 'row', 
+        alignItems: 'center',
+        flex: 1, 
     },
     expenseName: {
         fontSize: 20,
@@ -182,17 +178,16 @@ const styles = StyleSheet.create({
         color: 'gray',
     },
     menuContainer: {
-        flexDirection: 'column', // Alinha os itens verticalmente
-        justifyContent: 'center', // Alinha verticalmente os itens no centro
-        marginLeft: 10, // Espaço entre o conteúdo e o menu
-        marginRight: 0, // Remove qualquer margem direita
-        position: 'absolute', // Posiciona o container absolutamente
-        right: 0, // Alinha à direita do card
-        // top: '50%', // Alinha verticalmente ao meio
-        transform: [{ translateY: -12 }] // Ajusta para centralizar verticalmente
+        flexDirection: 'column', 
+        justifyContent: 'center', 
+        marginLeft: 10, 
+        marginRight: 0, 
+        position: 'absolute', 
+        right: 0, 
+        transform: [{ translateY: -12 }] 
     },
     menuTrigger: {
-        fontSize: 35, // Tamanho do ícone de menu
+        fontSize: 35,
         color: 'gray',
         fontWeight: 'bold',
     },

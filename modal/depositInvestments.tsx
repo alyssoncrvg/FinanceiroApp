@@ -26,8 +26,8 @@ export const DepositModal: React.FC<DepositInvestmentsModalProps> = ({ modalVisi
         date: new Date(),
     });
 
-    const { dataWallet, refetchData } = useFetchData(true); // Hook para buscar carteiras
-    const [selectedWallet, setSelectedWallet] = useState<string | null>(null); // Carteira selecionada
+    const { dataWallet, refetchData } = useFetchData(true); 
+    const [selectedWallet, setSelectedWallet] = useState<string | null>(null); 
 
     const [loading, setLoading] = useState(false);
 
@@ -54,29 +54,28 @@ export const DepositModal: React.FC<DepositInvestmentsModalProps> = ({ modalVisi
             const wallet = dataWallet.find(w => w.id === selectedWallet);
             
             if (wallet && wallet.valor >= formData.valor) {
-                setLoading(true); // Start loading
+                setLoading(true); 
                 try {
-                    // Atualize o saldo da carteira
+                    
                     const updatedWallet = {
                         ...wallet,
-                        valor: wallet.valor - formData.valor, // Subtrai o valor do depósito
+                        valor: wallet.valor - formData.valor,
                     };
 
                     const updatedInvestment = {
                         ...formData,
-                        valor: item.valor + formData.valor, // Soma o valor do depósito ao valor atual do investimento
+                        valor: item.valor + formData.valor, 
                     };
 
-                    await editWallet(updatedWallet); // Atualiza a carteira na API
-                    await editInvestment(updatedInvestment);  // Atualiza o investimento
-
+                    await editWallet(updatedWallet); 
+                    await editInvestment(updatedInvestment);  
                     refetchData()
-                    onUpdate(updatedInvestment); // Atualiza o investimento no estado local
-                    onClose(); // Fecha o modal
+                    onUpdate(updatedInvestment); 
+                    onClose(); 
                 } catch (error) {
                     Alert.alert("Erro", "Ocorreu um erro ao realizar o depósito.");
                 } finally {
-                    setLoading(false); // Stop loading
+                    setLoading(false);
                 }
             } else {
                 Alert.alert("Saldo insuficiente na carteira selecionada: ", selectedWallet);
@@ -84,7 +83,7 @@ export const DepositModal: React.FC<DepositInvestmentsModalProps> = ({ modalVisi
         }
     };
 
-    const availableWallets = dataWallet.filter((wallet: { valor: number; }) => wallet.valor >= formData.valor); // Filtra carteiras com saldo suficiente
+    const availableWallets = dataWallet.filter((wallet: { valor: number; }) => wallet.valor >= formData.valor); 
 
     return (
         <Modal animationType="fade" transparent={true} visible={modalVisible} onRequestClose={onClose}>

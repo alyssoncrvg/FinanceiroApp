@@ -49,7 +49,7 @@ export const DepositModal: React.FC<DepositModalProps> = ({
 
     const handleDeposit = async () => {
         if (item) {
-            setLoading(true); // Start loading
+            setLoading(true); 
             try {
                 const updatedItem = {
                     ...item,
@@ -64,7 +64,7 @@ export const DepositModal: React.FC<DepositModalProps> = ({
             } catch (error) {
                 Alert.alert("Erro", "Ocorreu um erro ao realizar o depósito.");
             } finally {
-                setLoading(false); // Stop loading
+                setLoading(false);
             }
         } else {
             Alert.alert("Erro ao selecionar a carteira de origem.");

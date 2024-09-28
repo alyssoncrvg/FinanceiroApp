@@ -6,7 +6,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 export const FlexModal: React.FC<FlexModalProps> = ({ modalVisible, onClose, fields, onSubmit, setAddItem, loading, setLoading }) => {
   const [formData, setFormData] = useState<{ [key: string]: string | number }>({});
 
-  // Função para lidar com alterações nos inputs
   const handleInputChange = (field: string, value: string) => {
     setFormData({
       ...formData,
@@ -15,15 +14,15 @@ export const FlexModal: React.FC<FlexModalProps> = ({ modalVisible, onClose, fie
   };
 
   const handleSave = async () => {
-    setLoading(true); // Inicia o carregamento
+    setLoading(true); 
     try {
-      await onSubmit(formData); // Chama a função de submissão com os dados do formulário
+      await onSubmit(formData); 
       setAddItem(true);
-      onClose(); // Fecha o modal
+      onClose(); 
     } catch (error) {
       console.error("Erro ao salvar:", error);
     } finally {
-      setLoading(false); // Para o carregamento
+      setLoading(false); 
     }
   };
 
@@ -111,7 +110,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   saveButtonDisabled: {
-    backgroundColor: '#a5a5a5', // Cor de fundo para o botão desativado
+    backgroundColor: '#a5a5a5', 
   },
   saveButtonText: {
     color: 'white',

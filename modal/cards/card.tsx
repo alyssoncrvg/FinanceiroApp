@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
-import { Menu, MenuTrigger, MenuOptions, MenuOption, MenuProvider } from 'react-native-popup-menu';
-import { Ionicons } from '@expo/vector-icons'; // ou qualquer outra biblioteca de ícones que você usa
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { Menu, MenuTrigger, MenuOptions, MenuOption } from 'react-native-popup-menu';
+import { Ionicons } from '@expo/vector-icons';
 
 type CardProps = {
   banco: string;

@@ -55,7 +55,7 @@ export const WithdrawModalWallet: React.FC<WithdrawModalProps> = ({
         }
 
         if (item) {
-            setLoading(true); // Start loading
+            setLoading(true); 
             try {
                 const updatedItem = {
                     ...item,

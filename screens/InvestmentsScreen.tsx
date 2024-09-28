@@ -22,7 +22,7 @@ export function InvestmentsScreen() {
 
     const [modalVisible, setInvestmentsModalVisible] = useState(false);
     const [investimentAdded, setInvestmentAdded] = useState(false);
-    const [loading, setLoading] = useState(true); // Adicionar estado de carregamento
+    const [loading, setLoading] = useState(true); 
     const { sumInvestments } = useInvestments();
     const [refreshData, setRefreshData] = useState(false); 
 
@@ -34,7 +34,7 @@ export function InvestmentsScreen() {
 
     useFocusEffect(
         useCallback(() => {
-            setRefreshData(true); // Disparar recarregamento ao focar
+            setRefreshData(true); 
         }, [])
     );
 
@@ -86,7 +86,7 @@ export function InvestmentsScreen() {
         navigation.navigate('InvestmentDetails', { data: investmentData });
     };
 
-    // Mostrar o indicador de carregamento se os dados ainda estiverem carregando
+    
     if (loading) {
         return (
             <View style={styleInvestment.loadingContainer}>

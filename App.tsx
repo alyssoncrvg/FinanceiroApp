@@ -3,7 +3,6 @@ import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { HomeScreen } from './screens/homeScreen';
-import { InvestmentsScreen } from './screens/InvestmentsScreen';
 import { GoalsScreen } from './screens/goals';
 import { BottomNavigationBar } from './screens/bottomNavigationBar';
 import { InvestmentProvider } from './context/investmentContext';
@@ -15,7 +14,6 @@ const Tab = createMaterialTopTabNavigator();
 
 export default function App() {
   return (
-    // <MenuProvider> {/* Adiciona o MenuProvider */}
       <InvestmentProvider>
           <NavigationContainer>
             <SafeAreaView style={styles.safeArea}>
@@ -44,7 +42,6 @@ export default function App() {
             </SafeAreaView>
           </NavigationContainer>
       </InvestmentProvider>
-    // </MenuProvider>
   );
 }
 
@@ -54,6 +51,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: 'space-between', // Garante que a barra fique no final da tela
+    justifyContent: 'space-between', 
   },
 });

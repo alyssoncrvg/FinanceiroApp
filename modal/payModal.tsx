@@ -20,25 +20,25 @@ export const PayModal: React.FC<PayModalProps> = ({ modalVisible, onClose, expen
 
     const handlePay = async () => {
         if (selectedWallet) {
-            setLoading(true); // Inicia o carregamento
+            setLoading(true); 
             const wallet = dataWallet.find(w => w.id === selectedWallet);
 
             if (wallet) {
-                // Atualize o saldo da carteira
+                
                 const updatedWallet = {
                     ...wallet,
-                    valor: wallet.valor - expense.valor // Subtrai o valor da despesa
+                    valor: wallet.valor - expense.valor 
                 };
 
                 try {
-                    await editWallet(updatedWallet); // Atualiza a carteira na API
+                    await editWallet(updatedWallet);
                     await addMovent(expense.valor * (-1));
-                    onDelete(expense); // Chama a função para deletar a despesa
-                    onClose(); // Fecha o modal
+                    onDelete(expense);
+                    onClose(); 
                 } catch (error) {
                     console.error("Erro ao pagar despesa:", error);
                 } finally {
-                    setLoading(false); // Para o carregamento
+                    setLoading(false);
                 }
             } else {
                 console.error("Carteira não encontrada");
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     payButtonDisabled: {
-        backgroundColor: '#a5a5a5', // Cor de fundo para o botão desativado
+        backgroundColor: '#a5a5a5', 
     },
     closeButton: {
         backgroundColor: '#ccc',

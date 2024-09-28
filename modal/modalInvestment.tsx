@@ -123,8 +123,8 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',
-    flexDirection: 'row', // Para alinhar o indicador de carregamento e o texto
-    justifyContent: 'center', // Centraliza o texto e o indicador
+    flexDirection: 'row', 
+    justifyContent: 'center', 
   },
   saveButtonText: {
     color: 'white',

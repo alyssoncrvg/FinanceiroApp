@@ -113,7 +113,6 @@ export const useFetchData = (expenseAdded: boolean) => {
         } catch (error) {
             Alert.alert('Erro ao buscar carteiras')
         } finally {
-            // Loading só será atualizado aqui, após todas as requisições serem finalizadas
             setLoading(false);
         }
     };
@@ -154,7 +153,7 @@ export const useModalHandlers = (
         const categoria = String(formData.categoria);
 
         await addExpenses(descricao, valor, categoria);
-        closeModalExpense(); // Fecha o modal após adicionar a despesa
+        closeModalExpense(); 
     };
 
     return { addModalWallet, closeModalWallet, addModalExpense, closeModalExpense, handleAddCarteira, handleAddDespesas };

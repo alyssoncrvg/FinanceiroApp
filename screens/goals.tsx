@@ -10,13 +10,6 @@ import { FormDataGoal } from '../interfaces/interfaces';
 import { FlexModalGoal } from '../modal/modalGoal';
 import { EditGoalModel } from '../modal/modalEditGoal';
 
-interface FlexModalProps {
-    modalVisible: boolean;
-    onClose: () => void;
-    fields: { name: string; placeholder: string; type: string }[];
-    onSubmit: (formData: FormDataGoal) => void;
-}
-
 
 export function GoalsScreen() {
 
@@ -41,7 +34,6 @@ export function GoalsScreen() {
         setEditModalGoal(true);
     };
 
-    // Tela de carregamento
     if (loading) {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -103,9 +95,9 @@ export function GoalsScreen() {
                     <EditGoalModel
                         modalVisible={editModalGoal}
                         onClose={() => setEditModalGoal(false)}
-                        onSubmit={() => setItemUpdated(true)} // Atualiza flag para forçar refresh
-                        item={selectedGoal} // Meta selecionada para edição
-                        setItemUpdated={setItemUpdated} // Passa o setter para marcar atualização
+                        onSubmit={() => setItemUpdated(true)}
+                        item={selectedGoal} 
+                        setItemUpdated={setItemUpdated} 
                     />
                 )}
 

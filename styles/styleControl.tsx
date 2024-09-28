@@ -8,17 +8,16 @@ export const styleControl = StyleSheet.create({
         paddingBottom: 80,
     },
     loadingContainer: {
-        flex: 1,                // Ocupar o espaço inteiro da tela
-        justifyContent: 'center', // Centralizar verticalmente
-        alignItems: 'center',    // Centralizar horizontalmente
-        backgroundColor: '#f5f5f5', // Opcional: definir uma cor de fundo suave
+        flex: 1,                
+        justifyContent: 'center', 
+        alignItems: 'center',   
+        backgroundColor: '#f5f5f5', 
       },
     containerCarousel: {
         flex: 1,
         backgroundColor: 'white',
-        justifyContent: 'center', // Alinha o carrossel verticalmente ao centro
+        justifyContent: 'center', 
         paddingEnd: 10
-        // alignItems: 'center', // Alinha o carrossel horizontalmente ao centro
       },
     scrollView: {
         flexGrow: 1,
@@ -38,8 +37,8 @@ export const styleControl = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         paddingLeft: 20,
-        justifyContent: 'center', // Alinha o carrossel verticalmente ao centro
-        alignItems: 'center', // Alinha o carrossel horizontalmente ao centro
+        justifyContent: 'center', 
+        alignItems: 'center', 
         marginTop: 20
     },
     walletsContainer: {
@@ -50,9 +49,9 @@ export const styleControl = StyleSheet.create({
     },
     walletsContent: {
         flexDirection: 'row',
-        justifyContent: 'space-between', // Espaça os itens para a esquerda e direita
+        justifyContent: 'space-between', 
         alignItems: 'center',
-        width: '100%', // Garante que ocupe toda a largura
+        width: '100%', 
         
     },
     walletItem: {
@@ -73,8 +72,8 @@ export const styleControl = StyleSheet.create({
     },
     addButton: {
         backgroundColor: '#820AD1',
-        paddingVertical: 5, // Aumenta o padding verticalmente
-        paddingHorizontal: 16, // Aumenta o padding horizontalmente
+        paddingVertical: 5,
+        paddingHorizontal: 16, 
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
@@ -90,14 +89,14 @@ export const styleControl = StyleSheet.create({
         paddingHorizontal: 0,
     },
     paginationContainer: {
-        paddingVertical: 10,  // Espaçamento vertical ao redor dos dots
-        alignItems: 'center', // Centraliza os dots horizontalmente
+        paddingVertical: 10, 
+        alignItems: 'center', 
     },
     paginationDot: {
-        width: 10,            // Largura dos dots
-        height: 10,           // Altura dos dots
-        borderRadius: 5,      // Torna os dots redondos
-        marginHorizontal: 8,  // Espaçamento horizontal entre os dots
-        backgroundColor: 'rgba(0, 0, 0, 0.92)',  // Cor dos dots
+        width: 10,            
+        height: 10,          
+        borderRadius: 5,      
+        marginHorizontal: 8,  
+        backgroundColor: 'rgba(0, 0, 0, 0.92)',  
     }
 })

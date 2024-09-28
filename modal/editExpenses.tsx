@@ -24,7 +24,6 @@ export const EditExpensesModal: React.FC<EditExpensesModalProps> = ({ modalVisib
 
     const [loading, setLoading] = useState(false);
 
-    // Atualiza formData com os valores da despesa selecionada
     useEffect(() => {
         if (item) {
             setFormData({
@@ -147,7 +146,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     buttonDisabled: {
-        backgroundColor: '#a5a5a5', // Cor de fundo para o botão desativado
+        backgroundColor: '#a5a5a5', 
     },
     buttonText: {
         color: '#fff',

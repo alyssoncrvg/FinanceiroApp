@@ -30,8 +30,8 @@ export const WithdrawModal: React.FC<DepositInvestmentsModalProps> = ({
         date: new Date(),
     });
 
-    const { dataWallet, refetchData } = useFetchData(true); // Hook para buscar carteiras
-    const [selectedWallet, setSelectedWallet] = useState<string | null>(null); // Carteira selecionada
+    const { dataWallet, refetchData } = useFetchData(true); 
+    const [selectedWallet, setSelectedWallet] = useState<string | null>(null); 
 
     const [loading, setLoading] = useState(false);
 
@@ -64,30 +64,29 @@ export const WithdrawModal: React.FC<DepositInvestmentsModalProps> = ({
 
             
             if (wallet) {
-                setLoading(true); // Start loading
+                setLoading(true);
                 try {
-                    // Atualize o saldo do investimento (subtrai o valor do saque)
+                
                     const updatedInvestment = {
                         ...formData,
-                        valor: item.valor - formData.valor, // Subtrai o valor do saque do valor atual do investimento
+                        valor: item.valor - formData.valor,
                     };
 
-                    // Atualize o saldo da carteira (adiciona o valor do saque)
                     const updatedWallet = {
                         ...wallet,
-                        valor: wallet.valor + formData.valor, // Soma o valor do saque ao saldo da carteira
+                        valor: wallet.valor + formData.valor,
                     };
 
-                    await editWallet(updatedWallet); // Atualiza a carteira na API
-                    await editInvestment(updatedInvestment);  // Atualiza o investimento
+                    await editWallet(updatedWallet); 
+                    await editInvestment(updatedInvestment);
 
-                    refetchData(); // Recarregue os dados da carteira
-                    onUpdate(updatedInvestment); // Atualiza o investimento no estado local
-                    onClose(); // Fecha o modal
+                    refetchData(); 
+                    onUpdate(updatedInvestment);
+                    onClose(); 
                 } catch (error) {
                     Alert.alert("Erro", "Ocorreu um erro ao realizar o saque.");
                 } finally {
-                    setLoading(false); // Stop loading
+                    setLoading(false);
                 }
             } else {
                 Alert.alert("Erro ao selecionar a carteira de destino.");

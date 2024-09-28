@@ -19,7 +19,6 @@ export const UsefecthDataGoals = (GoalsAdded: boolean) => {
                 icon: goal.icon,
                 categoria: goal.categoria,
                 titulo: goal.titulo,
-                // icon: a fazer,
                 targetAmount: goal.meta,
                 currentAmount: goal.valorGuardado,
                 forecast: goal.previsao,
@@ -37,7 +36,7 @@ export const UsefecthDataGoals = (GoalsAdded: boolean) => {
 
     useEffect(() => {
         fetchData();
-    }, [GoalsAdded]); // Reexecuta o fetch sempre que `expenseAdded` mudar
+    }, [GoalsAdded]); 
 
     return { dataGoals, loading }
 

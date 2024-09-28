@@ -14,7 +14,7 @@ export function HomeScreen({ navigation }: any) {
   const [refreshData, setRefreshData] = useState(false); 
   const [monthlyMovements, setMonthlyMovements] = useState<{ entradas: number; saidas: number }>({ entradas: 0, saidas: 0 });
   const [currentMonthYear, setCurrentMonthYear] = useState<string>('09-2024');
-  const [isLoading, setIsLoading] = useState(true); // Estado para controlar o carregamento
+  const [isLoading, setIsLoading] = useState(true); 
 
   const { sumWallet, dataExpensesOthers, topWallets } = useFetchData(refreshData);
   const { sumInvestments } = useInvestments();
@@ -25,23 +25,21 @@ export function HomeScreen({ navigation }: any) {
 
   useFocusEffect(
     useCallback(() => {
-      setRefreshData(true); // Disparar recarregamento ao focar
+      setRefreshData(true); 
     }, [])
   );
 
-  // Quando os dados forem carregados, podemos resetar o refreshData e mudar o estado de carregamento
   useEffect(() => {
     if (refreshData) {
-      setRefreshData(false); // Impede a recarga contínua quando os dados já foram atualizados
+      setRefreshData(false);
 
       getMoviment(currentMonthYear).then((data) => {
         setMonthlyMovements(data);
-        setIsLoading(false); // Dados carregados, parar o carregamento
+        setIsLoading(false);
       });
     }
   }, [refreshData, currentMonthYear]);
 
-  // Mostrar o loader enquanto os dados estão carregando
   if (isLoading) {
     return (
       <View style={styleHome.loadingContainer}>
@@ -108,14 +106,14 @@ export function HomeScreen({ navigation }: any) {
         <Text style={styleHome.sectionTitle}>Despesas</Text>
         {isDataEmpty ? (
           <PieChart
-            data={[{ name: 'Sem Dados', population: 1 }]} // Dado fictício para exibir o gráfico cinza
+            data={[{ name: 'Sem Dados', population: 1 }]}
             width={350}
             height={220}
             chartConfig={{
               backgroundColor: '#fff',
               backgroundGradientFrom: '#fff',
               backgroundGradientTo: '#fff',
-              color: () => 'rgba(169, 169, 169, 1)', // Cinza
+              color: () => 'rgba(169, 169, 169, 1)',
             }}
             accessor="population"
             backgroundColor="transparent"

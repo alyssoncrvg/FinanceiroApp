@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     buttonDisabled: {
-        backgroundColor: '#a5a5a5', // Cor de fundo para o botão desativado
+        backgroundColor: '#a5a5a5', 
     },
     buttonText: {
         color: '#fff',

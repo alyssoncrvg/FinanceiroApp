@@ -10,16 +10,15 @@ import { DepositModal } from '../../modal/depositInvestments';
 import { WithdrawModal } from '../../modal/saqueInvestmentsModal';
 import { Ionicons } from '@expo/vector-icons';
 
-// Defina o tipo das rotas
 type RootStackParamList = {
     InvestmentDetails: { data: FormDataInvestments[] };
 };
 
-// Utilize NativeStackScreenProps para pegar `route` e `navigation`
+
 type Props = NativeStackScreenProps<RootStackParamList, 'InvestmentDetails'>;
 
 export const DetailInvestmentScreen = ({ route, navigation }: Props) => {
-    const { data } = route.params; // Acessa os dados passados pela navegação
+    const { data } = route.params; 
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedItem, setSelectedItem] = useState<FormDataInvestments | null>(null);
 
@@ -34,7 +33,7 @@ export const DetailInvestmentScreen = ({ route, navigation }: Props) => {
     }, [navigation]);
 
     useEffect(() => {
-        setData(data); // Inicializa os dados com os investimentos passados via props
+        setData(data); 
     }, [data]);
 
     const handleEditSubmit = (formData: { [key: string]: string | number }) => {
@@ -44,25 +43,25 @@ export const DetailInvestmentScreen = ({ route, navigation }: Props) => {
     };
 
     const handlePress = (item: FormDataInvestments) => {
-        setSelectedItem(item); // Define o item selecionado para edição
-        setModalVisible(true); // Abre o modal de edição
+        setSelectedItem(item);
+        setModalVisible(true);
     };
 
     const handleSaque = (item: FormDataInvestments) => {
-        setSelectedItem(item); // Define o item selecionado para edição
-        setModalSaque(true); // Abre o modal de edição
+        setSelectedItem(item);
+        setModalSaque(true); 
     };
 
     const handleDeposito = (item: FormDataInvestments) => {
-        setSelectedItem(item); // Define o item selecionado para edição
-        setModalDeposito(true); // Abre o modal de edição
+        setSelectedItem(item);
+        setModalDeposito(true);
     };
 
     const handleUpdate = (updatedItem: FormDataInvestments) => {
         const updatedData = dataLocal.map((investment) =>
             investment._id === updatedItem._id ? updatedItem : investment
         );
-        setData(updatedData); // Atualiza o estado local com os dados editados
+        setData(updatedData); 
     };
 
     const handleDelete = async (investment: FormDataInvestments) => {

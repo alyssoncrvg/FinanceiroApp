@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Modal, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { FormDataGoal } from '../interfaces/interfaces';
-import * as Icons from '@expo/vector-icons'; // Importa a biblioteca de ícones
+import * as Icons from '@expo/vector-icons'; 
 import { Picker } from '@react-native-picker/picker';
 
 interface FlexModalProps {
@@ -21,7 +21,7 @@ interface IconOption {
 export const FlexModalGoal: React.FC<FlexModalProps> = ({ modalVisible, onClose, onSubmit }) => {
   const [formData, setFormData] = useState<FormDataGoal>({
     id: '',
-    icon: 'phone-portrait', // Valor padrão
+    icon: 'phone-portrait', 
     titulo: '',
     targetAmount: 0,
     currentAmount: 0,
@@ -29,13 +29,13 @@ export const FlexModalGoal: React.FC<FlexModalProps> = ({ modalVisible, onClose,
   });
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedIcon, setSelectedIcon] = useState<IconName>('phone-portrait');
-  const [loading, setLoading] = useState(false); // Estado para controlar o carregamento
+  const [loading, setLoading] = useState(false); 
 
   useEffect(() => {
     if (modalVisible) {
       setFormData((prevData) => ({
         ...prevData,
-        icon: 'phone-portrait', // Resetar para valor padrão
+        icon: 'phone-portrait', 
         titulo: '',
         targetAmount: 0,
         currentAmount: 0,
@@ -53,7 +53,7 @@ export const FlexModalGoal: React.FC<FlexModalProps> = ({ modalVisible, onClose,
 
   const handleIconChange = (iconName: IconName) => {
     setSelectedIcon(iconName);
-    handleInputChange('icon', iconName); // Atualiza o estado do formulário com o ícone selecionado
+    handleInputChange('icon', iconName); 
   };
 
   const handleDateChange = (dateString: string) => {
@@ -84,13 +84,13 @@ export const FlexModalGoal: React.FC<FlexModalProps> = ({ modalVisible, onClose,
 
   const handleSubmit = async () => {
     if (validateForm()) {
-      setLoading(true); // Inicia o carregamento
+      setLoading(true);
       try {
         await onSubmit(formData);
       } catch (error) {
         Alert.alert('Erro', 'Houve um problema ao salvar a meta.');
       } finally {
-        setLoading(false); // Termina o carregamento
+        setLoading(false); 
         onClose();
       }
     }
@@ -178,7 +178,7 @@ export const FlexModalGoal: React.FC<FlexModalProps> = ({ modalVisible, onClose,
               <View style={styles.calendarContainer}>
                 <Calendar
                   onDayPress={handleDayPress}
-                  minDate={minDate} // Define a data mínima
+                  minDate={minDate}
                   markedDates={{ [formData.forecast.toISOString().split('T')[0]]: { selected: true, marked: true } }}
                   theme={{
                     todayTextColor: 'blue',
@@ -194,7 +194,7 @@ export const FlexModalGoal: React.FC<FlexModalProps> = ({ modalVisible, onClose,
             <TouchableOpacity
               style={[styles.saveButton, loading && styles.buttonDisabled]}
               onPress={handleSubmit}
-              disabled={loading} // Desativa o botão enquanto carrega
+              disabled={loading} 
             >
               {loading ? (
                 <ActivityIndicator color="#fff" />

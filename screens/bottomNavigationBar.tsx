@@ -1,18 +1,17 @@
-// BottomNavigationBar.tsx
 import React, { useState } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styleNavigation } from '../styles/styleNavigation';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { RootStackParamList } from '../interfaces/interfaces'; // Importa os tipos
+import { RootStackParamList } from '../interfaces/interfaces'; 
 
 export function BottomNavigationBar() {
-    const [activeTab, setActiveTab] = useState<string>('Home'); // Adiciona o estado para o botão ativo
+    const [activeTab, setActiveTab] = useState<string>('Home');
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
     const handleTabPress = (tabName: keyof RootStackParamList) => {
-        setActiveTab(tabName); // Define o botão ativo
-        navigation.navigate(tabName); // Navega para a tela correspondente
+        setActiveTab(tabName);
+        navigation.navigate(tabName);
     };
 
     return (
@@ -21,7 +20,7 @@ export function BottomNavigationBar() {
                 <Ionicons 
                     name="home" 
                     size={32} 
-                    color={activeTab === 'Home' ? "#007AFF" : "#000"} // Altera a cor com base no estado
+                    color={activeTab === 'Home' ? "#007AFF" : "#000"}
                 />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => handleTabPress('Investments')}>

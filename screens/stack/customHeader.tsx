@@ -17,14 +17,14 @@ const CustomHeader = ({ title }: { title: string }) => {
 
   const styles = StyleSheet.create({
     headerContainer: {
-        height: 80, // Ajuste a altura do cabeçalho aqui
-        flexDirection: 'row', // Alinha o botão e o título horizontalmente
-        alignItems: 'center', // Centraliza verticalmente
+        height: 80, 
+        flexDirection: 'row', 
+        alignItems: 'center',
         backgroundColor: '#fff',
         paddingHorizontal: 15,
       },
       backButton: {
-        marginRight: 15, // Espaço entre o botão de voltar e o título
+        marginRight: 15, 
       },
       headerTitle: {
         fontSize: 20,

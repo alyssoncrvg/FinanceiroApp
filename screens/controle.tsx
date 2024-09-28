@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { PieChart } from 'react-native-chart-kit';
 import { styleControl } from '../styles/styleControl';
 import { FlexModal } from '../modal/modalWallet';
@@ -49,13 +48,13 @@ export function ExpensesScreen() {
 
     useFocusEffect(
         useCallback(() => {
-            setRefreshData(true); // Disparar recarregamento ao focar
+            setRefreshData(true); 
         }, [])
     );
 
     useEffect(() => {
         if (refreshData) {
-            setRefreshData(false); // Impede a recarga contínua quando os dados já foram atualizados
+            setRefreshData(false); 
         }
     }, [refreshData]);
 
@@ -79,16 +78,12 @@ export function ExpensesScreen() {
     };
 
     const handlePieChartPress = () => {
-        navigation.navigate('ExpenseDetails', { data: dataExpenses }); // Navegar para a tela ExpenseDetails
+        navigation.navigate('ExpenseDetails', { data: dataExpenses }); 
     };
 
     const handleEdit = (item: Item) => {
         setSelectedItem(item);
         setEditModalVisible(true);
-    };
-
-    const handleDelete = (item: Item) => {
-        // lógica de exclusão
     };
 
     const handleWithdraw = (item: Item) => {
@@ -107,14 +102,13 @@ export function ExpensesScreen() {
                 banco={item.banco}
                 valor={item.valor}
                 onEdit={() => handleEdit(item)}
-                onDelete={() => handleDelete(item)}
+                onDelete={() => {}}
                 onWithdraw={() => handleWithdraw(item)}
                 onDeposit={() => handleDeposit(item)}
             />
         </View>
     );
 
-    // Tela de carregamento
     if (loading) {
         return (
             <View style={styleControl.loadingContainer}>
@@ -177,7 +171,7 @@ export function ExpensesScreen() {
                                     backgroundColor: '#fff',
                                     backgroundGradientFrom: '#fff',
                                     backgroundGradientTo: '#fff',
-                                    color: () => 'rgba(169, 169, 169, 1)', // Cinza
+                                    color: () => 'rgba(169, 169, 169, 1)', 
                                 }}
                                 accessor="population"
                                 backgroundColor="transparent"

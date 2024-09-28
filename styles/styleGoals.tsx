@@ -14,7 +14,7 @@ export const styleGoals = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: 150, // Adiciona espaço suficiente para a barra de navegação
+    paddingBottom: 150, 
     backgroundColor: '#fff'
   },
   title: {
